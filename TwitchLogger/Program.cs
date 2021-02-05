@@ -23,19 +23,15 @@ namespace TwitchLogger
                 {
                     var chatClientConfig = new ChatClientConfig
                     {
-                        Channels = new [] { "tera_" }
+
                     };
                     var chatLoggingConfig = new ChatLoggingConfig
                     {
-                        SourceId = 1
+                        SourceName = Environment.GetEnvironmentVariable("CHAT_MESSAGE_SOURCE")!
                     };
                     var pubSubClientConfig = new PubSubClientConfig
                     {
-                        Token = Environment.GetEnvironmentVariable("PUBSUB_TOKEN")!,
-                        Topics = new Topic[]
-                        {
-                            new Topic("chat_moderator_actions", new[] { "130277892", "52324616" })
-                        }
+                        Token = Environment.GetEnvironmentVariable("PUBSUB_TOKEN")!
                     };
                     var pubSubLoggingConfig = new PubSubLoggingConfig
                     {

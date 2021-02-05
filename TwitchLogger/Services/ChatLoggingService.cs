@@ -13,7 +13,7 @@ namespace TwitchLogger.Services
 {
     class ChatLoggingConfig
     {
-        public short SourceId { get; set; }
+        public string SourceName { get; init; } = null!;
     }
 
     class ChatLoggingService : IHostedService
@@ -22,6 +22,7 @@ namespace TwitchLogger.Services
         private readonly ILogger<ChatLoggingService> _logger;
         private readonly IDbContextFactory<TwitchLoggerDbContext> _contextFactory;
         private readonly ChatLoggingConfig _config;
+        private MessageSource _source = null!;
 
         public ChatLoggingService(
             TwitchIrcClient client,
@@ -35,11 +36,25 @@ namespace TwitchLogger.Services
             _config = config;
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
-            _client.IrcMessageReceived += IrcMessageReceivedAsync;
+            if (_config.SourceName is null)
+                throw new ArgumentNullException(nameof(_config.SourceName));
 
-            return Task.CompletedTask;
+            using (var ctx = _contextFactory.CreateDbContext())
+            {
+                _source = await ctx.MessageSources.FirstOrDefaultAsync(x => x.Name == _config.SourceName, cancellationToken);
+                if (_source is null)
+                {
+                    _source = new MessageSource { Name = _config.SourceName };
+                    await ctx.MessageSources.AddAsync(_source);
+                    await ctx.SaveChangesAsync();
+                }
+            }
+
+            _logger.LogInformation($"Using message source: {_source.Name} ({_source.Id})");
+
+            _client.IrcMessageReceived += IrcMessageReceivedAsync;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -67,7 +82,7 @@ namespace TwitchLogger.Services
             var messageEntity = new Message
             {
                 ReceivedAt = timestamp,
-                SourceId = _config.SourceId,
+                SourceId = _source.Id,
                 ChannelId = channelId,
                 AuthorId = userId,
                 AuthorLogin = userLogin,
