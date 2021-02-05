@@ -18,6 +18,7 @@ namespace TwitchLogger
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSystemd()
                 .ConfigureServices((hostContext, services) =>
                 {
                     var chatClientConfig = new ChatClientConfig
