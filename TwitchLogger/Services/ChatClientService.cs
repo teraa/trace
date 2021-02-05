@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -48,25 +49,37 @@ namespace TwitchLogger.Services
             await _client.DisconnectAsync();
         }
 
-        private async Task ReadyAsync()
+        private Task ReadyAsync()
         {
-            string[] channelLogins;
-
-            using (var ctx = _contextFactory.CreateDbContext())
+            _ = Task.Run(async () =>
             {
-                channelLogins = await ctx.ChatLogs
-                    .AsQueryable()
-                    .Select(x => x.Channel.Login)
-                    .ToArrayAsync();
-            }
+                try
+                {
+                    string[] channelLogins;
 
-            var tasks = new List<Task>();
-            foreach (var channelLogin in channelLogins)
-                tasks.Add(_client.SendAsync(new IrcMessage { Command = IrcCommand.JOIN, Content = new($"#{channelLogin}") }));
+                    using (var ctx = _contextFactory.CreateDbContext())
+                    {
+                        channelLogins = await ctx.ChatLogs
+                            .AsQueryable()
+                            .Select(x => x.Channel.Login)
+                            .ToArrayAsync();
+                    }
 
-            await Task.WhenAll(tasks);
+                    var tasks = new List<Task>();
+                    foreach (var channelLogin in channelLogins)
+                        tasks.Add(_client.SendAsync(new IrcMessage { Command = IrcCommand.JOIN, Content = new($"#{channelLogin}") }));
 
-            _logger.LogInformation($"Joined {channelLogins.Length} channels: {string.Join(", ", channelLogins)}");
+                    await Task.WhenAll(tasks);
+
+                    _logger.LogInformation($"Joined {channelLogins.Length} channels: {string.Join(", ", channelLogins)}");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError("Exception while joining channels.", ex);
+                }
+            });
+
+            return Task.CompletedTask;
         }
     }
 }
