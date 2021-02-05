@@ -1,6 +1,6 @@
 using System;
 
-namespace TwitchLogger.Data.Models
+namespace TwitchLogger.Data.Models.Twitch
 {
     public class Message : EntityBase<long>
     {

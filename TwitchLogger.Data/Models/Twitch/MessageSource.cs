@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace TwitchLogger.Data.Models
+namespace TwitchLogger.Data.Models.Twitch
 {
     public class MessageSource : EntityBase<short>
     {

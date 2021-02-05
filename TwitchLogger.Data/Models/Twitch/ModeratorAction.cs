@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace TwitchLogger.Data.Models
+namespace TwitchLogger.Data.Models.Twitch
 {
     public class ModeratorAction : EntityBase<long>
     {

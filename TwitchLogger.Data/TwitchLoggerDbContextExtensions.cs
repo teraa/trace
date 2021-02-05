@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using TwitchLogger.Data.Models;
+using TwitchLogger.Data.Models.Twitch;
 
 namespace TwitchLogger.Data
 {

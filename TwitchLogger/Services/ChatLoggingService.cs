@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Twitch.Irc;
 using TwitchLogger.Data;
-using TwitchLogger.Data.Models;
+using TwitchLogger.Data.Models.Twitch;
 
 namespace TwitchLogger.Services
 {

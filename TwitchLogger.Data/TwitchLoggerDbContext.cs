@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using TwitchLogger.Data.Models;
+using TwitchLogger.Data.Models.Twitch;
 
 namespace TwitchLogger.Data
 {
