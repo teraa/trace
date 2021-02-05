@@ -11,6 +11,7 @@ ExecStart=/opt/twitchlogger/bin/TwitchLogger
 Restart=always
 Environment="DB_STRING=Host=localhost;Database=twitchlogger;Username=postgres;Password=example"
 Environment="PUBSUB_TOKEN=x"
+Environment="CHAT_MESSAGE_SOURCE=TwitchLogger"
 
 [Install]
 WantedBy=multi-user.target
