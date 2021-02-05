@@ -12,6 +12,8 @@ namespace TwitchLogger.Data.Models.Twitch
             ChannelModeratorActions = new HashSet<ModeratorAction>();
             ModeratorActionsIssued = new HashSet<ModeratorAction>();
             ModeratorActionsReceived = new HashSet<ModeratorAction>();
+            ChatLogs = new HashSet<ChatLog>();
+            PubSubLogs = new HashSet<PubSubLog>();
         }
 
         public string Login { get; set; } = null!;
@@ -22,5 +24,8 @@ namespace TwitchLogger.Data.Models.Twitch
         public virtual ICollection<ModeratorAction> ChannelModeratorActions { get; set; }
         public virtual ICollection<ModeratorAction> ModeratorActionsIssued { get; set; }
         public virtual ICollection<ModeratorAction> ModeratorActionsReceived { get; set; }
+
+        public virtual ICollection<ChatLog> ChatLogs { get; set; }
+        public virtual ICollection<PubSubLog> PubSubLogs { get; set; }
     }
 }

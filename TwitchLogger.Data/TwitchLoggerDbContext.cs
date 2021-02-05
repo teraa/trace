@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TwitchLogger.Data.Models;
 using TwitchLogger.Data.Models.Twitch;
 
 namespace TwitchLogger.Data
@@ -12,6 +13,9 @@ namespace TwitchLogger.Data
         public virtual DbSet<Message> Messages { get; set; } = null!;
         public virtual DbSet<MessageSource> MessageSources { get; set; } = null!;
         public virtual DbSet<ModeratorAction> ModeratorActions { get; set; } = null!;
+
+        public virtual DbSet<ChatLog> ChatLogs { get; set; } = null!;
+        public virtual DbSet<PubSubLog> PubSubLogs { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -159,6 +163,50 @@ namespace TwitchLogger.Data
                     .WithMany(x => x!.ModeratorActionsReceived)
                     .HasForeignKey(x => x.TargetId)
                     .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<ChatLog>(entity =>
+            {
+                entity.ToTable("chat_log")
+                    .HasKey(x => x.Id);
+
+                entity.Property(x => x.Id)
+                    .HasColumnName("id")
+                    .IsRequired()
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(x => x.ChannelId)
+                    .HasColumnName("channel_id")
+                    .IsRequired();
+
+                entity.HasOne(x => x.Channel)
+                    .WithMany(x => x.ChatLogs)
+                    .HasForeignKey(x => x.ChannelId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<PubSubLog>(entity =>
+            {
+                entity.ToTable("pubsub_log")
+                    .HasKey(x => x.Id);
+
+                entity.Property(x => x.Id)
+                    .HasColumnName("id")
+                    .IsRequired()
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(x => x.Topic)
+                    .HasColumnName("topic")
+                    .IsRequired();
+
+                entity.Property(x => x.ChannelId)
+                    .HasColumnName("channel_id")
+                    .IsRequired();
+
+                entity.HasOne(x => x.Channel)
+                    .WithMany(x => x.PubSubLogs)
+                    .HasForeignKey(x => x.ChannelId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }
