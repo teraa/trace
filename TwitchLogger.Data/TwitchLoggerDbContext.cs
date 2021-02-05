@@ -57,11 +57,11 @@ namespace TwitchLogger.Data
                     .IsRequired();
 
                 entity.Property(x => x.AuthorId)
-                    .HasColumnName("user_id")
+                    .HasColumnName("author_id")
                     .IsRequired(false);
 
                 entity.Property(x => x.AuthorLogin)
-                    .HasColumnName("user_login")
+                    .HasColumnName("author_login")
                     .IsRequired();
 
                 entity.Property(x => x.Content)
