@@ -11,6 +11,7 @@ namespace TwitchLogger.Data
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<Message> Messages { get; set; } = null!;
         public virtual DbSet<MessageSource> MessageSources { get; set; } = null!;
+        public virtual DbSet<ModeratorAction> ModeratorActions { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -100,6 +101,64 @@ namespace TwitchLogger.Data
                 entity.Property(x => x.Description)
                     .HasColumnName("description")
                     .IsRequired(false);
+            });
+
+            modelBuilder.Entity<ModeratorAction>(entity =>
+            {
+                entity.ToTable("moderator_action")
+                    .HasKey(x => x.Id);
+
+                entity.Property(x => x.Id)
+                    .HasColumnName("id")
+                    .IsRequired()
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(x => x.CreatedAt)
+                    .HasColumnName("created_at")
+                    .IsRequired();
+
+                entity.Property(x => x.ChannelId)
+                    .HasColumnName("channel_id")
+                    .IsRequired();
+
+                entity.Property(x => x.Action)
+                    .HasColumnName("action")
+                    .IsRequired();
+
+                entity.Property(x => x.Args)
+                    .HasColumnName("args")
+                    .IsRequired(false);
+
+                entity.Property(x => x.MessageId)
+                    .HasColumnName("message_id")
+                    .IsRequired(false);
+
+                entity.Property(x => x.ModeratorId)
+                    .HasColumnName("moderator_id")
+                    .IsRequired(false);
+
+                entity.Property(x => x.TargetId)
+                    .HasColumnName("target_id")
+                    .IsRequired(false);
+
+                entity.Property(x => x.ModeratorMessage)
+                    .HasColumnName("moderator_message")
+                    .IsRequired(false);
+
+                entity.HasOne(x => x.Channel)
+                    .WithMany(x => x.ChannelModeratorActions)
+                    .HasForeignKey(x => x.ChannelId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(x => x.Moderator)
+                    .WithMany(x => x!.ModeratorActionsIssued)
+                    .HasForeignKey(x => x.ModeratorId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(x => x.Target)
+                    .WithMany(x => x!.ModeratorActionsReceived)
+                    .HasForeignKey(x => x.TargetId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
         }
     }
