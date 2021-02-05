@@ -1,0 +1,16 @@
+[Unit]
+Description=Twitch Logger
+After=network-online.target
+
+[Service]
+User=tera
+Type=notify
+SyslogIdentifier=twitchlogger
+WorkingDirectory=/opt/twitchlogger/bin
+ExecStart=/opt/twitchlogger/bin/TwitchLogger
+Restart=always
+Environment="DB_STRING=Host=localhost;Database=twitchlogger;Username=postgres;Password=example"
+Environment="PUBSUB_TOKEN=x"
+
+[Install]
+WantedBy=multi-user.target
