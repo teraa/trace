@@ -93,6 +93,9 @@ namespace TwitchLogger.Data
                 entity.ToTable("message_source", schema: "twitch")
                     .HasKey(x => x.Id);
 
+                entity.HasIndex(x => x.Name)
+                    .IsUnique();
+
                 entity.Property(x => x.Id)
                     .HasColumnName("id")
                     .IsRequired()
@@ -170,6 +173,9 @@ namespace TwitchLogger.Data
                 entity.ToTable("chat_log")
                     .HasKey(x => x.Id);
 
+                entity.HasIndex(x => x.ChannelId)
+                    .IsUnique();
+
                 entity.Property(x => x.Id)
                     .HasColumnName("id")
                     .IsRequired()
@@ -189,6 +195,9 @@ namespace TwitchLogger.Data
             {
                 entity.ToTable("pubsub_log")
                     .HasKey(x => x.Id);
+
+                entity.HasIndex(x => x.Topic)
+                    .IsUnique();
 
                 entity.Property(x => x.Id)
                     .HasColumnName("id")
