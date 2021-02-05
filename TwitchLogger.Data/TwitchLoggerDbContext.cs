@@ -17,7 +17,7 @@ namespace TwitchLogger.Data
         {
             modelBuilder.Entity<User>(entity =>
             {
-                entity.ToTable("user")
+                entity.ToTable("user", schema: "twitch")
                     .HasKey(x => x.Id);
 
                 entity.Property(x => x.Id)
@@ -36,7 +36,7 @@ namespace TwitchLogger.Data
 
             modelBuilder.Entity<Message>(entity =>
             {
-                entity.ToTable("message")
+                entity.ToTable("message", schema: "twitch")
                     .HasKey(x => x.Id);
 
                 entity.Property(x => x.Id)
@@ -86,7 +86,7 @@ namespace TwitchLogger.Data
 
             modelBuilder.Entity<MessageSource>(entity =>
             {
-                entity.ToTable("message_source")
+                entity.ToTable("message_source", schema: "twitch")
                     .HasKey(x => x.Id);
 
                 entity.Property(x => x.Id)
@@ -105,7 +105,7 @@ namespace TwitchLogger.Data
 
             modelBuilder.Entity<ModeratorAction>(entity =>
             {
-                entity.ToTable("moderator_action")
+                entity.ToTable("moderator_action", schema: "twitch")
                     .HasKey(x => x.Id);
 
                 entity.Property(x => x.Id)
