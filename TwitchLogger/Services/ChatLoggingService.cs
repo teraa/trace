@@ -59,10 +59,10 @@ namespace TwitchLogger.Services
             var userId = message.Tags!["user-id"];
             var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(message.Tags["tmi-sent-ts"]));
 
-            await UpdateOrCreateUser(channelId, channelLogin, timestamp);
-            await UpdateOrCreateUser(userId, userLogin, timestamp);
-
             using var ctx = _contextFactory.CreateDbContext();
+
+            await ctx.CreateOrUpdateUserAsync(new User { Id = channelId, Login = channelLogin, FirstSeenAt = timestamp });
+            await ctx.CreateOrUpdateUserAsync(new User { Id = userId, Login = userLogin, FirstSeenAt = timestamp });
 
             var messageEntity = new Message
             {
@@ -75,33 +75,6 @@ namespace TwitchLogger.Services
             };
 
             await ctx.Messages.AddAsync(messageEntity);
-            await ctx.SaveChangesAsync();
-        }
-
-        private async Task UpdateOrCreateUser(string id, string login, DateTimeOffset seenAt)
-        {
-            using var ctx = _contextFactory.CreateDbContext();
-            var user = await ctx.Users.FindAsync(id);
-            if (user is null)
-            {
-                user = new User
-                {
-                    Id = id,
-                    Login = login,
-                    FirstSeenAt = seenAt
-                };
-
-                await ctx.Users.AddAsync(user);
-            }
-            else if (user.Login != login)
-            {
-                user.Login = login;
-            }
-            else
-            {
-                return;
-            }
-
             await ctx.SaveChangesAsync();
         }
     }

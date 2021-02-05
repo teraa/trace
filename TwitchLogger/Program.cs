@@ -28,6 +28,18 @@ namespace TwitchLogger
                     {
                         SourceId = 1
                     };
+                    var pubSubClientConfig = new PubSubClientConfig
+                    {
+                        Token = Environment.GetEnvironmentVariable("PUBSUB_TOKEN")!,
+                        Topics = new Topic[]
+                        {
+                            new Topic("chat_moderator_actions", new[] { "130277892", "52324616" })
+                        }
+                    };
+                    var pubSubLoggingConfig = new PubSubLoggingConfig
+                    {
+
+                    };
 
                     services
                         .AddDbContextFactory<TwitchLoggerDbContext>(options =>
@@ -39,6 +51,13 @@ namespace TwitchLogger
                         .AddSingleton(chatClientConfig)
                         .AddHostedService<ChatLoggingService>()
                         .AddSingleton(chatLoggingConfig);
+
+                    services
+                        .AddSingleton<TwitchPubSubClient>()
+                        .AddHostedService<PubSubClientService>()
+                        .AddSingleton(pubSubClientConfig)
+                        .AddHostedService<PubSubLoggingService>()
+                        .AddSingleton(pubSubLoggingConfig);
                 });
     }
 }
