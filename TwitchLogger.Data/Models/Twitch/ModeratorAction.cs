@@ -12,6 +12,7 @@ namespace TwitchLogger.Data.Models.Twitch
         public string? MessageId { get; set; } = null!;
         public string? ModeratorId { get; set; }
         public string? TargetId { get; set; }
+        public string? TargetLogin { get; set; }
         public string? ModeratorMessage { get; set; }
 
         public virtual User Channel { get; set; } = null!;

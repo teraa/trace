@@ -66,6 +66,7 @@ namespace TwitchLogger.Services
                 MessageId = action.MessageId,
                 ModeratorId = action.Moderator?.Id,
                 TargetId = action.Target?.Id,
+                TargetLogin = action.Target?.Login,
                 ModeratorMessage = action.ModeratorMessage,
             };
 

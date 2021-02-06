@@ -148,6 +148,10 @@ namespace TwitchLogger.Data
                     .HasColumnName("target_id")
                     .IsRequired(false);
 
+                entity.Property(x => x.TargetLogin)
+                    .HasColumnName("target_login")
+                    .IsRequired(false);
+
                 entity.Property(x => x.ModeratorMessage)
                     .HasColumnName("moderator_message")
                     .IsRequired(false);
