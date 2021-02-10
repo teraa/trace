@@ -59,7 +59,7 @@ namespace TwitchLogger.Services
 
             var actionEntity = new Data.Models.Twitch.ModeratorAction
             {
-                CreatedAt = DateTimeOffset.UtcNow,
+                CreatedAt = now,
                 ChannelId = action.ChannelId,
                 Action = action.Action,
                 Args = action.Args?.ToList(),
