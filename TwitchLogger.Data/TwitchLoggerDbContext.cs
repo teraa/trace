@@ -24,6 +24,10 @@ namespace TwitchLogger.Data
                 entity.ToTable("user", schema: "twitch")
                     .HasKey(x => x.Id);
 
+                entity.HasIndex(x => x.Id);
+
+                entity.HasIndex(x => x.Login);
+
                 entity.Property(x => x.Id)
                     .HasColumnName("id")
                     .IsRequired()
@@ -42,6 +46,8 @@ namespace TwitchLogger.Data
             {
                 entity.ToTable("message", schema: "twitch")
                     .HasKey(x => x.Id);
+
+                entity.HasIndex(x => x.ReceivedAt);
 
                 entity.Property(x => x.Id)
                     .HasColumnName("id")
@@ -114,6 +120,8 @@ namespace TwitchLogger.Data
             {
                 entity.ToTable("moderator_action", schema: "twitch")
                     .HasKey(x => x.Id);
+
+                entity.HasIndex(x => x.CreatedAt);
 
                 entity.Property(x => x.Id)
                     .HasColumnName("id")
