@@ -19,13 +19,13 @@ namespace TwitchLogger.Data.Models.Twitch
         public string Login { get; set; } = null!;
         public DateTimeOffset FirstSeenAt { get; set; }
 
-        public virtual ICollection<Message> Messages { get; set; }
-        public virtual ICollection<Message> ChannelMessages { get; set; }
-        public virtual ICollection<ModeratorAction> ChannelModeratorActions { get; set; }
-        public virtual ICollection<ModeratorAction> ModeratorActionsIssued { get; set; }
-        public virtual ICollection<ModeratorAction> ModeratorActionsReceived { get; set; }
+        public ICollection<Message> Messages { get; set; }
+        public ICollection<Message> ChannelMessages { get; set; }
+        public ICollection<ModeratorAction> ChannelModeratorActions { get; set; }
+        public ICollection<ModeratorAction> ModeratorActionsIssued { get; set; }
+        public ICollection<ModeratorAction> ModeratorActionsReceived { get; set; }
 
-        public virtual ICollection<ChatLog> ChatLogs { get; set; }
-        public virtual ICollection<PubSubLog> PubSubLogs { get; set; }
+        public ICollection<ChatLog> ChatLogs { get; set; }
+        public ICollection<PubSubLog> PubSubLogs { get; set; }
     }
 }

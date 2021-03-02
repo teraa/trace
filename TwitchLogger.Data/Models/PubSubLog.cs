@@ -7,6 +7,6 @@ namespace TwitchLogger.Data.Models
         public string Topic { get; set; } = null!;
         public string ChannelId { get; set; } = null!;
 
-        public virtual User Channel { get; set; } = null!;
+        public User Channel { get; set; } = null!;
     }
 }

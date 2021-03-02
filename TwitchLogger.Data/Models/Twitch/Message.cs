@@ -11,8 +11,8 @@ namespace TwitchLogger.Data.Models.Twitch
         public string AuthorLogin { get; set; } = null!;
         public string Content { get; set; } = null!;
 
-        public virtual User Author { get; set; } = null!;
-        public virtual User Channel { get; set; } = null!;
-        public virtual MessageSource Source { get; set; } = null!;
+        public User Author { get; set; } = null!;
+        public User Channel { get; set; } = null!;
+        public MessageSource Source { get; set; } = null!;
     }
 }

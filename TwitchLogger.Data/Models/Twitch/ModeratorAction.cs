@@ -15,8 +15,8 @@ namespace TwitchLogger.Data.Models.Twitch
         public string? TargetLogin { get; set; }
         public string? ModeratorMessage { get; set; }
 
-        public virtual User Channel { get; set; } = null!;
-        public virtual User? Moderator { get; set; }
-        public virtual User? Target { get; set; }
+        public User Channel { get; set; } = null!;
+        public User? Moderator { get; set; }
+        public User? Target { get; set; }
     }
 }

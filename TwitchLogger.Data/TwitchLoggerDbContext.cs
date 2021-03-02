@@ -9,13 +9,13 @@ namespace TwitchLogger.Data
         public TwitchLoggerDbContext(DbContextOptions<TwitchLoggerDbContext> options)
             : base(options) { }
 
-        public virtual DbSet<User> Users { get; set; } = null!;
-        public virtual DbSet<Message> Messages { get; set; } = null!;
-        public virtual DbSet<MessageSource> MessageSources { get; set; } = null!;
-        public virtual DbSet<ModeratorAction> ModeratorActions { get; set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
+        public DbSet<Message> Messages { get; set; } = null!;
+        public DbSet<MessageSource> MessageSources { get; set; } = null!;
+        public DbSet<ModeratorAction> ModeratorActions { get; set; } = null!;
 
-        public virtual DbSet<ChatLog> ChatLogs { get; set; } = null!;
-        public virtual DbSet<PubSubLog> PubSubLogs { get; set; } = null!;
+        public DbSet<ChatLog> ChatLogs { get; set; } = null!;
+        public DbSet<PubSubLog> PubSubLogs { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
