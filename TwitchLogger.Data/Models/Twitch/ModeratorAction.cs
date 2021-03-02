@@ -3,8 +3,9 @@ using System.Collections.Generic;
 
 namespace TwitchLogger.Data.Models.Twitch
 {
-    public class ModeratorAction : EntityBase<long>
+    public class ModeratorAction
     {
+        public long Id { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public string ChannelId { get; set; } = null!;
         public string Action { get; set; } = null!;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TwitchLogger.Data.Models.Twitch
 {
-    public class User : EntityBase<string>
+    public class User
     {
         public User()
         {
@@ -16,6 +16,7 @@ namespace TwitchLogger.Data.Models.Twitch
             PubSubLogs = new HashSet<PubSubLog>();
         }
 
+        public string Id { get; set; } = null!;
         public string Login { get; set; } = null!;
         public DateTimeOffset FirstSeenAt { get; set; }
 

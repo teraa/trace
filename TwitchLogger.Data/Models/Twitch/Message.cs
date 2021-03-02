@@ -2,8 +2,9 @@ using System;
 
 namespace TwitchLogger.Data.Models.Twitch
 {
-    public class Message : EntityBase<long>
+    public class Message
     {
+        public long Id { get; set; }
         public DateTimeOffset ReceivedAt { get; set; }
         public short SourceId { get; set; }
         public string ChannelId { get; set; } = null!;
