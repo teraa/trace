@@ -70,7 +70,7 @@ namespace TwitchLogger.Services
                 ModeratorMessage = action.ModeratorMessage,
             };
 
-            await ctx.ModeratorActions.AddAsync(actionEntity);
+            ctx.ModeratorActions.Add(actionEntity);
             await ctx.SaveChangesAsync();
         }
     }

@@ -47,7 +47,7 @@ namespace TwitchLogger.Services
                 if (_source is null)
                 {
                     _source = new MessageSource { Name = _config.SourceName };
-                    await ctx.MessageSources.AddAsync(_source);
+                    ctx.MessageSources.Add(_source);
                     await ctx.SaveChangesAsync();
                 }
             }
@@ -89,7 +89,7 @@ namespace TwitchLogger.Services
                 Content = message.Content!.Text
             };
 
-            await ctx.Messages.AddAsync(messageEntity);
+            ctx.Messages.Add(messageEntity);
             await ctx.SaveChangesAsync();
         }
     }

@@ -11,7 +11,7 @@ namespace TwitchLogger.Data
             if (entity is null)
             {
                 entity = user;
-                await ctx.Users.AddAsync(entity);
+                ctx.Users.Add(entity);
             }
             else if (entity.Login != user.Login)
             {
