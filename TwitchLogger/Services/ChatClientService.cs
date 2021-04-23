@@ -75,7 +75,7 @@ namespace TwitchLogger.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError("Exception while joining channels.", ex);
+                    _logger.LogError(ex, "Exception while joining channels.");
                 }
             });
 
