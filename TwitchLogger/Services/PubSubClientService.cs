@@ -31,9 +31,9 @@ namespace TwitchLogger.Services
             _client = client;
             _logger = logger;
             _config = config;
+            _contextFactory = contextFactory;
 
             _client.Connected += ConnectedAsync;
-            _contextFactory = contextFactory;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -46,7 +46,7 @@ namespace TwitchLogger.Services
             await _client.DisconnectAsync();
         }
 
-        private async Task ConnectedAsync()
+        private async ValueTask ConnectedAsync()
         {
             Topic[] topics;
 
@@ -60,17 +60,15 @@ namespace TwitchLogger.Services
                 topics = topicsNames.Select(Topic.Parse).ToArray();
             }
 
-            var tasks = new List<Task<PubSubMessage?>>();
+            var tasks = new List<Task<PubSubMessage>>();
             foreach (var topic in topics)
                 tasks.Add(_client.ListenAsync(topic, _config.Token));
 
             var responses = await Task.WhenAll(tasks);
 
-            foreach (var (topic, response) in topics.Zip(responses))
+            foreach ((Topic topic, PubSubMessage response) in topics.Zip(responses))
             {
-                if (response is null)
-                    _logger.LogError($"No listen response received for {topic}.");
-                else if (response.Error is { Length: > 0 })
+                if (response.Error is { Length: > 0 })
                     _logger.LogError($"Error listening {topic}: {response.Error}.");
                 else
                     _logger.LogInformation($"Successfully listened {topic}.");

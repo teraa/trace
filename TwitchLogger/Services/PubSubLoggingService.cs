@@ -45,7 +45,7 @@ namespace TwitchLogger.Services
             return Task.CompletedTask;
         }
 
-        private async Task ModeratorActionReceivedAsync(Topic topic, ModeratorAction action)
+        private async ValueTask ModeratorActionReceivedAsync(Topic topic, ModeratorAction action)
         {
             using var ctx = _contextFactory.CreateDbContext();
 

@@ -64,7 +64,7 @@ namespace TwitchLogger.Services
             return Task.CompletedTask;
         }
 
-        private async Task IrcMessageReceivedAsync(IrcMessage message)
+        private async ValueTask IrcMessageReceivedAsync(IrcMessage message)
         {
             if (message.Command != IrcCommand.PRIVMSG) return;
 

@@ -35,7 +35,7 @@ namespace TwitchLogger.Services
             _logger = logger;
             _config = config;
 
-            _client.Ready += ReadyAsync;
+            _client.Connected += ConnectedAsync;
             _contextFactory = contextFactory;
         }
 
@@ -49,37 +49,27 @@ namespace TwitchLogger.Services
             await _client.DisconnectAsync();
         }
 
-        private Task ReadyAsync()
+        private async ValueTask ConnectedAsync()
         {
-            _ = Task.Run(async () =>
+            await _client.LoginAnonAsync();
+
+            string[] channelLogins;
+
+            using (var ctx = _contextFactory.CreateDbContext())
             {
-                try
-                {
-                    string[] channelLogins;
+                channelLogins = await ctx.ChatLogs
+                    .AsQueryable()
+                    .Select(x => x.Channel.Login)
+                    .ToArrayAsync();
+            }
 
-                    using (var ctx = _contextFactory.CreateDbContext())
-                    {
-                        channelLogins = await ctx.ChatLogs
-                            .AsQueryable()
-                            .Select(x => x.Channel.Login)
-                            .ToArrayAsync();
-                    }
+            var tasks = new List<Task>();
+            foreach (var channelLogin in channelLogins)
+                tasks.Add(_client.SendAsync(new IrcMessage { Command = IrcCommand.JOIN, Content = new($"#{channelLogin}") }).AsTask());
 
-                    var tasks = new List<Task>();
-                    foreach (var channelLogin in channelLogins)
-                        tasks.Add(_client.SendAsync(new IrcMessage { Command = IrcCommand.JOIN, Content = new($"#{channelLogin}") }));
+            await Task.WhenAll(tasks);
 
-                    await Task.WhenAll(tasks);
-
-                    _logger.LogInformation($"Joined {channelLogins.Length} channels: {string.Join(", ", channelLogins)}");
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Exception while joining channels.");
-                }
-            });
-
-            return Task.CompletedTask;
+            _logger.LogInformation($"Joined {channelLogins.Length} channels: {string.Join(", ", channelLogins)}");
         }
     }
 }
