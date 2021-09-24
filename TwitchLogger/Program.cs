@@ -43,14 +43,14 @@ namespace TwitchLogger
                             options.UseNpgsql(Environment.GetEnvironmentVariable("DB_STRING")));
 
                     services
-                        .AddSingleton<TwitchIrcClient>()
+                        .AddTwitchIrcClient()
                         .AddHostedService<ChatClientService>()
                         .AddSingleton(chatClientConfig)
                         .AddHostedService<ChatLoggingService>()
                         .AddSingleton(chatLoggingConfig);
 
                     services
-                        .AddSingleton<TwitchPubSubClient>()
+                        .AddTwitchPubSubClient()
                         .AddHostedService<PubSubClientService>()
                         .AddSingleton(pubSubClientConfig)
                         .AddHostedService<PubSubLoggingService>()
