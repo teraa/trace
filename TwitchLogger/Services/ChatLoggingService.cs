@@ -70,7 +70,7 @@ namespace TwitchLogger.Services
 
             var channelLogin = message.Arg![1..];
             var channelId =  message.Tags!["room-id"];
-            var userLogin = message.Hostmask![..message.Hostmask.IndexOf('!')];
+            var userLogin = message.Prefix!.Name;
             var userId = message.Tags!["user-id"];
             var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(message.Tags["tmi-sent-ts"]));
 
