@@ -10,6 +10,11 @@ using TwitchLogger.Services;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .UseSystemd()
+    .UseDefaultServiceProvider((hostContext, options) =>
+    {
+        options.ValidateOnBuild = true;
+        options.ValidateScopes = true;
+    })
     .ConfigureServices((hostContext, services) =>
     {
         services
