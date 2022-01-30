@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using IrcMessageParser;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -18,7 +19,7 @@ class ChatService : IHostedService
 {
     private readonly TwitchIrcClient _client;
     private readonly ILogger<ChatService> _logger;
-    private readonly IDbContextFactory<TwitchLoggerDbContext> _contextFactory;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly ChatOptions _options;
     private short _messageSourceId;
 
@@ -26,12 +27,12 @@ class ChatService : IHostedService
     public ChatService(
         TwitchIrcClient client,
         ILogger<ChatService> logger,
-        IDbContextFactory<TwitchLoggerDbContext> contextFactory,
+        IServiceScopeFactory scopeFactory,
         IOptions<ChatOptions> options)
     {
         _client = client;
         _logger = logger;
-        _contextFactory = contextFactory;
+        _scopeFactory = scopeFactory;
         _options = options.Value;
 
         _client.Connected += ConnectedAsync;
@@ -43,8 +44,10 @@ class ChatService : IHostedService
         if (_options.MessageSourceName is null)
             throw new ArgumentNullException(nameof(_options.MessageSourceName));
 
-        using (var ctx = _contextFactory.CreateDbContext())
+        using (var scope = _scopeFactory.CreateScope())
         {
+            var ctx = scope.Get<TwitchLoggerDbContext>();
+
             var source = await ctx.MessageSources
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Name == _options.MessageSourceName, cancellationToken);
@@ -75,8 +78,10 @@ class ChatService : IHostedService
 
         string[] channelLogins;
 
-        using (var ctx = _contextFactory.CreateDbContext())
+        using (var scope = _scopeFactory.CreateScope())
         {
+            var ctx = scope.Get<TwitchLoggerDbContext>();
+
             channelLogins = await ctx.ChatLogs
                 .AsNoTracking()
                 .Select(x => x.Channel.Login)
@@ -102,7 +107,8 @@ class ChatService : IHostedService
         var userId = message.Tags!["user-id"];
         var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(message.Tags["tmi-sent-ts"]));
 
-        using var ctx = _contextFactory.CreateDbContext();
+        using var scope = _scopeFactory.CreateScope();
+        var ctx = scope.Get<TwitchLoggerDbContext>();
 
         await ctx.CreateOrUpdateUserAsync(new Data.Models.Twitch.User
         {

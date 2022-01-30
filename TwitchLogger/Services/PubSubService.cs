@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -18,18 +19,18 @@ class PubSubService : IHostedService
     private readonly TwitchPubSubClient _client;
     private readonly ILogger<PubSubService> _logger;
     private readonly PubSubOptions _options;
-    private readonly IDbContextFactory<TwitchLoggerDbContext> _contextFactory;
+    private readonly IServiceScopeFactory _scopeFactory;
 
     public PubSubService(
         TwitchPubSubClient client,
         ILogger<PubSubService> logger,
         IOptions<PubSubOptions> options,
-        IDbContextFactory<TwitchLoggerDbContext> contextFactory)
+        IServiceScopeFactory scopeFactory)
     {
         _client = client;
         _logger = logger;
         _options = options.Value;
-        _contextFactory = contextFactory;
+        _scopeFactory = scopeFactory;
 
         _client.Connected += ConnectedAsync;
         _client.ModeratorActionReceived += ModeratorActionReceivedAsync;
@@ -49,8 +50,10 @@ class PubSubService : IHostedService
     {
         Topic[] topics;
 
-        using (var ctx = _contextFactory.CreateDbContext())
+        using (var scope = _scopeFactory.CreateScope())
         {
+            var ctx = scope.Get<TwitchLoggerDbContext>();
+
             var topicsNames = await ctx.PubSubLogs
                 .AsNoTracking()
                 .Select(x => x.Topic)
@@ -76,7 +79,8 @@ class PubSubService : IHostedService
 
     private async ValueTask ModeratorActionReceivedAsync(Topic topic, ModeratorAction action)
     {
-        using var ctx = _contextFactory.CreateDbContext();
+        using var scope = _scopeFactory.CreateScope();
+        var ctx = scope.Get<TwitchLoggerDbContext>();
 
         var now = DateTimeOffset.UtcNow;
 

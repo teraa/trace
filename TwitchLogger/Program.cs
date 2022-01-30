@@ -13,8 +13,12 @@ IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostContext, services) =>
     {
         services
-            .AddDbContextFactory<TwitchLoggerDbContext>(options =>
-                options.UseNpgsql(hostContext.Configuration["DB_STRING"]))
+            .AddDbContext<TwitchLoggerDbContext>(contextOptions =>
+            {
+                contextOptions.UseNpgsql(
+                    hostContext.Configuration["DB_STRING"],
+                    npgsqlOpt => npgsqlOpt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+            })
 
             .AddOptionsWithSection<ChatOptions>(hostContext.Configuration)
             .AddTwitchIrcClient()
@@ -27,9 +31,9 @@ IHost host = Host.CreateDefaultBuilder(args)
     })
     .Build();
 
-var contextFactory = host.Services.GetRequiredService<IDbContextFactory<TwitchLoggerDbContext>>();
-using (var ctx = contextFactory.CreateDbContext())
+using (var scope = host.Services.CreateScope())
 {
+    var ctx = scope.Get<TwitchLoggerDbContext>();
     await ctx.Database.MigrateAsync();
 }
 
