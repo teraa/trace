@@ -11,7 +11,7 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
         builder.HasIndex(x => x.ReceivedAt);
 
         builder.HasOne(x => x.Author)
-            .WithMany(x => x.Messages)
+            .WithMany(x => x.AuthorMessages)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(x => x.Channel)

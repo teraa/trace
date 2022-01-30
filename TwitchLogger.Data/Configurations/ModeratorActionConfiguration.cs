@@ -15,11 +15,11 @@ public class ModeratorActionConfiguration : IEntityTypeConfiguration<ModeratorAc
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(x => x.Moderator)
-            .WithMany(x => x.ModeratorActionsIssued)
+            .WithMany(x => x.ModeratorModeratorActions)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(x => x.Target)
-            .WithMany(x => x.ModeratorActionsReceived)
+            .WithMany(x => x.TargetModeratorActions)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }
