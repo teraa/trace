@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,9 +13,17 @@ namespace TwitchLogger
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            var contextFactory = host.Services.GetRequiredService<IDbContextFactory<TwitchLoggerDbContext>>();
+            using (var ctx = contextFactory.CreateDbContext())
+            {
+                await ctx.Database.MigrateAsync();
+            }
+
+            await host.RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
