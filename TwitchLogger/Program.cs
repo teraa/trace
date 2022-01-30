@@ -9,8 +9,8 @@ using TwitchLogger.Data;
 using TwitchLogger.Options;
 using TwitchLogger.Services;
 
-namespace TwitchLogger
-{
+namespace TwitchLogger;
+
     public class Program
     {
         public static async Task Main(string[] args)
@@ -45,4 +45,3 @@ namespace TwitchLogger
                         ;
                 });
     }
-}

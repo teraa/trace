@@ -2,8 +2,8 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace TwitchLogger.Data
-{
+namespace TwitchLogger.Data;
+
     internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<TwitchLoggerDbContext>
     {
         public TwitchLoggerDbContext CreateDbContext(string[] args)
@@ -14,4 +14,3 @@ namespace TwitchLogger.Data
             return new TwitchLoggerDbContext(optionsBuilder.Options);
         }
     }
-}

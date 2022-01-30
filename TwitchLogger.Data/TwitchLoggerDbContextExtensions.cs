@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using TwitchLogger.Data.Models.Twitch;
 
-namespace TwitchLogger.Data
-{
+namespace TwitchLogger.Data;
+
     public static class TwitchLoggerDbContextExtensions
     {
         public static async Task<User> CreateOrUpdateUserAsync(this TwitchLoggerDbContext ctx, User user)
@@ -21,4 +21,3 @@ namespace TwitchLogger.Data
             return entity;
         }
     }
-}

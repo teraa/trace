@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
-namespace TwitchLogger.Data.Models.Twitch
-{
+namespace TwitchLogger.Data.Models.Twitch;
+
     public class MessageSource
     {
         public MessageSource()
@@ -15,4 +15,3 @@ namespace TwitchLogger.Data.Models.Twitch
 
         public ICollection<Message> Messages { get; set; }
     }
-}

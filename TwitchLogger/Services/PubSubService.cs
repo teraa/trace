@@ -11,8 +11,8 @@ using Twitch.PubSub;
 using TwitchLogger.Data;
 using TwitchLogger.Options;
 
-namespace TwitchLogger.Services
-{
+namespace TwitchLogger.Services;
+
     class PubSubService : IHostedService
     {
         private readonly TwitchPubSubClient _client;
@@ -113,4 +113,3 @@ namespace TwitchLogger.Services
             await ctx.SaveChangesAsync();
         }
     }
-}

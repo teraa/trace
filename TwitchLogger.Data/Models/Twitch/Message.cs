@@ -1,7 +1,7 @@
 using System;
 
-namespace TwitchLogger.Data.Models.Twitch
-{
+namespace TwitchLogger.Data.Models.Twitch;
+
     public class Message
     {
         public long Id { get; set; }
@@ -16,4 +16,3 @@ namespace TwitchLogger.Data.Models.Twitch
         public User Channel { get; set; } = null!;
         public MessageSource Source { get; set; } = null!;
     }
-}

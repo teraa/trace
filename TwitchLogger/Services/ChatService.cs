@@ -12,8 +12,8 @@ using Twitch.Irc;
 using TwitchLogger.Data;
 using TwitchLogger.Options;
 
-namespace TwitchLogger.Services
-{
+namespace TwitchLogger.Services;
+
     class ChatService : IHostedService
     {
         private readonly TwitchIrcClient _client;
@@ -131,4 +131,3 @@ namespace TwitchLogger.Services
             await ctx.SaveChangesAsync();
         }
     }
-}

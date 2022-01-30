@@ -1,7 +1,7 @@
 using TwitchLogger.Data.Models.Twitch;
 
-namespace TwitchLogger.Data.Models
-{
+namespace TwitchLogger.Data.Models;
+
     public class ChatLog
     {
         public int Id { get; set; }
@@ -9,4 +9,3 @@ namespace TwitchLogger.Data.Models
 
         public User Channel { get; set; } = null!;
     }
-}

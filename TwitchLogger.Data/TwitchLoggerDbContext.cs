@@ -3,8 +3,8 @@ using TwitchLogger.Data.Models;
 using Twitch = TwitchLogger.Data.Models.Twitch;
 
 #pragma warning disable CS8618
-namespace TwitchLogger.Data
-{
+namespace TwitchLogger.Data;
+
     public class TwitchLoggerDbContext : DbContext
     {
         public TwitchLoggerDbContext(DbContextOptions<TwitchLoggerDbContext> options)
@@ -34,4 +34,3 @@ namespace TwitchLogger.Data
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TwitchLoggerDbContext).Assembly);
         }
     }
-}

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace TwitchLogger.Data.Models.Twitch
-{
+namespace TwitchLogger.Data.Models.Twitch;
+
     public class ModeratorAction
     {
         public long Id { get; set; }
@@ -20,4 +20,3 @@ namespace TwitchLogger.Data.Models.Twitch
         public User? Moderator { get; set; }
         public User? Target { get; set; }
     }
-}

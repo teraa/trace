@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace TwitchLogger.Data.Models.Twitch
-{
+namespace TwitchLogger.Data.Models.Twitch;
+
     public class User
     {
         public User()
@@ -29,4 +29,3 @@ namespace TwitchLogger.Data.Models.Twitch
         public ICollection<ChatLog> ChatLogs { get; set; }
         public ICollection<PubSubLog> PubSubLogs { get; set; }
     }
-}
