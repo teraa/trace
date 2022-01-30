@@ -9,7 +9,7 @@ namespace TwitchLogger.Data
         public TwitchLoggerDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<TwitchLoggerDbContext>()
-                .UseNpgsql(Environment.GetEnvironmentVariable("DB_STRING"));
+                .UseNpgsql(Environment.GetEnvironmentVariable("DB_STRING")!);
 
             return new TwitchLoggerDbContext(optionsBuilder.Options);
         }
