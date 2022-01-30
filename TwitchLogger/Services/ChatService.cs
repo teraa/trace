@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Twitch.Irc;
 using TwitchLogger.Data;
-using TwitchLogger.Data.Models.Twitch;
 using TwitchLogger.Options;
 
 namespace TwitchLogger.Services
@@ -52,7 +51,7 @@ namespace TwitchLogger.Services
 
                 if (source is null)
                 {
-                    source = new MessageSource { Name = _options.MessageSourceName };
+                    source = new Data.Models.Twitch.MessageSource { Name = _options.MessageSourceName };
                     ctx.MessageSources.Add(source);
                     await ctx.SaveChangesAsync();
                 }
@@ -105,10 +104,20 @@ namespace TwitchLogger.Services
 
             using var ctx = _contextFactory.CreateDbContext();
 
-            await ctx.CreateOrUpdateUserAsync(new User { Id = channelId, Login = channelLogin, FirstSeenAt = timestamp });
-            await ctx.CreateOrUpdateUserAsync(new User { Id = userId, Login = userLogin, FirstSeenAt = timestamp });
+            await ctx.CreateOrUpdateUserAsync(new Data.Models.Twitch.User
+            {
+                Id = channelId,
+                Login = channelLogin,
+                FirstSeenAt = timestamp
+            });
+            await ctx.CreateOrUpdateUserAsync(new Data.Models.Twitch.User
+            {
+                Id = userId,
+                Login = userLogin,
+                FirstSeenAt = timestamp
+            });
 
-            var messageEntity = new Message
+            var messageEntity = new Data.Models.Twitch.Message
             {
                 ReceivedAt = timestamp,
                 SourceId = _messageSourceId,

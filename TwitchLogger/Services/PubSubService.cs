@@ -81,10 +81,20 @@ namespace TwitchLogger.Services
             var now = DateTimeOffset.UtcNow;
 
             if (action.Moderator is not null)
-                await ctx.CreateOrUpdateUserAsync(new Data.Models.Twitch.User { Id = action.Moderator.Id, Login = action.Moderator.Login, FirstSeenAt = now });
+                await ctx.CreateOrUpdateUserAsync(new Data.Models.Twitch.User
+                {
+                    Id = action.Moderator.Id,
+                    Login = action.Moderator.Login,
+                    FirstSeenAt = now
+                });
 
             if (action.Target is not null)
-                await ctx.CreateOrUpdateUserAsync(new Data.Models.Twitch.User { Id = action.Target.Id, Login = action.Target.Login, FirstSeenAt = now });
+                await ctx.CreateOrUpdateUserAsync(new Data.Models.Twitch.User
+                {
+                    Id = action.Target.Id,
+                    Login = action.Target.Login,
+                    FirstSeenAt = now
+                });
 
             var actionEntity = new Data.Models.Twitch.ModeratorAction
             {
