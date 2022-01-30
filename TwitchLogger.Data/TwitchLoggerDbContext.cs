@@ -29,8 +29,6 @@ namespace TwitchLogger.Data
             {
                 entity.ToTable("user", schema: "twitch");
 
-                entity.HasIndex(x => x.Id);
-
                 entity.HasIndex(x => x.Login);
 
                 entity.Property(x => x.Id)
