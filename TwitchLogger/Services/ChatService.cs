@@ -15,7 +15,6 @@ class ChatService : IHostedService
     private readonly ChatOptions _options;
     private short _messageSourceId;
 
-
     public ChatService(
         TwitchIrcClient client,
         ILogger<ChatService> logger,
