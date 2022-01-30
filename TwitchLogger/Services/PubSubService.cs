@@ -52,7 +52,7 @@ namespace TwitchLogger.Services
             using (var ctx = _contextFactory.CreateDbContext())
             {
                 var topicsNames = await ctx.PubSubLogs
-                    .AsQueryable()
+                    .AsNoTracking()
                     .Select(x => x.Topic)
                     .ToArrayAsync();
 

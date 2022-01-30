@@ -21,7 +21,7 @@ namespace TwitchLogger.Services
         private readonly ILogger<ChatService> _logger;
         private readonly IDbContextFactory<TwitchLoggerDbContext> _contextFactory;
         private readonly ChatOptions _options;
-        private MessageSource _source = null!;
+        private short _messageSourceId;
 
 
         public ChatService(
@@ -46,7 +46,10 @@ namespace TwitchLogger.Services
 
             using (var ctx = _contextFactory.CreateDbContext())
             {
-                var source = await ctx.MessageSources.FirstOrDefaultAsync(x => x.Name == _options.MessageSourceName, cancellationToken);
+                var source = await ctx.MessageSources
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Name == _options.MessageSourceName, cancellationToken);
+
                 if (source is null)
                 {
                     source = new MessageSource { Name = _options.MessageSourceName };
@@ -54,10 +57,10 @@ namespace TwitchLogger.Services
                     await ctx.SaveChangesAsync();
                 }
 
-                _source = source;
-            }
+                _messageSourceId = source.Id;
 
-            _logger.LogInformation($"Using message source: {_source.Name} ({_source.Id})");
+                _logger.LogInformation($"Using message source: {source.Name} ({source.Id})");
+            }
 
             await _client.ConnectAsync(cancellationToken);
         }
@@ -76,7 +79,7 @@ namespace TwitchLogger.Services
             using (var ctx = _contextFactory.CreateDbContext())
             {
                 channelLogins = await ctx.ChatLogs
-                    .AsQueryable()
+                    .AsNoTracking()
                     .Select(x => x.Channel.Login)
                     .ToArrayAsync();
             }
@@ -108,7 +111,7 @@ namespace TwitchLogger.Services
             var messageEntity = new Message
             {
                 ReceivedAt = timestamp,
-                SourceId = _source.Id,
+                SourceId = _messageSourceId,
                 ChannelId = channelId,
                 AuthorId = userId,
                 AuthorLogin = userLogin,
