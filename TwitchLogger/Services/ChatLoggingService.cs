@@ -5,51 +5,50 @@ using IrcMessageParser;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Twitch.Irc;
 using TwitchLogger.Data;
 using TwitchLogger.Data.Models.Twitch;
+using TwitchLogger.Options;
 
 namespace TwitchLogger.Services
 {
-    class ChatLoggingConfig
-    {
-        public string SourceName { get; init; } = null!;
-    }
-
     class ChatLoggingService : IHostedService
     {
         private readonly TwitchIrcClient _client;
         private readonly ILogger<ChatLoggingService> _logger;
         private readonly IDbContextFactory<TwitchLoggerDbContext> _contextFactory;
-        private readonly ChatLoggingConfig _config;
+        private readonly ChatOptions _options;
         private MessageSource _source = null!;
 
         public ChatLoggingService(
             TwitchIrcClient client,
             ILogger<ChatLoggingService> logger,
             IDbContextFactory<TwitchLoggerDbContext> contextFactory,
-            ChatLoggingConfig config)
+            IOptions<ChatOptions> options)
         {
             _client = client;
             _logger = logger;
             _contextFactory = contextFactory;
-            _config = config;
+            _options = options.Value;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            if (_config.SourceName is null)
-                throw new ArgumentNullException(nameof(_config.SourceName));
+            if (_options.MessageSourceName is null)
+                throw new ArgumentNullException(nameof(_options.MessageSourceName));
 
             using (var ctx = _contextFactory.CreateDbContext())
             {
-                _source = await ctx.MessageSources.FirstOrDefaultAsync(x => x.Name == _config.SourceName, cancellationToken);
-                if (_source is null)
+                var source = await ctx.MessageSources.FirstOrDefaultAsync(x => x.Name == _options.MessageSourceName, cancellationToken);
+                if (source is null)
                 {
-                    _source = new MessageSource { Name = _config.SourceName };
-                    ctx.MessageSources.Add(_source);
+                    source = new MessageSource { Name = _options.MessageSourceName };
+                    ctx.MessageSources.Add(source);
                     await ctx.SaveChangesAsync();
                 }
+
+                _source = source;
             }
 
             _logger.LogInformation($"Using message source: {_source.Name} ({_source.Id})");

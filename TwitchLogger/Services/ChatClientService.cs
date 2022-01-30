@@ -12,28 +12,20 @@ using TwitchLogger.Data;
 
 namespace TwitchLogger.Services
 {
-    class ChatClientConfig
-    {
-
-    }
-
     class ChatClientService : IHostedService
     {
         private readonly TwitchIrcClient _client;
         private readonly ILogger<ChatClientService> _logger;
-        private readonly ChatClientConfig _config;
         private readonly IDbContextFactory<TwitchLoggerDbContext> _contextFactory;
 
 
         public ChatClientService(
             TwitchIrcClient client,
             ILogger<ChatClientService> logger,
-            ChatClientConfig config,
             IDbContextFactory<TwitchLoggerDbContext> contextFactory)
         {
             _client = client;
             _logger = logger;
-            _config = config;
 
             _client.Connected += ConnectedAsync;
             _contextFactory = contextFactory;

@@ -5,32 +5,29 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Twitch.PubSub;
 using TwitchLogger.Data;
+using TwitchLogger.Options;
 
 namespace TwitchLogger.Services
 {
-    class PubSubClientConfig
-    {
-        public string Token { get; init; } = null!;
-    }
-
     class PubSubClientService : IHostedService
     {
         private readonly TwitchPubSubClient _client;
         private readonly ILogger<PubSubClientService> _logger;
-        private readonly PubSubClientConfig _config;
+        private readonly PubSubOptions _options;
         private readonly IDbContextFactory<TwitchLoggerDbContext> _contextFactory;
 
         public PubSubClientService(
             TwitchPubSubClient client,
             ILogger<PubSubClientService> logger,
-            PubSubClientConfig config,
+            IOptions<PubSubOptions> options,
             IDbContextFactory<TwitchLoggerDbContext> contextFactory)
         {
             _client = client;
             _logger = logger;
-            _config = config;
+            _options = options.Value;
             _contextFactory = contextFactory;
 
             _client.Connected += ConnectedAsync;
@@ -62,7 +59,7 @@ namespace TwitchLogger.Services
 
             var tasks = new List<Task<PubSubMessage>>();
             foreach (var topic in topics)
-                tasks.Add(_client.ListenAsync(topic, _config.Token));
+                tasks.Add(_client.ListenAsync(topic, _options.Token));
 
             var responses = await Task.WhenAll(tasks);
 

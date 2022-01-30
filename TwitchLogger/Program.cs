@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Twitch.Irc;
 using Twitch.PubSub;
 using TwitchLogger.Data;
+using TwitchLogger.Options;
 using TwitchLogger.Services;
 
 namespace TwitchLogger
@@ -21,40 +22,23 @@ namespace TwitchLogger
                 .UseSystemd()
                 .ConfigureServices((hostContext, services) =>
                 {
-                    var chatClientConfig = new ChatClientConfig
-                    {
-
-                    };
-                    var chatLoggingConfig = new ChatLoggingConfig
-                    {
-                        SourceName = Environment.GetEnvironmentVariable("CHAT_MESSAGE_SOURCE")!
-                    };
-                    var pubSubClientConfig = new PubSubClientConfig
-                    {
-                        Token = Environment.GetEnvironmentVariable("PUBSUB_TOKEN")!
-                    };
-                    var pubSubLoggingConfig = new PubSubLoggingConfig
-                    {
-
-                    };
-
                     services
                         .AddDbContextFactory<TwitchLoggerDbContext>(options =>
-                            options.UseNpgsql(Environment.GetEnvironmentVariable("DB_STRING")));
+                            options.UseNpgsql(Environment.GetEnvironmentVariable("DB_STRING")!))
+
+                        .AddOptionsWithSection<PubSubOptions>(hostContext.Configuration)
+                        .AddOptionsWithSection<ChatOptions>(hostContext.Configuration)
+                        ;
 
                     services
                         .AddTwitchIrcClient()
                         .AddHostedService<ChatClientService>()
-                        .AddSingleton(chatClientConfig)
-                        .AddHostedService<ChatLoggingService>()
-                        .AddSingleton(chatLoggingConfig);
+                        .AddHostedService<ChatLoggingService>();
 
                     services
                         .AddTwitchPubSubClient()
                         .AddHostedService<PubSubClientService>()
-                        .AddSingleton(pubSubClientConfig)
-                        .AddHostedService<PubSubLoggingService>()
-                        .AddSingleton(pubSubLoggingConfig);
+                        .AddHostedService<PubSubLoggingService>();
                 });
     }
 }

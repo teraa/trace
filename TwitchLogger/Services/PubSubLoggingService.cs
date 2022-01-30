@@ -10,11 +10,6 @@ using TwitchLogger.Data;
 
 namespace TwitchLogger.Services
 {
-    class PubSubLoggingConfig
-    {
-
-    }
-
     class PubSubLoggingService : IHostedService
     {
         private readonly TwitchPubSubClient _client;
