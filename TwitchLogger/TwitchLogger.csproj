@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-TwitchLogger-5E0409A2-DC45-4DF7-BDBF-49B7DAE349FC</UserSecretsId>
   </PropertyGroup>
 

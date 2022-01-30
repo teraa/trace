@@ -1,5 +1,3 @@
-using System;
-
 #pragma warning disable CS8618
 namespace TwitchLogger.Data.Models.Twitch;
 
