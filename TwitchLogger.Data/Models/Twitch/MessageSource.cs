@@ -11,7 +11,7 @@ namespace TwitchLogger.Data.Models.Twitch
 
         public short Id { get; set; }
         public string Name { get; set; } = null!;
-        public string Description { get; set; } = null!;
+        public string? Description { get; set; } = null!;
 
         public ICollection<Message> Messages { get; set; }
     }

@@ -30,16 +30,13 @@ namespace TwitchLogger.Data
 
                 entity.Property(x => x.Id)
                     .HasColumnName("id")
-                    .IsRequired()
                     .ValueGeneratedNever();
 
                 entity.Property(x => x.Login)
-                    .HasColumnName("login")
-                    .IsRequired();
+                    .HasColumnName("login");
 
                 entity.Property(x => x.FirstSeenAt)
-                    .HasColumnName("first_seen_at")
-                    .IsRequired();
+                    .HasColumnName("first_seen_at");
             });
 
             modelBuilder.Entity<Message>(entity =>
@@ -50,33 +47,26 @@ namespace TwitchLogger.Data
                 entity.HasIndex(x => x.ReceivedAt);
 
                 entity.Property(x => x.Id)
-                    .HasColumnName("id")
-                    .IsRequired()
-                    .ValueGeneratedOnAdd();
+                    .HasColumnName("id");
 
                 entity.Property(x => x.ReceivedAt)
-                    .HasColumnName("received_at")
-                    .IsRequired();
+                    .HasColumnName("received_at");
 
                 entity.Property(x => x.SourceId)
-                    .HasColumnName("source_id")
-                    .IsRequired();
+                    .HasColumnName("source_id");
 
                 entity.Property(x => x.ChannelId)
-                    .HasColumnName("channel_id")
-                    .IsRequired();
+                    .HasColumnName("channel_id");
 
                 entity.Property(x => x.AuthorId)
-                    .HasColumnName("author_id")
-                    .IsRequired(false);
+                    .IsRequired(false)
+                    .HasColumnName("author_id");
 
                 entity.Property(x => x.AuthorLogin)
-                    .HasColumnName("author_login")
-                    .IsRequired();
+                    .HasColumnName("author_login");
 
                 entity.Property(x => x.Content)
-                    .HasColumnName("content")
-                    .IsRequired();
+                    .HasColumnName("content");
 
                 entity.HasOne(x => x.Author)
                     .WithMany(x => x.Messages)
@@ -103,17 +93,13 @@ namespace TwitchLogger.Data
                     .IsUnique();
 
                 entity.Property(x => x.Id)
-                    .HasColumnName("id")
-                    .IsRequired()
-                    .ValueGeneratedOnAdd();
+                    .HasColumnName("id");
 
                 entity.Property(x => x.Name)
-                    .HasColumnName("name")
-                    .IsRequired();
+                    .HasColumnName("name");
 
                 entity.Property(x => x.Description)
-                    .HasColumnName("description")
-                    .IsRequired(false);
+                    .HasColumnName("description");
             });
 
             modelBuilder.Entity<ModeratorAction>(entity =>
@@ -125,44 +111,34 @@ namespace TwitchLogger.Data
 
                 entity.Property(x => x.Id)
                     .HasColumnName("id")
-                    .IsRequired()
                     .ValueGeneratedOnAdd();
 
                 entity.Property(x => x.CreatedAt)
-                    .HasColumnName("created_at")
-                    .IsRequired();
+                    .HasColumnName("created_at");
 
                 entity.Property(x => x.ChannelId)
-                    .HasColumnName("channel_id")
-                    .IsRequired();
+                    .HasColumnName("channel_id");
 
                 entity.Property(x => x.Action)
-                    .HasColumnName("action")
-                    .IsRequired();
+                    .HasColumnName("action");
 
                 entity.Property(x => x.Args)
-                    .HasColumnName("args")
-                    .IsRequired(false);
+                    .HasColumnName("args");
 
                 entity.Property(x => x.MessageId)
-                    .HasColumnName("message_id")
-                    .IsRequired(false);
+                    .HasColumnName("message_id");
 
                 entity.Property(x => x.ModeratorId)
-                    .HasColumnName("moderator_id")
-                    .IsRequired(false);
+                    .HasColumnName("moderator_id");
 
                 entity.Property(x => x.TargetId)
-                    .HasColumnName("target_id")
-                    .IsRequired(false);
+                    .HasColumnName("target_id");
 
                 entity.Property(x => x.TargetLogin)
-                    .HasColumnName("target_login")
-                    .IsRequired(false);
+                    .HasColumnName("target_login");
 
                 entity.Property(x => x.ModeratorMessage)
-                    .HasColumnName("moderator_message")
-                    .IsRequired(false);
+                    .HasColumnName("moderator_message");
 
                 entity.HasOne(x => x.Channel)
                     .WithMany(x => x.ChannelModeratorActions)
@@ -189,13 +165,10 @@ namespace TwitchLogger.Data
                     .IsUnique();
 
                 entity.Property(x => x.Id)
-                    .HasColumnName("id")
-                    .IsRequired()
-                    .ValueGeneratedOnAdd();
+                    .HasColumnName("id");
 
                 entity.Property(x => x.ChannelId)
-                    .HasColumnName("channel_id")
-                    .IsRequired();
+                    .HasColumnName("channel_id");
 
                 entity.HasOne(x => x.Channel)
                     .WithMany(x => x.ChatLogs)
@@ -212,17 +185,13 @@ namespace TwitchLogger.Data
                     .IsUnique();
 
                 entity.Property(x => x.Id)
-                    .HasColumnName("id")
-                    .IsRequired()
-                    .ValueGeneratedOnAdd();
+                    .HasColumnName("id");
 
                 entity.Property(x => x.Topic)
-                    .HasColumnName("topic")
-                    .IsRequired();
+                    .HasColumnName("topic");
 
                 entity.Property(x => x.ChannelId)
-                    .HasColumnName("channel_id")
-                    .IsRequired();
+                    .HasColumnName("channel_id");
 
                 entity.HasOne(x => x.Channel)
                     .WithMany(x => x.PubSubLogs)
