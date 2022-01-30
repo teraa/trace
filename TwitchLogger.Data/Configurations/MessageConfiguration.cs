@@ -10,9 +10,6 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
     {
         builder.HasIndex(x => x.ReceivedAt);
 
-        builder.Property(x => x.AuthorId)
-            .IsRequired(false);
-
         builder.HasOne(x => x.Author)
             .WithMany(x => x.Messages)
             .OnDelete(DeleteBehavior.Restrict);

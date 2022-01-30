@@ -8,7 +8,7 @@ namespace TwitchLogger.Data.Models.Twitch
         public DateTimeOffset ReceivedAt { get; set; }
         public short SourceId { get; set; }
         public string ChannelId { get; set; } = null!;
-        public string? AuthorId { get; set; } = null!;
+        public string AuthorId { get; set; } = null!;
         public string AuthorLogin { get; set; } = null!;
         public string Content { get; set; } = null!;
 
