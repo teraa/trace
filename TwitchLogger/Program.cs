@@ -35,19 +35,14 @@ namespace TwitchLogger
                         .AddDbContextFactory<TwitchLoggerDbContext>(options =>
                             options.UseNpgsql(Environment.GetEnvironmentVariable("DB_STRING")!))
 
-                        .AddOptionsWithSection<PubSubOptions>(hostContext.Configuration)
                         .AddOptionsWithSection<ChatOptions>(hostContext.Configuration)
-                        ;
-
-                    services
                         .AddTwitchIrcClient()
-                        .AddHostedService<ChatClientService>()
-                        .AddHostedService<ChatLoggingService>();
+                        .AddHostedService<ChatService>()
 
-                    services
+                        .AddOptionsWithSection<PubSubOptions>(hostContext.Configuration)
                         .AddTwitchPubSubClient()
-                        .AddHostedService<PubSubClientService>()
-                        .AddHostedService<PubSubLoggingService>();
+                        .AddHostedService<PubSubService>()
+                        ;
                 });
     }
 }

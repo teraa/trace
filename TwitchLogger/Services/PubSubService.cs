@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -12,16 +13,16 @@ using TwitchLogger.Options;
 
 namespace TwitchLogger.Services
 {
-    class PubSubClientService : IHostedService
+    class PubSubService : IHostedService
     {
         private readonly TwitchPubSubClient _client;
-        private readonly ILogger<PubSubClientService> _logger;
+        private readonly ILogger<PubSubService> _logger;
         private readonly PubSubOptions _options;
         private readonly IDbContextFactory<TwitchLoggerDbContext> _contextFactory;
 
-        public PubSubClientService(
+        public PubSubService(
             TwitchPubSubClient client,
-            ILogger<PubSubClientService> logger,
+            ILogger<PubSubService> logger,
             IOptions<PubSubOptions> options,
             IDbContextFactory<TwitchLoggerDbContext> contextFactory)
         {
@@ -31,6 +32,7 @@ namespace TwitchLogger.Services
             _contextFactory = contextFactory;
 
             _client.Connected += ConnectedAsync;
+            _client.ModeratorActionReceived += ModeratorActionReceivedAsync;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -70,6 +72,35 @@ namespace TwitchLogger.Services
                 else
                     _logger.LogInformation($"Successfully listened {topic}.");
             }
+        }
+
+        private async ValueTask ModeratorActionReceivedAsync(Topic topic, ModeratorAction action)
+        {
+            using var ctx = _contextFactory.CreateDbContext();
+
+            var now = DateTimeOffset.UtcNow;
+
+            if (action.Moderator is not null)
+                await ctx.CreateOrUpdateUserAsync(new Data.Models.Twitch.User { Id = action.Moderator.Id, Login = action.Moderator.Login, FirstSeenAt = now });
+
+            if (action.Target is not null)
+                await ctx.CreateOrUpdateUserAsync(new Data.Models.Twitch.User { Id = action.Target.Id, Login = action.Target.Login, FirstSeenAt = now });
+
+            var actionEntity = new Data.Models.Twitch.ModeratorAction
+            {
+                CreatedAt = now,
+                ChannelId = action.ChannelId,
+                Action = action.Action,
+                Args = action.Args?.ToList(),
+                MessageId = action.MessageId,
+                ModeratorId = action.Moderator?.Id,
+                TargetId = action.Target?.Id,
+                TargetLogin = action.Target?.Login,
+                ModeratorMessage = action.ModeratorMessage,
+            };
+
+            ctx.ModeratorActions.Add(actionEntity);
+            await ctx.SaveChangesAsync();
         }
     }
 }

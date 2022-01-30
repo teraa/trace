@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using IrcMessageParser;
@@ -13,17 +15,18 @@ using TwitchLogger.Options;
 
 namespace TwitchLogger.Services
 {
-    class ChatLoggingService : IHostedService
+    class ChatService : IHostedService
     {
         private readonly TwitchIrcClient _client;
-        private readonly ILogger<ChatLoggingService> _logger;
+        private readonly ILogger<ChatService> _logger;
         private readonly IDbContextFactory<TwitchLoggerDbContext> _contextFactory;
         private readonly ChatOptions _options;
         private MessageSource _source = null!;
 
-        public ChatLoggingService(
+
+        public ChatService(
             TwitchIrcClient client,
-            ILogger<ChatLoggingService> logger,
+            ILogger<ChatService> logger,
             IDbContextFactory<TwitchLoggerDbContext> contextFactory,
             IOptions<ChatOptions> options)
         {
@@ -31,6 +34,9 @@ namespace TwitchLogger.Services
             _logger = logger;
             _contextFactory = contextFactory;
             _options = options.Value;
+
+            _client.Connected += ConnectedAsync;
+            _client.IrcMessageReceived += IrcMessageReceivedAsync;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -53,14 +59,35 @@ namespace TwitchLogger.Services
 
             _logger.LogInformation($"Using message source: {_source.Name} ({_source.Id})");
 
-            _client.IrcMessageReceived += IrcMessageReceivedAsync;
+            await _client.ConnectAsync(cancellationToken);
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
-            _client.IrcMessageReceived -= IrcMessageReceivedAsync;
+            await _client.DisconnectAsync();
+        }
 
-            return Task.CompletedTask;
+        private async ValueTask ConnectedAsync()
+        {
+            await _client.LoginAnonAsync();
+
+            string[] channelLogins;
+
+            using (var ctx = _contextFactory.CreateDbContext())
+            {
+                channelLogins = await ctx.ChatLogs
+                    .AsQueryable()
+                    .Select(x => x.Channel.Login)
+                    .ToArrayAsync();
+            }
+
+            var tasks = new List<Task>();
+            foreach (var channelLogin in channelLogins)
+                tasks.Add(_client.SendAsync(new IrcMessage { Command = IrcCommand.JOIN, Content = new($"#{channelLogin}") }).AsTask());
+
+            await Task.WhenAll(tasks);
+
+            _logger.LogInformation($"Joined {channelLogins.Length} channels: {string.Join(", ", channelLogins)}");
         }
 
         private async ValueTask IrcMessageReceivedAsync(IrcMessage message)
