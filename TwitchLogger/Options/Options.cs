@@ -3,7 +3,7 @@ namespace TwitchLogger.Options;
 
 public class PubSubOptions
 {
-    public string Token { get; set; }
+    public string Token { get; init; }
 }
 
 public class ChatOptions
