@@ -1,5 +1,6 @@
 using IrcMessageParser;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Twitch.Irc;
 using TwitchLogger.Data;
@@ -13,18 +14,24 @@ class ChatService : IHostedService
     private readonly ILogger<ChatService> _logger;
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ChatOptions _options;
+    private readonly IMemoryCache _cache;
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions;
     private short _messageSourceId;
 
     public ChatService(
         TwitchIrcClient client,
         ILogger<ChatService> logger,
         IServiceScopeFactory scopeFactory,
-        IOptions<ChatOptions> options)
+        IOptions<ChatOptions> options,
+        IMemoryCache cache,
+        MemoryCacheEntryOptions cacheEntryOptions)
     {
         _client = client;
         _logger = logger;
         _scopeFactory = scopeFactory;
         _options = options.Value;
+        _cache = cache;
+        _cacheEntryOptions = cacheEntryOptions;
 
         _client.Connected += ConnectedAsync;
         _client.IrcMessageReceived += IrcMessageReceivedAsync;
@@ -101,18 +108,8 @@ class ChatService : IHostedService
         using var scope = _scopeFactory.CreateScope();
         var ctx = scope.Get<TwitchLoggerDbContext>();
 
-        await ctx.CreateOrUpdateUserAsync(new Data.Models.Twitch.User
-        {
-            Id = channelId,
-            Login = channelLogin,
-            FirstSeenAt = timestamp
-        });
-        await ctx.CreateOrUpdateUserAsync(new Data.Models.Twitch.User
-        {
-            Id = userId,
-            Login = userLogin,
-            FirstSeenAt = timestamp
-        });
+        await ctx.TryUpdateUserAsync(channelId, channelLogin, timestamp, _cache, _cacheEntryOptions);
+        await ctx.TryUpdateUserAsync(userId, userLogin, timestamp, _cache, _cacheEntryOptions);
 
         var messageEntity = new Data.Models.Twitch.Message
         {

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Twitch.Irc;
 using Twitch.PubSub;
 using TwitchLogger;
@@ -30,7 +31,22 @@ IHost host = Host.CreateDefaultBuilder(args)
             .AddOptionsWithSection<PubSubOptions>(hostContext.Configuration)
             .AddTwitchPubSubClient()
             .AddHostedService<PubSubService>()
-            ;
+
+            .AddMemoryCache()
+            .AddSingleton<MemoryCacheEntryOptions>(services =>
+            {
+                var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+                var logger = loggerFactory.CreateLogger("CachePostEvictionCallback");
+
+                var options = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(10))
+                    .RegisterPostEvictionCallback((key, value, reason, state) =>
+                    {
+                        logger.LogDebug("Evicted ({key}, {value}): {reason}", key, value, reason);
+                    });
+
+                return options;
+            });
     })
     .Build();
 

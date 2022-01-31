@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using TwitchLogger.Data;
+
 namespace TwitchLogger;
 
 public static class Extensions
@@ -27,5 +31,35 @@ public static class Extensions
         where TOptions : class
     {
         return services.Configure<TOptions>(configuration.GetOptionsSection<TOptions>());
+    }
+
+    public static async Task<bool> TryUpdateUserAsync(this TwitchLoggerDbContext ctx, string id, string login, DateTimeOffset timestamp, IMemoryCache cache, MemoryCacheEntryOptions? options = null)
+    {
+        if (!cache.TryGetValue(id, out string cachedLogin) || cachedLogin != login)
+        {
+            var user = await ctx.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (user is null)
+            {
+                user = new Data.Models.Twitch.User
+                {
+                    Id = id,
+                    Login = login,
+                    FirstSeenAt = timestamp,
+                };
+
+                ctx.Users.Add(user);
+            }
+            else if (user.Login != login)
+            {
+                user.Login = login;
+            }
+
+            cache.Set(id, login, options);
+
+            return true;
+        }
+
+        return false;
     }
 }

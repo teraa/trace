@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Twitch.PubSub;
 using TwitchLogger.Data;
@@ -12,17 +13,23 @@ class PubSubService : IHostedService
     private readonly ILogger<PubSubService> _logger;
     private readonly PubSubOptions _options;
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly IMemoryCache _cache;
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions;
 
     public PubSubService(
         TwitchPubSubClient client,
         ILogger<PubSubService> logger,
         IOptions<PubSubOptions> options,
-        IServiceScopeFactory scopeFactory)
+        IServiceScopeFactory scopeFactory,
+        IMemoryCache cache,
+        MemoryCacheEntryOptions cacheEntryOptions)
     {
         _client = client;
         _logger = logger;
         _options = options.Value;
         _scopeFactory = scopeFactory;
+        _cache = cache;
+        _cacheEntryOptions = cacheEntryOptions;
 
         _client.Connected += ConnectedAsync;
         _client.ModeratorActionReceived += ModeratorActionReceivedAsync;
@@ -77,20 +84,10 @@ class PubSubService : IHostedService
         var now = DateTimeOffset.UtcNow;
 
         if (action.Moderator is not null)
-            await ctx.CreateOrUpdateUserAsync(new Data.Models.Twitch.User
-            {
-                Id = action.Moderator.Id,
-                Login = action.Moderator.Login,
-                FirstSeenAt = now
-            });
+            await ctx.TryUpdateUserAsync(action.Moderator.Id, action.Moderator.Login, now, _cache, _cacheEntryOptions);
 
         if (action.Target is not null)
-            await ctx.CreateOrUpdateUserAsync(new Data.Models.Twitch.User
-            {
-                Id = action.Target.Id,
-                Login = action.Target.Login,
-                FirstSeenAt = now
-            });
+            await ctx.TryUpdateUserAsync(action.Target.Id, action.Target.Login, now, _cache, _cacheEntryOptions);
 
         var actionEntity = new Data.Models.Twitch.ModeratorAction
         {
