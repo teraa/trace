@@ -14,6 +14,10 @@ IHost host = Host.CreateDefaultBuilder(args)
         options.ValidateOnBuild = true;
         options.ValidateScopes = true;
     })
+    .ConfigureLogging((hostContext, builder) =>
+    {
+        builder.AddSeq(hostContext.Configuration.GetSection("Seq"));
+    })
     .ConfigureServices((hostContext, services) =>
     {
         services
