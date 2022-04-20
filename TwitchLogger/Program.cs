@@ -4,6 +4,7 @@ using Twitch.Irc;
 using Twitch.PubSub;
 using TwitchLogger;
 using TwitchLogger.Data;
+using TwitchLogger.Initializers;
 using TwitchLogger.Options;
 using TwitchLogger.Services;
 
@@ -21,6 +22,7 @@ IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostContext, services) =>
     {
         services
+            .AddAsyncInitializer<MigrationInitializer>()
             .AddDbContext<TwitchLoggerDbContext>(contextOptions =>
             {
                 contextOptions.UseNpgsql(
@@ -54,10 +56,5 @@ IHost host = Host.CreateDefaultBuilder(args)
     })
     .Build();
 
-using (var scope = host.Services.CreateScope())
-{
-    var ctx = scope.Get<TwitchLoggerDbContext>();
-    await ctx.Database.MigrateAsync();
-}
-
+await host.InitAsync();
 await host.RunAsync();
