@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using JetBrains.Annotations;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
@@ -14,28 +13,35 @@ public class MessageHandler : INotificationHandler<MessageReceived>
     private readonly TwitchLoggerDbContext _ctx;
     private readonly MemoryCacheEntryOptions _cacheEntryOptions;
     private readonly IMemoryCache _cache;
+    private readonly ILogger<MessageHandler> _logger;
 
     public MessageHandler(
         TwitchLoggerDbContext ctx,
         MemoryCacheEntryOptions cacheEntryOptions,
-        IMemoryCache cache)
+        IMemoryCache cache,
+        ILogger<MessageHandler> logger)
     {
         _ctx = ctx;
         _cacheEntryOptions = cacheEntryOptions;
         _cache = cache;
+        _logger = logger;
     }
 
     public async Task Handle(MessageReceived notification, CancellationToken cancellationToken)
     {
         if (notification.Message.Command != Command.PRIVMSG) return;
 
-        Debug.Assert(notification.Message is
+        if (notification.Message is not
+            {
+                Arg: not null,
+                Tags: not null,
+                Prefix: not null,
+                Content: not null
+            })
         {
-            Arg: not null,
-            Tags: not null,
-            Prefix: not null,
-            Content: not null
-        });
+            _logger.LogWarning("Invalid message received: {Message}", notification.Message);
+            return;
+        }
 
         string channelLogin = notification.Message.Arg[1..];
         string channelId = notification.Message.Tags["room-id"];
