@@ -35,31 +35,29 @@ public static class Extensions
 
     public static async Task<bool> TryUpdateUserAsync(this TwitchLoggerDbContext ctx, string id, string login, DateTimeOffset timestamp, IMemoryCache cache, MemoryCacheEntryOptions? options = null)
     {
-        if (!cache.TryGetValue(id, out string cachedLogin) || cachedLogin != login)
+        if (cache.TryGetValue(id, out string cachedLogin) && cachedLogin == login)
+            return false;
+        
+        var user = await ctx.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (user is null)
         {
-            var user = await ctx.Users.FirstOrDefaultAsync(x => x.Id == id);
-
-            if (user is null)
+            user = new Data.Models.Twitch.User
             {
-                user = new Data.Models.Twitch.User
-                {
-                    Id = id,
-                    Login = login,
-                    FirstSeenAt = timestamp,
-                };
+                Id = id,
+                Login = login,
+                FirstSeenAt = timestamp,
+            };
 
-                ctx.Users.Add(user);
-            }
-            else if (user.Login != login)
-            {
-                user.Login = login;
-            }
-
-            cache.Set(id, login, options);
-
-            return true;
+            ctx.Users.Add(user);
+        }
+        else if (user.Login != login)
+        {
+            user.Login = login;
         }
 
-        return false;
+        cache.Set(id, login, options);
+
+        return true;
     }
 }
