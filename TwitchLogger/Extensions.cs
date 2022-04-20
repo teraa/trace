@@ -33,12 +33,19 @@ public static class Extensions
         return services.Configure<TOptions>(configuration.GetOptionsSection<TOptions>());
     }
 
-    public static async Task<bool> TryUpdateUserAsync(this TwitchLoggerDbContext ctx, string id, string login, DateTimeOffset timestamp, IMemoryCache cache, MemoryCacheEntryOptions? options = null)
+    public static async Task<bool> TryUpdateUserAsync(
+        this TwitchLoggerDbContext ctx,
+        string id,
+        string login,
+        DateTimeOffset timestamp,
+        IMemoryCache cache,
+        MemoryCacheEntryOptions? options = null,
+        CancellationToken cancellationToken = default)
     {
         if (cache.TryGetValue(id, out string cachedLogin) && cachedLogin == login)
             return false;
-        
-        var user = await ctx.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+        var user = await ctx.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
         if (user is null)
         {
