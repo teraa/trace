@@ -11,7 +11,7 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="6.0.0" />
     <PackageReference Include="Seq.Extensions.Logging" Version="6.0.0" />
-    <PackageReference Include="Teraa.Tw.Net" Version="0.3.0-alpha.75" />
+    <PackageReference Include="Teraa.Tw.Net" Version="0.4.0-alpha.2" />
   </ItemGroup>
 
   <ItemGroup>

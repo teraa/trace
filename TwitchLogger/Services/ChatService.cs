@@ -1,7 +1,7 @@
-using IrcMessageParser;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using Teraa.Irc;
 using Twitch.Irc;
 using TwitchLogger.Data;
 using TwitchLogger.Options;
@@ -88,16 +88,16 @@ class ChatService : IHostedService
 
         var tasks = new List<Task>();
         foreach (var channelLogin in channelLogins)
-            tasks.Add(_client.SendAsync(new IrcMessage { Command = IrcCommand.JOIN, Content = new($"#{channelLogin}") }).AsTask());
+            tasks.Add(_client.SendAsync(new Message { Command = Command.JOIN, Content = new($"#{channelLogin}") }).AsTask());
 
         await Task.WhenAll(tasks);
 
         _logger.LogInformation($"Joined {channelLogins.Length} channels: {string.Join(", ", channelLogins)}");
     }
 
-    private async ValueTask IrcMessageReceivedAsync(IrcMessage message)
+    private async ValueTask IrcMessageReceivedAsync(Message message)
     {
-        if (message.Command != IrcCommand.PRIVMSG) return;
+        if (message.Command != Command.PRIVMSG) return;
 
         var channelLogin = message.Arg![1..];
         var channelId = message.Tags!["room-id"];
