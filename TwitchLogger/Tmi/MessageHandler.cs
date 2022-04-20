@@ -34,10 +34,10 @@ public class MessageHandler : INotificationHandler<MessageReceived>
         Debug.Assert(notification.Message.Prefix is not null);
         Debug.Assert(notification.Message.Content is not null);
 
-        var channelLogin = notification.Message.Arg[1..];
-        var channelId = notification.Message.Tags["room-id"];
-        var userLogin = notification.Message.Prefix.Name;
-        var userId = notification.Message.Tags["user-id"];
+        string channelLogin = notification.Message.Arg[1..];
+        string channelId = notification.Message.Tags["room-id"];
+        string userLogin = notification.Message.Prefix.Name;
+        string userId = notification.Message.Tags["user-id"];
         var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(
             long.Parse(notification.Message.Tags["tmi-sent-ts"]));
 

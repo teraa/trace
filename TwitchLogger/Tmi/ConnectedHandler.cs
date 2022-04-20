@@ -28,14 +28,14 @@ public class ConnectedHandler : INotificationHandler<Connected>
         _tmi.EnqueueMessage(new Message
         {
             Command = Command.NICK,
-            Content = new("justinfan1"),
+            Content = new Content("justinfan1"),
         });
 
         _tmi.EnqueueMessage(new Message
         {
             Command = Command.CAP,
             Arg = "REQ",
-            Content = new("twitch.tv/tags twitch.tv/commands")
+            Content = new Content("twitch.tv/tags twitch.tv/commands")
         });
 
         var channels = await _ctx.ChatLogs
@@ -48,7 +48,7 @@ public class ConnectedHandler : INotificationHandler<Connected>
             _tmi.EnqueueMessage(new Message
             {
                 Command = Command.JOIN,
-                Content = new($"#{channel}"),
+                Content = new Content($"#{channel}"),
             });
     }
 }

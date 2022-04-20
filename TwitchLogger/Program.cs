@@ -9,9 +9,9 @@ using TwitchLogger.Initializers;
 using TwitchLogger.Options;
 using TwitchLogger.Services;
 
-IHost host = Host.CreateDefaultBuilder(args)
+var host = Host.CreateDefaultBuilder(args)
     .UseSystemd()
-    .UseDefaultServiceProvider((hostContext, options) =>
+    .UseDefaultServiceProvider(options =>
     {
         options.ValidateOnBuild = true;
         options.ValidateScopes = true;
@@ -41,16 +41,16 @@ IHost host = Host.CreateDefaultBuilder(args)
             .AddHostedService<PubSubService>()
 
             .AddMemoryCache()
-            .AddSingleton<MemoryCacheEntryOptions>(services =>
+            .AddSingleton<MemoryCacheEntryOptions>(serviceProvider =>
             {
-                var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+                var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
                 var logger = loggerFactory.CreateLogger("CachePostEvictionCallback");
 
                 var options = new MemoryCacheEntryOptions()
                     .SetSlidingExpiration(TimeSpan.FromMinutes(10))
-                    .RegisterPostEvictionCallback((key, value, reason, state) =>
+                    .RegisterPostEvictionCallback((key, value, reason, _) =>
                     {
-                        logger.LogDebug("Evicted ({key}, {value}): {reason}", key, value, reason);
+                        logger.LogDebug("Evicted: {Key}, {Value}, {Reason}", key, value, reason);
                     });
 
                 return options;

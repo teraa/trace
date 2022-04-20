@@ -42,7 +42,7 @@ class PubSubService : IHostedService
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
-        await _client.DisconnectAsync();
+        await _client.DisconnectAsync(cancellationToken);
     }
 
     private async ValueTask ConnectedAsync()
@@ -70,9 +70,9 @@ class PubSubService : IHostedService
         foreach ((Topic topic, PubSubMessage response) in topics.Zip(responses))
         {
             if (response.Error is { Length: > 0 })
-                _logger.LogError($"Error listening {topic}: {response.Error}.");
+                _logger.LogError("Error listening {Topic}: {Error}", topic, response.Error);
             else
-                _logger.LogInformation($"Successfully listened {topic}.");
+                _logger.LogInformation("Successfully listened {Topic}", topic);
         }
     }
 

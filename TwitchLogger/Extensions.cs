@@ -10,7 +10,7 @@ public static class Extensions
         where TService : notnull
         => scope.ServiceProvider.GetRequiredService<TService>();
 
-    public static IConfigurationSection GetOptionsSection<TOptions>(this IConfiguration configuration)
+    private static IConfigurationSection GetOptionsSection<TOptions>(this IConfiguration configuration)
     {
         const string suffix = "Options";
 
@@ -42,7 +42,7 @@ public static class Extensions
         MemoryCacheEntryOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        string key = $"user.{id}";
+        var key = $"user.{id}";
 
         if (cache.TryGetValue(key, out string cachedLogin) && cachedLogin == login)
             return false;
