@@ -42,7 +42,9 @@ public static class Extensions
         MemoryCacheEntryOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        if (cache.TryGetValue(id, out string cachedLogin) && cachedLogin == login)
+        string key = $"user.{id}";
+
+        if (cache.TryGetValue(key, out string cachedLogin) && cachedLogin == login)
             return false;
 
         var user = await ctx.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
@@ -63,7 +65,7 @@ public static class Extensions
             user.Login = login;
         }
 
-        cache.Set(id, login, options);
+        cache.Set(key, login, options);
 
         return true;
     }

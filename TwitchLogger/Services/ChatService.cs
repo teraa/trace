@@ -1,127 +1,108 @@
+using System.Diagnostics;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
 using Teraa.Irc;
-using Twitch.Irc;
+using Teraa.Twitch.Tmi;
+using Teraa.Twitch.Tmi.Notifications;
 using TwitchLogger.Data;
-using TwitchLogger.Options;
 
 namespace TwitchLogger.Services;
 
-class ChatService : IHostedService
+public class ConnectedHandler : INotificationHandler<Connected>
 {
-    private readonly TwitchIrcClient _client;
-    private readonly ILogger<ChatService> _logger;
-    private readonly IServiceScopeFactory _scopeFactory;
-    private readonly ChatOptions _options;
-    private readonly IMemoryCache _cache;
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions;
-    private short _messageSourceId;
+    private readonly TmiService _tmi;
+    private readonly TwitchLoggerDbContext _ctx;
+    private readonly ILogger<ConnectedHandler> _logger;
 
-    public ChatService(
-        TwitchIrcClient client,
-        ILogger<ChatService> logger,
-        IServiceScopeFactory scopeFactory,
-        IOptions<ChatOptions> options,
-        IMemoryCache cache,
-        MemoryCacheEntryOptions cacheEntryOptions)
+    public ConnectedHandler(
+        TmiService tmi,
+        TwitchLoggerDbContext ctx,
+        ILogger<ConnectedHandler> logger)
     {
-        _client = client;
+        _tmi = tmi;
+        _ctx = ctx;
         _logger = logger;
-        _scopeFactory = scopeFactory;
-        _options = options.Value;
-        _cache = cache;
-        _cacheEntryOptions = cacheEntryOptions;
-
-        _client.Connected += ConnectedAsync;
-        _client.IrcMessageReceived += IrcMessageReceivedAsync;
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
+    public async Task Handle(Connected notification, CancellationToken cancellationToken)
     {
-        if (_options.MessageSourceName is null)
-            throw new ArgumentNullException(nameof(_options.MessageSourceName));
-
-        using (var scope = _scopeFactory.CreateScope())
+        _tmi.EnqueueMessage(new Message
         {
-            var ctx = scope.Get<TwitchLoggerDbContext>();
+            Command = Command.NICK,
+            Content = new("justinfan1"),
+        });
 
-            var source = await ctx.MessageSources
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Name == _options.MessageSourceName, cancellationToken);
+        _tmi.EnqueueMessage(new Message
+        {
+            Command = Command.CAP,
+            Arg = "REQ",
+            Content = new("twitch.tv/tags twitch.tv/commands")
+        });
 
-            if (source is null)
+        var channels = await _ctx.ChatLogs
+            .Select(x => x.Channel.Login)
+            .ToListAsync(cancellationToken);
+
+        _logger.LogInformation("Joining: {Channels}", channels);
+
+        foreach (string channel in channels)
+            _tmi.EnqueueMessage(new Message
             {
-                source = new Data.Models.Twitch.MessageSource { Name = _options.MessageSourceName };
-                ctx.MessageSources.Add(source);
-                await ctx.SaveChangesAsync();
-            }
+                Command = Command.JOIN,
+                Content = new($"#{channel}"),
+            });
+    }
+}
 
-            _messageSourceId = source.Id;
+public class MessageHandler : INotificationHandler<MessageReceived>
+{
+    private readonly TwitchLoggerDbContext _ctx;
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions;
+    private readonly IMemoryCache _cache;
 
-            _logger.LogInformation($"Using message source: {source.Name} ({source.Id})");
-        }
-
-        await _client.ConnectAsync(cancellationToken);
+    public MessageHandler(
+        TwitchLoggerDbContext ctx,
+        MemoryCacheEntryOptions cacheEntryOptions,
+        IMemoryCache cache)
+    {
+        _ctx = ctx;
+        _cacheEntryOptions = cacheEntryOptions;
+        _cache = cache;
     }
 
-    public async Task StopAsync(CancellationToken cancellationToken)
+    public async Task Handle(MessageReceived notification, CancellationToken cancellationToken)
     {
-        await _client.DisconnectAsync();
-    }
+        if (notification.Message.Command != Command.PRIVMSG) return;
 
-    private async ValueTask ConnectedAsync()
-    {
-        await _client.LoginAnonAsync();
+        // Debug.Assert(notification.Message is {Arg: not null, Tags: not null, Prefix: not null, Content: not null});
 
-        string[] channelLogins;
+        Debug.Assert(notification.Message.Arg is not null);
+        Debug.Assert(notification.Message.Tags is not null);
+        Debug.Assert(notification.Message.Prefix is not null);
+        Debug.Assert(notification.Message.Content is not null);
 
-        using (var scope = _scopeFactory.CreateScope())
-        {
-            var ctx = scope.Get<TwitchLoggerDbContext>();
+        var channelLogin = notification.Message.Arg[1..];
+        var channelId = notification.Message.Tags["room-id"];
+        var userLogin = notification.Message.Prefix.Name;
+        var userId = notification.Message.Tags["user-id"];
+        var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(
+            long.Parse(notification.Message.Tags["tmi-sent-ts"]));
 
-            channelLogins = await ctx.ChatLogs
-                .AsNoTracking()
-                .Select(x => x.Channel.Login)
-                .ToArrayAsync();
-        }
-
-        var tasks = new List<Task>();
-        foreach (var channelLogin in channelLogins)
-            tasks.Add(_client.SendAsync(new Message { Command = Command.JOIN, Content = new($"#{channelLogin}") }).AsTask());
-
-        await Task.WhenAll(tasks);
-
-        _logger.LogInformation($"Joined {channelLogins.Length} channels: {string.Join(", ", channelLogins)}");
-    }
-
-    private async ValueTask IrcMessageReceivedAsync(Message message)
-    {
-        if (message.Command != Command.PRIVMSG) return;
-
-        var channelLogin = message.Arg![1..];
-        var channelId = message.Tags!["room-id"];
-        var userLogin = message.Prefix!.Name;
-        var userId = message.Tags!["user-id"];
-        var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(message.Tags["tmi-sent-ts"]));
-
-        using var scope = _scopeFactory.CreateScope();
-        var ctx = scope.Get<TwitchLoggerDbContext>();
-
-        await ctx.TryUpdateUserAsync(channelId, channelLogin, timestamp, _cache, _cacheEntryOptions);
-        await ctx.TryUpdateUserAsync(userId, userLogin, timestamp, _cache, _cacheEntryOptions);
+        await _ctx.TryUpdateUserAsync(channelId, channelLogin, timestamp, _cache, _cacheEntryOptions, cancellationToken);
+        await _ctx.TryUpdateUserAsync(userId, userLogin, timestamp, _cache, _cacheEntryOptions, cancellationToken);
 
         var messageEntity = new Data.Models.Twitch.Message
         {
             ReceivedAt = timestamp,
-            SourceId = _messageSourceId,
+            SourceId = _cache.Get<short>("source_id"),
             ChannelId = channelId,
             AuthorId = userId,
             AuthorLogin = userLogin,
-            Content = message.Content!.Text
+            Content = notification.Message.Content.Text
         };
 
-        ctx.Messages.Add(messageEntity);
-        await ctx.SaveChangesAsync();
+        _ctx.Messages.Add(messageEntity);
+        await _ctx.SaveChangesAsync(cancellationToken);
     }
 }

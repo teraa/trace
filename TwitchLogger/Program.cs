@@ -1,6 +1,7 @@
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Twitch.Irc;
+using Teraa.Twitch.Tmi;
 using Twitch.PubSub;
 using TwitchLogger;
 using TwitchLogger.Data;
@@ -23,6 +24,7 @@ IHost host = Host.CreateDefaultBuilder(args)
     {
         services
             .AddAsyncInitializer<MigrationInitializer>()
+            .AddAsyncInitializer<MessageSourceInitializer>()
             .AddDbContext<TwitchLoggerDbContext>(contextOptions =>
             {
                 contextOptions.UseNpgsql(
@@ -31,8 +33,8 @@ IHost host = Host.CreateDefaultBuilder(args)
             })
 
             .AddOptionsWithSection<ChatOptions>(hostContext.Configuration)
-            .AddTwitchIrcClient()
-            .AddHostedService<ChatService>()
+            .AddMediatR(typeof(Program))
+            .AddTmiService()
 
             .AddOptionsWithSection<PubSubOptions>(hostContext.Configuration)
             .AddTwitchPubSubClient()

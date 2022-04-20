@@ -9,10 +9,12 @@
 
   <ItemGroup>
     <PackageReference Include="Extensions.Hosting.AsyncInitialization" Version="1.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="6.0.0" />
     <PackageReference Include="Seq.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="Teraa.Tw.Net" Version="0.4.0-alpha.2" />
+    <PackageReference Include="Teraa.Twitch.Tmi" Version="1.0.0-alpha.6" />
   </ItemGroup>
 
   <ItemGroup>
