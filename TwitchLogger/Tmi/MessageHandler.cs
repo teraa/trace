@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using JetBrains.Annotations;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Teraa.Irc;
@@ -7,6 +8,7 @@ using TwitchLogger.Data;
 
 namespace TwitchLogger.Tmi;
 
+[UsedImplicitly]
 public class MessageHandler : INotificationHandler<MessageReceived>
 {
     private readonly TwitchLoggerDbContext _ctx;

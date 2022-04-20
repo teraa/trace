@@ -1,10 +1,11 @@
 ﻿using Extensions.Hosting.AsyncInitialization;
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using TwitchLogger.Data;
 
 namespace TwitchLogger.Initializers;
 
-// ReSharper disable once UnusedType.Global
+[UsedImplicitly]
 public class MigrationInitializer : IAsyncInitializer
 {
     private readonly TwitchLoggerDbContext _ctx;

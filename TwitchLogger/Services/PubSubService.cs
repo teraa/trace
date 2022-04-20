@@ -7,7 +7,7 @@ using TwitchLogger.Options;
 
 namespace TwitchLogger.Services;
 
-class PubSubService : IHostedService
+internal class PubSubService : IHostedService
 {
     private readonly TwitchPubSubClient _client;
     private readonly ILogger<PubSubService> _logger;

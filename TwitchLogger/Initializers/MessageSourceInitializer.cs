@@ -1,4 +1,5 @@
 ﻿using Extensions.Hosting.AsyncInitialization;
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
@@ -8,6 +9,7 @@ using TwitchLogger.Options;
 
 namespace TwitchLogger.Initializers;
 
+[UsedImplicitly]
 public class MessageSourceInitializer : IAsyncInitializer
 {
     private readonly IMemoryCache _cache;

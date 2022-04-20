@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using JetBrains.Annotations;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Teraa.Irc;
 using Teraa.Twitch.Tmi;
@@ -7,6 +8,7 @@ using TwitchLogger.Data;
 
 namespace TwitchLogger.Tmi;
 
+[UsedImplicitly]
 public class ConnectedHandler : INotificationHandler<Connected>
 {
     private readonly TmiService _tmi;
