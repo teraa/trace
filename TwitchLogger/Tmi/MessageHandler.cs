@@ -29,12 +29,13 @@ public class MessageHandler : INotificationHandler<MessageReceived>
     {
         if (notification.Message.Command != Command.PRIVMSG) return;
 
-        // Debug.Assert(notification.Message is {Arg: not null, Tags: not null, Prefix: not null, Content: not null});
-
-        Debug.Assert(notification.Message.Arg is not null);
-        Debug.Assert(notification.Message.Tags is not null);
-        Debug.Assert(notification.Message.Prefix is not null);
-        Debug.Assert(notification.Message.Content is not null);
+        Debug.Assert(notification.Message is
+        {
+            Arg: not null,
+            Tags: not null,
+            Prefix: not null,
+            Content: not null
+        });
 
         string channelLogin = notification.Message.Arg[1..];
         string channelId = notification.Message.Tags["room-id"];
