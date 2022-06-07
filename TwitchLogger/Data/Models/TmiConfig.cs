@@ -8,20 +8,19 @@ using TwitchLogger.Data.Models.Twitch;
 namespace TwitchLogger.Data.Models
 {
     [PublicAPI]
-    public class PubSubLog
+    public class TmiConfig
     {
         public int Id { get; set; }
-        public string Topic { get; set; }
         public string ChannelId { get; set; }
 
         public User Channel { get; set; }
     }
 
-    public class PubSubLogConfiguration : IEntityTypeConfiguration<PubSubLog>
+    public class TmiConfigConfiguration : IEntityTypeConfiguration<TmiConfig>
     {
-        public void Configure(EntityTypeBuilder<PubSubLog> builder)
+        public void Configure(EntityTypeBuilder<TmiConfig> builder)
         {
-            builder.HasIndex(x => x.Topic)
+            builder.HasIndex(x => x.ChannelId)
                 .IsUnique();
         }
     }
@@ -31,6 +30,6 @@ namespace TwitchLogger.Data
 {
     public partial class TwitchLoggerDbContext
     {
-        public DbSet<PubSubLog> PubSubLogs { get; init; }
+        public DbSet<TmiConfig> TmiConfigs { get; init; }
     }
 }

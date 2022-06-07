@@ -18,8 +18,8 @@ namespace TwitchLogger.Data.Models.Twitch
         public ICollection<ModeratorAction> ChannelModeratorActions { get; set; }
         public ICollection<ModeratorAction> ModeratorModeratorActions { get; set; }
         public ICollection<ModeratorAction> TargetModeratorActions { get; set; }
-        public ICollection<ChatLog> ChatLogs { get; set; }
-        public ICollection<PubSubLog> PubSubLogs { get; set; }
+        public ICollection<TmiConfig> TmiConfigs { get; set; }
+        public ICollection<PubSubConfig> PubSubConfigs { get; set; }
     }
 
     public class UserConfiguration : IEntityTypeConfiguration<User>

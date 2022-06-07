@@ -40,7 +40,7 @@ public class ConnectedHandler : INotificationHandler<Connected>
             Content = new Content("twitch.tv/tags twitch.tv/commands")
         });
 
-        var channels = await _ctx.ChatLogs
+        var channels = await _ctx.TmiConfigs
             .Select(x => x.Channel.Login)
             .ToListAsync(cancellationToken);
 

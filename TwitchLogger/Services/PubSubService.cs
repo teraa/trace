@@ -53,7 +53,7 @@ internal class PubSubService : IHostedService
         {
             var ctx = scope.Get<TwitchLoggerDbContext>();
 
-            var topicsNames = await ctx.PubSubLogs
+            var topicsNames = await ctx.PubSubConfigs
                 .AsNoTracking()
                 .Select(x => x.Topic)
                 .ToArrayAsync();

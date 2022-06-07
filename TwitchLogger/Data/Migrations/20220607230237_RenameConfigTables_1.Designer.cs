@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TwitchLogger.Data;
@@ -12,9 +13,10 @@ using TwitchLogger.Data;
 namespace TwitchLogger.Data.Migrations
 {
     [DbContext(typeof(TwitchLoggerDbContext))]
-    partial class TwitchLoggerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220607230237_RenameConfigTables_1")]
+    partial class RenameConfigTables_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,16 +45,16 @@ namespace TwitchLogger.Data.Migrations
                         .HasColumnName("topic");
 
                     b.HasKey("Id")
-                        .HasName("pk_pub_sub_configs");
+                        .HasName("pk_pub_sub_logs");
 
                     b.HasIndex("ChannelId")
-                        .HasDatabaseName("ix_pub_sub_configs_channel_id");
+                        .HasDatabaseName("ix_pub_sub_logs_channel_id");
 
                     b.HasIndex("Topic")
                         .IsUnique()
-                        .HasDatabaseName("ix_pub_sub_configs_topic");
+                        .HasDatabaseName("ix_pub_sub_logs_topic");
 
-                    b.ToTable("pub_sub_configs", (string)null);
+                    b.ToTable("pub_sub_logs", (string)null);
                 });
 
             modelBuilder.Entity("TwitchLogger.Data.Models.TmiConfig", b =>
@@ -70,13 +72,13 @@ namespace TwitchLogger.Data.Migrations
                         .HasColumnName("channel_id");
 
                     b.HasKey("Id")
-                        .HasName("pk_tmi_configs");
+                        .HasName("pk_chat_logs");
 
                     b.HasIndex("ChannelId")
                         .IsUnique()
-                        .HasDatabaseName("ix_tmi_configs_channel_id");
+                        .HasDatabaseName("ix_chat_logs_channel_id");
 
-                    b.ToTable("tmi_configs", (string)null);
+                    b.ToTable("chat_logs", (string)null);
                 });
 
             modelBuilder.Entity("TwitchLogger.Data.Models.Twitch.Message", b =>
@@ -258,7 +260,7 @@ namespace TwitchLogger.Data.Migrations
                         .HasForeignKey("ChannelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_pub_sub_configs_users_channel_id");
+                        .HasConstraintName("fk_pub_sub_logs_users_channel_id");
 
                     b.Navigation("Channel");
                 });
@@ -270,7 +272,7 @@ namespace TwitchLogger.Data.Migrations
                         .HasForeignKey("ChannelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_tmi_configs_users_channel_id");
+                        .HasConstraintName("fk_chat_logs_users_channel_id");
 
                     b.Navigation("Channel");
                 });
