@@ -8,7 +8,7 @@ internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<TwitchLo
     public TwitchLoggerDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<TwitchLoggerDbContext>()
-            .UseNpgsql(Environment.GetEnvironmentVariable("DB_STRING")!);
+            .UseNpgsql(Environment.GetEnvironmentVariable("Db__ConnectionString")!);
 
         return new TwitchLoggerDbContext(optionsBuilder.Options);
     }

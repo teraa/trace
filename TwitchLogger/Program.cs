@@ -25,11 +25,16 @@ var host = Host.CreateDefaultBuilder(args)
         services
             .AddAsyncInitializer<MigrationInitializer>()
             .AddAsyncInitializer<MessageSourceInitializer>()
-            .AddDbContext<TwitchLoggerDbContext>(contextOptions =>
+            .AddDbContext<TwitchLoggerDbContext>((sp, options) =>
             {
-                contextOptions.UseNpgsql(
-                    hostContext.Configuration["DB_STRING"],
-                    npgsqlOpt => npgsqlOpt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+                var dbOptions = sp
+                    .GetRequiredService<IConfiguration>()
+                    .GetOptions<DbOptions>();
+
+                options.UseNpgsql(dbOptions.ConnectionString, contextOptions =>
+                {
+                    contextOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                });
             })
 
             .AddOptionsWithSection<ChatOptions>(hostContext.Configuration)
