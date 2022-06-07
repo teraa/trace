@@ -25,8 +25,4 @@
     <PackageReference Include="Teraa.Tw.Net" Version="0.4.0-alpha.2" />
     <PackageReference Include="Teraa.Twitch.Tmi" Version="1.0.0-alpha.6" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\TwitchLogger.Data\TwitchLogger.Data.csproj" />
-  </ItemGroup>
 </Project>
