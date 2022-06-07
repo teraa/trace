@@ -27,7 +27,7 @@ namespace TwitchLogger.Data.Models.Twitch
     {
         public void Configure(EntityTypeBuilder<Message> builder)
         {
-            builder.ToTable("message", schema: "twitch");
+            builder.Metadata.SetSchema("twitch");
 
             builder.HasIndex(x => x.ReceivedAt);
 

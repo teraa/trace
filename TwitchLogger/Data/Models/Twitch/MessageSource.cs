@@ -20,7 +20,7 @@ namespace TwitchLogger.Data.Models.Twitch
     {
         public void Configure(EntityTypeBuilder<MessageSource> builder)
         {
-            builder.ToTable("message_source", schema: "twitch");
+            builder.Metadata.SetSchema("twitch");
 
             builder.HasIndex(x => x.Name)
                 .IsUnique();

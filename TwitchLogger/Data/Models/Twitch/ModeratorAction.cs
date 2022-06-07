@@ -29,7 +29,7 @@ namespace TwitchLogger.Data.Models.Twitch
     {
         public void Configure(EntityTypeBuilder<ModeratorAction> builder)
         {
-            builder.ToTable("moderator_action", schema: "twitch");
+            builder.Metadata.SetSchema("twitch");
 
             builder.HasIndex(x => x.CreatedAt);
 

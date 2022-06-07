@@ -21,8 +21,6 @@ namespace TwitchLogger.Data.Models
     {
         public void Configure(EntityTypeBuilder<PubSubLog> builder)
         {
-            builder.ToTable("pubsub_log");
-
             builder.HasIndex(x => x.Topic)
                 .IsUnique();
         }

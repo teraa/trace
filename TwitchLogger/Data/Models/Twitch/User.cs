@@ -26,7 +26,7 @@ namespace TwitchLogger.Data.Models.Twitch
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("user", schema: "twitch");
+            builder.Metadata.SetSchema("twitch");
 
             builder.HasIndex(x => x.Login);
 

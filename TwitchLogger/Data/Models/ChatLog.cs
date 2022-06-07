@@ -20,8 +20,6 @@ namespace TwitchLogger.Data.Models
     {
         public void Configure(EntityTypeBuilder<ChatLog> builder)
         {
-            builder.ToTable("chat_log");
-
             builder.HasIndex(x => x.ChannelId)
                 .IsUnique();
         }
