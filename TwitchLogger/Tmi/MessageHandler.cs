@@ -11,18 +11,15 @@ namespace TwitchLogger.Tmi;
 public class MessageHandler : INotificationHandler<MessageReceived>
 {
     private readonly TwitchLoggerDbContext _ctx;
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions;
     private readonly IMemoryCache _cache;
     private readonly ILogger<MessageHandler> _logger;
 
     public MessageHandler(
         TwitchLoggerDbContext ctx,
-        MemoryCacheEntryOptions cacheEntryOptions,
         IMemoryCache cache,
         ILogger<MessageHandler> logger)
     {
         _ctx = ctx;
-        _cacheEntryOptions = cacheEntryOptions;
         _cache = cache;
         _logger = logger;
     }
@@ -49,9 +46,6 @@ public class MessageHandler : INotificationHandler<MessageReceived>
         string userId = notification.Message.Tags["user-id"];
         var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(
             long.Parse(notification.Message.Tags["tmi-sent-ts"]));
-
-        await _ctx.TryUpdateUserAsync(channelId, channelLogin, timestamp, _cache, _cacheEntryOptions, cancellationToken);
-        await _ctx.TryUpdateUserAsync(userId, userLogin, timestamp, _cache, _cacheEntryOptions, cancellationToken);
 
         var messageEntity = new Data.Models.Tmi.Message
         {

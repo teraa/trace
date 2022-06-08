@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using MediatR;
-using Microsoft.Extensions.Caching.Memory;
 using Teraa.Twitch.PubSub.Messages.ChatModeratorActions;
 using Teraa.Twitch.PubSub.Notifications;
 using TwitchLogger.Data;
@@ -13,16 +12,10 @@ namespace TwitchLogger.PubSub;
 public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModeratorActionReceived>
 {
     private readonly TwitchLoggerDbContext _ctx;
-    private readonly IMemoryCache _cache;
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions;
 
-    public ChatModeratorActionReceivedHandler(TwitchLoggerDbContext ctx,
-        IMemoryCache cache,
-        MemoryCacheEntryOptions cacheEntryOptions)
+    public ChatModeratorActionReceivedHandler(TwitchLoggerDbContext ctx)
     {
         _ctx = ctx;
-        _cache = cache;
-        _cacheEntryOptions = cacheEntryOptions;
     }
 
     public async Task Handle(ChatModeratorActionReceived notification, CancellationToken cancellationToken)
@@ -84,14 +77,6 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
             var act = (Data.Models.Pubsub.TargetedModeratorAction) action;
             act.TargetId = evt.TargetId;
             act.TargetName = evt.Target;
-
-            await _ctx.TryUpdateUserAsync(
-                id: evt.TargetId,
-                login: evt.Target,
-                timestamp: timestamp,
-                cache: _cache,
-                options: _cacheEntryOptions,
-                cancellationToken: cancellationToken);
         }
 
         action.Timestamp = timestamp;
@@ -100,16 +85,7 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
         action.InitiatorId = notification.Action.InitiatorId;
         action.InitiatorName = notification.Action.Initiator;
 
-        if (notification.Action is not (Raid or Unraid))
-        {
-            await _ctx.TryUpdateUserAsync(
-                id: notification.Action.InitiatorId,
-                login: notification.Action.Initiator,
-                timestamp: timestamp,
-                cache: _cache,
-                options: _cacheEntryOptions,
-                cancellationToken: cancellationToken);
-        }
+        // if (notification.Action is not (Raid or Unraid)) { }
 
         _ctx.ModeratorActions.Add(action);
         await _ctx.SaveChangesAsync(cancellationToken);
