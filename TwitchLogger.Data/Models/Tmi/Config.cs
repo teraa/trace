@@ -11,8 +11,7 @@ namespace TwitchLogger.Data.Models.Tmi
     {
         public int Id { get; set; }
         public string ChannelId { get; set; }
-
-        public User Channel { get; set; }
+        public string ChannelLogin { get; set; }
     }
 
     public class ConfigConfiguration : IEntityTypeConfiguration<Config>

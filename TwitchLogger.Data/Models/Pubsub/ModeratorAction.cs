@@ -16,9 +16,6 @@ namespace TwitchLogger.Data.Models.Pubsub
         public string Action { get; set; }
         public string InitiatorId { get; set; }
         public string InitiatorName { get; set; }
-
-        public User Channel { get; set; }
-        public User Initiator { get; set; }
     }
 
     public class ModeratorActionConfiguration : IEntityTypeConfiguration<ModeratorAction>
@@ -29,14 +26,8 @@ namespace TwitchLogger.Data.Models.Pubsub
 
             builder.HasIndex(x => x.Timestamp);
             builder.HasIndex(x => x.Action);
-
-            builder.HasOne(x => x.Channel)
-                .WithMany(x => x.ChannelModeratorActions)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasOne(x => x.Initiator)
-                .WithMany(x => x.InitiatorModeratorActions)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.HasIndex(x => x.ChannelId);
+            builder.HasIndex(x => x.InitiatorId);
         }
     }
 
@@ -45,17 +36,13 @@ namespace TwitchLogger.Data.Models.Pubsub
     {
         public string TargetId { get; set; }
         public string TargetName { get; set; }
-
-        public User Target { get; set; }
     }
 
     public class TargetedModeratorActionConfiguration : IEntityTypeConfiguration<TargetedModeratorAction>
     {
         public void Configure(EntityTypeBuilder<TargetedModeratorAction> builder)
         {
-            builder.HasOne(x => x.Target)
-                .WithMany(x => x.TargetTargetedModeratorAction)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.HasIndex(x => x.TargetId);
         }
     }
 

@@ -14,14 +14,6 @@ namespace TwitchLogger.Data.Models
         public string Id { get; set; }
         public string Login { get; set; }
         public DateTimeOffset FirstSeenAt { get; set; }
-
-        public ICollection<Message> AuthorMessages { get; set; }
-        public ICollection<Message> ChannelMessages { get; set; }
-        public ICollection<ModeratorAction> ChannelModeratorActions { get; set; }
-        public ICollection<ModeratorAction> InitiatorModeratorActions { get; set; }
-        public ICollection<TargetedModeratorAction> TargetTargetedModeratorAction { get; set; }
-        public ICollection<Tmi.Config> TmiConfigs { get; set; }
-        public ICollection<Pubsub.Config> PubsubConfigs { get; set; }
     }
 
     public class UserConfiguration : IEntityTypeConfiguration<User>

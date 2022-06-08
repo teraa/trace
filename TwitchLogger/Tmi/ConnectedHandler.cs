@@ -41,7 +41,7 @@ public class ConnectedHandler : INotificationHandler<Connected>
         });
 
         var channels = await _ctx.TmiConfigs
-            .Select(x => x.Channel.Login)
+            .Select(x => x.ChannelLogin)
             .ToListAsync(cancellationToken);
 
         _logger.LogInformation("Joining: {Channels}", channels);

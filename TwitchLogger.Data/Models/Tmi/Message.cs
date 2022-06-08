@@ -17,8 +17,6 @@ namespace TwitchLogger.Data.Models.Tmi
         public string AuthorLogin { get; set; }
         public string Content { get; set; }
 
-        public User Author { get; set; }
-        public User Channel { get; set; }
         public Source Source { get; set; }
     }
 
@@ -30,14 +28,8 @@ namespace TwitchLogger.Data.Models.Tmi
             builder.Metadata.SetTableName("messages");
 
             builder.HasIndex(x => x.Timestamp);
-
-            builder.HasOne(x => x.Author)
-                .WithMany(x => x.AuthorMessages)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasOne(x => x.Channel)
-                .WithMany(x => x.ChannelMessages)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.HasIndex(x => x.AuthorId);
+            builder.HasIndex(x => x.ChannelId);
 
             builder.HasOne(x => x.Source)
                 .WithMany(x => x.Messages)
