@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using TwitchLogger.Data;
 using TwitchLogger.Data.Models.Tmi;
 
@@ -10,13 +11,14 @@ public class SourceCache
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IMemoryCache _cache;
 
-    public SourceCache(IServiceScopeFactory scopeFactory, IMemoryCache cache)
+    public SourceCache(IServiceScopeFactory scopeFactory,
+        IMemoryCache cache)
     {
         _scopeFactory = scopeFactory;
         _cache = cache;
     }
 
-    public async Task<short> GetOrLoadSourceIdAsync(string sourceName, CancellationToken cancellationToken)
+    public async Task<short> GetOrLoadSourceIdAsync(CancellationToken cancellationToken)
     {
         var lazy = _cache.GetOrCreate(new SourceKey(), entry =>
         {
@@ -24,10 +26,11 @@ public class SourceCache
             {
                 await using var scope = _scopeFactory.CreateAsyncScope();
                 var ctx = scope.ServiceProvider.GetRequiredService<TwitchLoggerDbContext>();
+                var options = scope.ServiceProvider.GetRequiredService<IOptions<TmiOptions>>();
 
                 var source = await ctx.TmiSources
                     .AsNoTracking()
-                    .Where(x => x.Name == sourceName)
+                    .Where(x => x.Name == options.Value.MessageSourceName)
                     .FirstOrDefaultAsync(cancellationToken);
 
                 if (source is not null)
@@ -35,7 +38,7 @@ public class SourceCache
 
                 source = new Source
                 {
-                    Name = sourceName,
+                    Name = options.Value.MessageSourceName,
                 };
 
                 ctx.TmiSources.Add(source);

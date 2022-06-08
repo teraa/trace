@@ -12,7 +12,6 @@ public class MessageHandler : INotificationHandler<MessageReceived>
 {
     private readonly TwitchLoggerDbContext _ctx;
     private readonly SourceCache _cache;
-    private readonly TmiOptions _options;
     private readonly ILogger<MessageHandler> _logger;
 
     public MessageHandler(
@@ -24,7 +23,6 @@ public class MessageHandler : INotificationHandler<MessageReceived>
         _ctx = ctx;
         _cache = cache;
         _logger = logger;
-        _options = options.Value;
     }
 
     public async Task Handle(MessageReceived notification, CancellationToken cancellationToken)
@@ -50,7 +48,7 @@ public class MessageHandler : INotificationHandler<MessageReceived>
         var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(
             long.Parse(notification.Message.Tags["tmi-sent-ts"]));
 
-        short sourceId = await _cache.GetOrLoadSourceIdAsync(_options.MessageSourceName, cancellationToken);
+        short sourceId = await _cache.GetOrLoadSourceIdAsync(cancellationToken);
 
         var messageEntity = new Data.Models.Tmi.Message
         {
