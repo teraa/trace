@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Reflection;
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
@@ -16,7 +17,11 @@ internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<TwitchLo
         var dbOptions = config.GetOptions<DbOptions>();
 
         var optionsBuilder = new DbContextOptionsBuilder<TwitchLoggerDbContext>()
-            .UseNpgsql(dbOptions.ConnectionString);
+            .UseNpgsql(dbOptions.ConnectionString,
+                npgsqlOptions =>
+                {
+                    npgsqlOptions.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
+                });
 
         return new TwitchLoggerDbContext(optionsBuilder.Options);
     }
