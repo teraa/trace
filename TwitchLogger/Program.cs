@@ -1,13 +1,12 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Teraa.Twitch.PubSub;
 using Teraa.Twitch.Tmi;
-using Twitch.PubSub;
 using TwitchLogger;
 using TwitchLogger.Data;
 using TwitchLogger.Initializers;
 using TwitchLogger.Options;
-using TwitchLogger.Services;
 
 var host = Host.CreateDefaultBuilder(args)
     .UseSystemd()
@@ -37,13 +36,11 @@ var host = Host.CreateDefaultBuilder(args)
                 });
             })
 
-            .AddOptionsWithSection<ChatOptions>(hostContext.Configuration)
             .AddMediatR(typeof(Program))
+            .AddOptionsWithSection<ChatOptions>(hostContext.Configuration)
             .AddTmiService()
-
             .AddOptionsWithSection<PubSubOptions>(hostContext.Configuration)
-            .AddTwitchPubSubClient()
-            .AddHostedService<PubSubService>()
+            .AddPubSubService()
 
             .AddMemoryCache()
             .AddSingleton<MemoryCacheEntryOptions>(serviceProvider =>
