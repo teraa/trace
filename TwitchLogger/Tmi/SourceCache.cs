@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using TwitchLogger.Data;
 using TwitchLogger.Data.Models.Tmi;
@@ -19,7 +18,7 @@ public class SourceCache
 
     public async Task<short> GetOrLoadSourceIdAsync(string sourceName, CancellationToken cancellationToken)
     {
-        var lazy = _cache.GetOrCreate(new SourceKey(sourceName), entry =>
+        var lazy = _cache.GetOrCreate(new SourceKey(), entry =>
         {
             return new Lazy<Task<short>>(async () =>
             {
@@ -49,6 +48,5 @@ public class SourceCache
         return await lazy.Value;
     }
 
-    [UsedImplicitly]
-    private record SourceKey(string SourceName);
+    private record SourceKey;
 }
