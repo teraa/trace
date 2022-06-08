@@ -1,7 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using TwitchLogger.Options;
 
 namespace TwitchLogger.Data;
 

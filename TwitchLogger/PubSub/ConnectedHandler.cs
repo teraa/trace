@@ -6,7 +6,6 @@ using Teraa.Twitch.PubSub;
 using Teraa.Twitch.PubSub.Notifications;
 using Teraa.Twitch.PubSub.Payloads;
 using TwitchLogger.Data;
-using TwitchLogger.Options;
 
 namespace TwitchLogger.PubSub;
 

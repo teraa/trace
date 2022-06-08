@@ -6,7 +6,6 @@ using Teraa.Twitch.Tmi;
 using TwitchLogger;
 using TwitchLogger.Data;
 using TwitchLogger.Initializers;
-using TwitchLogger.Options;
 
 var host = Host.CreateDefaultBuilder(args)
     .UseSystemd()

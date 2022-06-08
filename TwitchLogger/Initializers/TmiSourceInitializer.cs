@@ -5,7 +5,6 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using TwitchLogger.Data;
 using TwitchLogger.Data.Models.Tmi;
-using TwitchLogger.Options;
 
 namespace TwitchLogger.Initializers;
 
