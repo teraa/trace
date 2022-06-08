@@ -1,6 +1,5 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Teraa.Twitch.PubSub;
 using Teraa.Twitch.Tmi;
 using TwitchLogger;
@@ -35,29 +34,14 @@ var host = Host.CreateDefaultBuilder(args)
                     contextOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                 });
             })
-
+            .AddMemoryCache()
             .AddMediatR(typeof(Program))
             .AddSingleton<SourceCache>()
             .AddOptionsWithSection<TmiOptions>(hostContext.Configuration)
             .AddTmiService()
             .AddOptionsWithSection<PubSubOptions>(hostContext.Configuration)
             .AddPubSubService()
-
-            .AddMemoryCache()
-            .AddSingleton<MemoryCacheEntryOptions>(serviceProvider =>
-            {
-                var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
-                var logger = loggerFactory.CreateLogger("CachePostEvictionCallback");
-
-                var options = new MemoryCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromMinutes(10))
-                    .RegisterPostEvictionCallback((key, value, reason, _) =>
-                    {
-                        logger.LogDebug("Evicted: {Key}, {Value}, {Reason}", key, value, reason);
-                    });
-
-                return options;
-            });
+            ;
     })
     .Build();
 
