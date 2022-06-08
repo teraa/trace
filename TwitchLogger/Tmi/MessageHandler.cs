@@ -53,9 +53,9 @@ public class MessageHandler : INotificationHandler<MessageReceived>
         await _ctx.TryUpdateUserAsync(channelId, channelLogin, timestamp, _cache, _cacheEntryOptions, cancellationToken);
         await _ctx.TryUpdateUserAsync(userId, userLogin, timestamp, _cache, _cacheEntryOptions, cancellationToken);
 
-        var messageEntity = new Data.Models.Twitch.Message
+        var messageEntity = new Data.Models.Tmi.Message
         {
-            ReceivedAt = timestamp,
+            Timestamp = timestamp,
             SourceId = _cache.Get<short>("source_id"),
             ChannelId = channelId,
             AuthorId = userId,
@@ -63,7 +63,7 @@ public class MessageHandler : INotificationHandler<MessageReceived>
             Content = notification.Message.Content.Text
         };
 
-        _ctx.Messages.Add(messageEntity);
+        _ctx.TmiMessages.Add(messageEntity);
         await _ctx.SaveChangesAsync(cancellationToken);
     }
 }

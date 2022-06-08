@@ -51,7 +51,7 @@ public static class Extensions
 
         if (user is null)
         {
-            user = new Data.Models.Twitch.User
+            user = new Data.Models.User
             {
                 Id = id,
                 Login = login,

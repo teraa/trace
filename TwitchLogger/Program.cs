@@ -24,7 +24,7 @@ var host = Host.CreateDefaultBuilder(args)
     {
         services
             .AddAsyncInitializer<MigrationInitializer>()
-            .AddAsyncInitializer<MessageSourceInitializer>()
+            .AddAsyncInitializer<TmiSourceInitializer>()
             .AddDbContext<TwitchLoggerDbContext>((sp, options) =>
             {
                 var dbOptions = sp

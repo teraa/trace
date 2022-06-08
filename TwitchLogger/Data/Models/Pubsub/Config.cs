@@ -1,14 +1,13 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TwitchLogger.Data.Models;
-using TwitchLogger.Data.Models.Twitch;
+using TwitchLogger.Data.Models.Pubsub;
 
 #pragma warning disable CS8618
-namespace TwitchLogger.Data.Models
+namespace TwitchLogger.Data.Models.Pubsub
 {
     [PublicAPI]
-    public class PubSubConfig
+    public class Config
     {
         public int Id { get; set; }
         public string Topic { get; set; }
@@ -17,10 +16,13 @@ namespace TwitchLogger.Data.Models
         public User Channel { get; set; }
     }
 
-    public class PubSubConfigConfiguration : IEntityTypeConfiguration<PubSubConfig>
+    public class ConfigConfiguration : IEntityTypeConfiguration<Config>
     {
-        public void Configure(EntityTypeBuilder<PubSubConfig> builder)
+        public void Configure(EntityTypeBuilder<Config> builder)
         {
+            builder.Metadata.SetSchema("pubsub");
+            builder.Metadata.SetTableName("configs");
+
             builder.HasIndex(x => x.Topic)
                 .IsUnique();
         }
@@ -31,6 +33,6 @@ namespace TwitchLogger.Data
 {
     public partial class TwitchLoggerDbContext
     {
-        public DbSet<PubSubConfig> PubSubConfigs { get; init; }
+        public DbSet<Config> PubsubConfigs { get; init; }
     }
 }

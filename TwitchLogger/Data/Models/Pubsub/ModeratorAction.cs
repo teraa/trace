@@ -1,10 +1,10 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TwitchLogger.Data.Models.Twitch;
+using TwitchLogger.Data.Models.Pubsub;
 
 #pragma warning disable CS8618
-namespace TwitchLogger.Data.Models.Twitch
+namespace TwitchLogger.Data.Models.Pubsub
 {
     [PublicAPI]
     public class ModeratorAction
@@ -29,7 +29,7 @@ namespace TwitchLogger.Data.Models.Twitch
     {
         public void Configure(EntityTypeBuilder<ModeratorAction> builder)
         {
-            builder.Metadata.SetSchema("twitch");
+            builder.Metadata.SetSchema("pubsub");
 
             builder.HasIndex(x => x.CreatedAt);
 

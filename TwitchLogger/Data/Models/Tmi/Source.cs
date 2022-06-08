@@ -1,13 +1,13 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TwitchLogger.Data.Models.Twitch;
+using TwitchLogger.Data.Models.Tmi;
 
 #pragma warning disable CS8618
-namespace TwitchLogger.Data.Models.Twitch
+namespace TwitchLogger.Data.Models.Tmi
 {
     [PublicAPI]
-    public class MessageSource
+    public class Source
     {
         public short Id { get; set; }
         public string Name { get; set; }
@@ -16,11 +16,12 @@ namespace TwitchLogger.Data.Models.Twitch
         public ICollection<Message> Messages { get; set; }
     }
 
-    public class MessageSourceConfiguration : IEntityTypeConfiguration<MessageSource>
+    public class SourceConfiguration : IEntityTypeConfiguration<Source>
     {
-        public void Configure(EntityTypeBuilder<MessageSource> builder)
+        public void Configure(EntityTypeBuilder<Source> builder)
         {
-            builder.Metadata.SetSchema("twitch");
+            builder.Metadata.SetSchema("tmi");
+            builder.Metadata.SetTableName("sources");
 
             builder.HasIndex(x => x.Name)
                 .IsUnique();
@@ -32,6 +33,6 @@ namespace TwitchLogger.Data
 {
     public partial class TwitchLoggerDbContext
     {
-        public DbSet<MessageSource> MessageSources { get; init; }
+        public DbSet<Source> TmiSources { get; init; }
     }
 }

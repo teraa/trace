@@ -53,7 +53,7 @@ internal class PubSubService : IHostedService
         {
             var ctx = scope.Get<TwitchLoggerDbContext>();
 
-            var topicsNames = await ctx.PubSubConfigs
+            var topicsNames = await ctx.PubsubConfigs
                 .AsNoTracking()
                 .Select(x => x.Topic)
                 .ToArrayAsync();
@@ -89,7 +89,7 @@ internal class PubSubService : IHostedService
         if (action.Target is not null)
             await ctx.TryUpdateUserAsync(action.Target.Id, action.Target.Login, now, _cache, _cacheEntryOptions);
 
-        var actionEntity = new Data.Models.Twitch.ModeratorAction
+        var actionEntity = new Data.Models.Pubsub.ModeratorAction
         {
             CreatedAt = now,
             ChannelId = action.ChannelId,

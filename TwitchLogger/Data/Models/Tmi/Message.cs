@@ -1,17 +1,16 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TwitchLogger.Data.Models.Twitch;
+using TwitchLogger.Data.Models.Tmi;
 
 #pragma warning disable CS8618
-
-namespace TwitchLogger.Data.Models.Twitch
+namespace TwitchLogger.Data.Models.Tmi
 {
     [PublicAPI]
     public class Message
     {
         public long Id { get; set; }
-        public DateTimeOffset ReceivedAt { get; set; }
+        public DateTimeOffset Timestamp { get; set; }
         public short SourceId { get; set; }
         public string ChannelId { get; set; }
         public string AuthorId { get; set; }
@@ -20,16 +19,17 @@ namespace TwitchLogger.Data.Models.Twitch
 
         public User Author { get; set; }
         public User Channel { get; set; }
-        public MessageSource Source { get; set; }
+        public Source Source { get; set; }
     }
 
     public class MessageConfiguration : IEntityTypeConfiguration<Message>
     {
         public void Configure(EntityTypeBuilder<Message> builder)
         {
-            builder.Metadata.SetSchema("twitch");
+            builder.Metadata.SetSchema("tmi");
+            builder.Metadata.SetTableName("messages");
 
-            builder.HasIndex(x => x.ReceivedAt);
+            builder.HasIndex(x => x.Timestamp);
 
             builder.HasOne(x => x.Author)
                 .WithMany(x => x.AuthorMessages)
@@ -50,6 +50,6 @@ namespace TwitchLogger.Data
 {
     public partial class TwitchLoggerDbContext
     {
-        public DbSet<Message> Messages { get; init; }
+        public DbSet<Message> TmiMessages { get; init; }
     }
 }
