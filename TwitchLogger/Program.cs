@@ -6,6 +6,7 @@ using Teraa.Twitch.Tmi;
 using TwitchLogger;
 using TwitchLogger.Data;
 using TwitchLogger.Initializers;
+using TwitchLogger.Tmi;
 
 var host = Host.CreateDefaultBuilder(args)
     .UseSystemd()
@@ -22,7 +23,6 @@ var host = Host.CreateDefaultBuilder(args)
     {
         services
             .AddAsyncInitializer<MigrationInitializer>()
-            .AddAsyncInitializer<TmiSourceInitializer>()
             .AddDbContext<TwitchLoggerDbContext>((sp, options) =>
             {
                 var dbOptions = sp
@@ -36,6 +36,7 @@ var host = Host.CreateDefaultBuilder(args)
             })
 
             .AddMediatR(typeof(Program))
+            .AddSingleton<SourceCache>()
             .AddOptionsWithSection<ChatOptions>(hostContext.Configuration)
             .AddTmiService()
             .AddOptionsWithSection<PubSubOptions>(hostContext.Configuration)

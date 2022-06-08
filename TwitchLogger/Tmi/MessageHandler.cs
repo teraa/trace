@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 using MediatR;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using Teraa.Irc;
 using Teraa.Twitch.Tmi.Notifications;
 using TwitchLogger.Data;
@@ -11,17 +11,20 @@ namespace TwitchLogger.Tmi;
 public class MessageHandler : INotificationHandler<MessageReceived>
 {
     private readonly TwitchLoggerDbContext _ctx;
-    private readonly IMemoryCache _cache;
+    private readonly SourceCache _cache;
+    private readonly ChatOptions _options;
     private readonly ILogger<MessageHandler> _logger;
 
     public MessageHandler(
         TwitchLoggerDbContext ctx,
-        IMemoryCache cache,
+        SourceCache cache,
+        IOptions<ChatOptions> options,
         ILogger<MessageHandler> logger)
     {
         _ctx = ctx;
         _cache = cache;
         _logger = logger;
+        _options = options.Value;
     }
 
     public async Task Handle(MessageReceived notification, CancellationToken cancellationToken)
@@ -47,10 +50,12 @@ public class MessageHandler : INotificationHandler<MessageReceived>
         var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(
             long.Parse(notification.Message.Tags["tmi-sent-ts"]));
 
+        short sourceId = await _cache.GetOrLoadSourceIdAsync(_options.MessageSourceName, cancellationToken);
+
         var messageEntity = new Data.Models.Tmi.Message
         {
             Timestamp = timestamp,
-            SourceId = _cache.Get<short>("source_id"),
+            SourceId = sourceId,
             ChannelId = channelId,
             AuthorId = userId,
             AuthorLogin = userLogin,
