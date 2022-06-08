@@ -31,6 +31,7 @@ var host = Host.CreateDefaultBuilder(args)
 
                 options.UseNpgsql(dbOptions.ConnectionString, contextOptions =>
                 {
+                    contextOptions.MigrationsAssembly(typeof(Program).Assembly.FullName);
                     contextOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                 });
             })
