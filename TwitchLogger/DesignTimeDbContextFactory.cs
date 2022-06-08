@@ -2,8 +2,9 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using TwitchLogger.Data;
 
-namespace TwitchLogger.Data;
+namespace TwitchLogger;
 
 [UsedImplicitly]
 internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<TwitchLoggerDbContext>
