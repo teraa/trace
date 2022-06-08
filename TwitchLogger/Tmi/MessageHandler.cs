@@ -12,13 +12,13 @@ public class MessageHandler : INotificationHandler<MessageReceived>
 {
     private readonly TwitchLoggerDbContext _ctx;
     private readonly SourceCache _cache;
-    private readonly ChatOptions _options;
+    private readonly TmiOptions _options;
     private readonly ILogger<MessageHandler> _logger;
 
     public MessageHandler(
         TwitchLoggerDbContext ctx,
         SourceCache cache,
-        IOptions<ChatOptions> options,
+        IOptions<TmiOptions> options,
         ILogger<MessageHandler> logger)
     {
         _ctx = ctx;

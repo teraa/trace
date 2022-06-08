@@ -37,7 +37,7 @@ var host = Host.CreateDefaultBuilder(args)
 
             .AddMediatR(typeof(Program))
             .AddSingleton<SourceCache>()
-            .AddOptionsWithSection<ChatOptions>(hostContext.Configuration)
+            .AddOptionsWithSection<TmiOptions>(hostContext.Configuration)
             .AddTmiService()
             .AddOptionsWithSection<PubSubOptions>(hostContext.Configuration)
             .AddPubSubService()

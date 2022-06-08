@@ -10,7 +10,7 @@ public class PubSubOptions
     public string Token { get; init; }
 }
 
-public class ChatOptions
+public class TmiOptions
 {
     public string MessageSourceName { get; init; }
 }
