@@ -6,13 +6,12 @@ After=network-online.target
 User=tera
 Type=notify
 SyslogIdentifier=twitchlogger
-WorkingDirectory=/opt/twitchlogger/bin
-ExecStart=/opt/twitchlogger/bin/TwitchLogger
+WorkingDirectory=/opt/twitchlogger/bin/publish
+ExecStart=/opt/twitchlogger/bin/publish/TwitchLogger
 Restart=always
 Environment="DOTNET_ENVIRONMENT=Production"
-Environment="DB_STRING=Host=localhost;Database=twitchlogger;Username=postgres;Password=example"
+Environment="Db__ConnectionString=Host=localhost;Port=5432;Database=twitchlogger;Username=postgres;Password=example;Include Error Detail=true"
 Environment="PubSub__Token=x"
-Environment="Chat__MessageSourceName=TwitchLogger"
 Environment="Seq__ServerUrl=x"
 Environment="Seq__ApiKey=x"
 
