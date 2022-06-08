@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using TwitchLogger.Data;
 using TwitchLogger.Data.Models.Tmi;
@@ -48,5 +49,6 @@ public class SourceCache
         return await lazy.Value;
     }
 
+    [UsedImplicitly]
     private record SourceKey(string SourceName);
 }
