@@ -10,6 +10,7 @@ WorkingDirectory=/opt/twitchlogger/bin/publish
 ExecStart=/opt/twitchlogger/bin/publish/TwitchLogger
 Restart=always
 Environment="DOTNET_ENVIRONMENT=Production"
+Environment="Tmi__MessageSourceName=TwitchLogger"
 Environment="Db__ConnectionString=Host=localhost;Port=5432;Database=twitchlogger;Username=postgres;Password=example;Include Error Detail=true"
 Environment="PubSub__Token=x"
 Environment="Seq__ServerUrl=x"
