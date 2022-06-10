@@ -33,6 +33,10 @@ var host = Host.CreateDefaultBuilder(args)
                     contextOptions.MigrationsAssembly(typeof(Program).Assembly.FullName);
                     contextOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                 });
+
+#if DEBUG
+                options.EnableSensitiveDataLogging();
+#endif
             })
             .AddMemoryCache()
             .AddMediatR(typeof(Program))
