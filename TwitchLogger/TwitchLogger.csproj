@@ -18,8 +18,8 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="6.0.0" />
     <PackageReference Include="Seq.Extensions.Logging" Version="6.0.0" />
-    <PackageReference Include="Teraa.Twitch.PubSub" Version="1.0.0-alpha.14" />
-    <PackageReference Include="Teraa.Twitch.Tmi" Version="1.0.0-alpha.14" />
+    <PackageReference Include="Teraa.Twitch.PubSub" Version="1.0.0-alpha.16" />
+    <PackageReference Include="Teraa.Twitch.Tmi" Version="1.0.0-alpha.16" />
   </ItemGroup>
 
   <ItemGroup>

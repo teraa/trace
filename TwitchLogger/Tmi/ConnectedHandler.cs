@@ -27,18 +27,14 @@ public class ConnectedHandler : INotificationHandler<Connected>
 
     public async Task Handle(Connected notification, CancellationToken cancellationToken)
     {
-        _tmi.EnqueueMessage(new Message
-        {
-            Command = Command.NICK,
-            Content = new Content("justinfan1"),
-        });
+        _tmi.EnqueueMessage(new Message(
+            Command: Command.NICK,
+            Content: new Content("justinfan1")));
 
-        _tmi.EnqueueMessage(new Message
-        {
-            Command = Command.CAP,
-            Arg = "REQ",
-            Content = new Content("twitch.tv/tags twitch.tv/commands")
-        });
+        _tmi.EnqueueMessage(new Message(
+            Command: Command.CAP,
+            Arg: "REQ",
+            Content: new Content("twitch.tv/tags twitch.tv/commands")));
 
         var channels = await _ctx.TmiConfigs
             .Select(x => x.ChannelLogin)
@@ -47,10 +43,8 @@ public class ConnectedHandler : INotificationHandler<Connected>
         _logger.LogInformation("Joining: {Channels}", channels);
 
         foreach (string channel in channels)
-            _tmi.EnqueueMessage(new Message
-            {
-                Command = Command.JOIN,
-                Content = new Content($"#{channel}"),
-            });
+            _tmi.EnqueueMessage(new Message(
+                Command: Command.JOIN,
+                Content: new Content($"#{channel}")));
     }
 }
