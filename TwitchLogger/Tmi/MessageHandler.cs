@@ -41,7 +41,7 @@ public class MessageHandler : INotificationHandler<MessageReceived>
             return;
         }
 
-        string channelLogin = notification.Message.Arg[1..];
+        // string channelLogin = notification.Message.Arg[1..];
         string channelId = notification.Message.Tags["room-id"];
         string userLogin = notification.Message.Prefix.Name;
         string userId = notification.Message.Tags["user-id"];
