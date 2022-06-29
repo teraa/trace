@@ -11,15 +11,15 @@
     <PackageReference Include="Extensions.Hosting.AsyncInitialization" Version="1.0.0" />
     <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="6.0.0" />
     <PackageReference Include="Seq.Extensions.Logging" Version="6.0.0" />
-    <PackageReference Include="Teraa.Twitch.PubSub" Version="1.0.0-alpha.19" />
-    <PackageReference Include="Teraa.Twitch.Tmi" Version="1.0.0-alpha.19" />
+    <PackageReference Include="Teraa.Twitch.PubSub" Version="1.0.0-alpha.21" />
+    <PackageReference Include="Teraa.Twitch.Tmi" Version="1.0.0-alpha.21" />
   </ItemGroup>
 
   <ItemGroup>
