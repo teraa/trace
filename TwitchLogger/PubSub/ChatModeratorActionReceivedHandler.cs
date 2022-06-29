@@ -29,6 +29,12 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
                 Reason = x.Reason,
             },
 
+            Delete x => new Data.Models.Pubsub.Delete
+            {
+                MessageId = x.MessageId,
+                Message = x.Message,
+            },
+
             Followers x => new Data.Models.Pubsub.Followers
             {
                 Duration = x.Duration,

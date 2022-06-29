@@ -53,6 +53,13 @@ namespace TwitchLogger.Data.Models.Pubsub
     }
 
     [PublicAPI]
+    public class Delete : TargetedModeratorAction
+    {
+        public string MessageId { get; set; }
+        public string Message { get; set; }
+    }
+
+    [PublicAPI]
     public class Followers : ModeratorAction
     {
         public TimeSpan Duration { get; set; }
@@ -99,6 +106,7 @@ namespace TwitchLogger.Data
         public DbSet<ModeratorAction> ModeratorActions { get; init; }
 
         public DbSet<Ban> Bans { get; init; }
+        public DbSet<Delete> Deletes { get; init; }
         public DbSet<Followers> Followers { get; init; }
         public DbSet<Raid> Raids { get; init; }
         public DbSet<Slow> Slows { get; init; }
