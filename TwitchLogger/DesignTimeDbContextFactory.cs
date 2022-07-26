@@ -21,6 +21,7 @@ internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<TwitchLo
                 contextOptions =>
                 {
                     contextOptions.MigrationsAssembly(typeof(Program).Assembly.FullName);
+                    contextOptions.CommandTimeout(600);
                 });
 
         return new TwitchLoggerDbContext(optionsBuilder.Options);
