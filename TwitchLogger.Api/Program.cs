@@ -1,3 +1,9 @@
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using TwitchLogger.Api.Extensions;
+using TwitchLogger.Api.Options;
+using TwitchLogger.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
@@ -11,7 +17,23 @@ builder.Host
 builder.Services
     .AddControllers()
     .Services
-    .AddAsyncInitialization();
+    .AddAsyncInitialization()
+    .AddMediatR(typeof(Program))
+    .AddDbContext<TwitchLoggerDbContext>((services, options) =>
+    {
+        var dbOptions = services
+            .GetRequiredService<IConfiguration>()
+            .GetOptions<DbOptions>();
+
+        options.UseNpgsql(dbOptions.ConnectionString, contextOptions =>
+        {
+            contextOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+        });
+
+#if DEBUG
+        options.EnableSensitiveDataLogging();
+#endif
+    });
 
 var app = builder.Build();
 

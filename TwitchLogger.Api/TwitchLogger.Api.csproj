@@ -1,13 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>3a8d3aab-0ef5-4d95-952d-bf0a193ab4e2</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Extensions.Hosting.AsyncInitialization" Version="1.0.0" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="6.0.0" />
   </ItemGroup>
 
