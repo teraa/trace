@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using FluentValidation;
+using JetBrains.Annotations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,14 @@ public static class Index
         long? Before
     ) : IRequest<IActionResult>;
 
-    // TODO: QueryValidator
+    [UsedImplicitly]
+    public class QueryValidator : AbstractValidator<Query>
+    {
+        public QueryValidator()
+        {
+            RuleFor(x => x.Before).NotEmpty(); // TODO: Temporary
+        }
+    }
 
     [PublicAPI]
     public record Result(

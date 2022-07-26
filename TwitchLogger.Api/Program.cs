@@ -1,3 +1,4 @@
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TwitchLogger.Api.Extensions;
@@ -19,6 +20,7 @@ builder.Services
     .Services
     .AddAsyncInitialization()
     .AddMediatR(typeof(Program))
+    .AddValidatorsFromAssemblyContaining<Program>()
     .AddDbContext<TwitchLoggerDbContext>((services, options) =>
     {
         var dbOptions = services
