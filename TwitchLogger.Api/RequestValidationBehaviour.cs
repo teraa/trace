@@ -15,6 +15,9 @@ public class RequestValidationBehaviour<TRequest, TResponse> : IPipelineBehavior
 
     public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
     {
+        if (!_validators.Any())
+            return next();
+
         var context = new ValidationContext<TRequest>(request);
 
         var failures = _validators
