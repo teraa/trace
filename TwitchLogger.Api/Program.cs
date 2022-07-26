@@ -1,6 +1,7 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using TwitchLogger.Api;
 using TwitchLogger.Api.Extensions;
 using TwitchLogger.Api.Options;
 using TwitchLogger.Data;
@@ -16,10 +17,14 @@ builder.Host
     .UseSystemd();
 
 builder.Services
-    .AddControllers()
+    .AddControllers(options =>
+    {
+        options.Filters.Add<ValidationExceptionFilter>();
+    })
     .Services
     .AddAsyncInitialization()
     .AddMediatR(typeof(Program))
+    .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehaviour<,>))
     .AddValidatorsFromAssemblyContaining<Program>()
     .AddDbContext<TwitchLoggerDbContext>((services, options) =>
     {
