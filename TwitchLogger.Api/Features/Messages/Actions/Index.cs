@@ -21,7 +21,8 @@ public static class Index
     {
         public QueryValidator()
         {
-            RuleFor(x => x.Before).NotEmpty(); // TODO: Temporary
+            RuleFor(x => x.ChannelId).NotEmpty();
+            RuleFor(x => x.Limit).InclusiveBetween(1, 100);
         }
     }
 
