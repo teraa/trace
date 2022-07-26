@@ -13,7 +13,9 @@ public static class Index
     public record Query(
         string ChannelId,
         int Limit,
-        long? Before
+        long? Before,
+        string? AuthorId,
+        string? AuthorLogin
     ) : IRequest<IActionResult>;
 
     [UsedImplicitly]
@@ -50,6 +52,12 @@ public static class Index
                 .Where(x => x.ChannelId == request.ChannelId)
                 .OrderByDescending(x => x.Timestamp)
                 .ThenBy(x => x.Id);
+
+            if (request.AuthorId is { })
+                query = query.Where(x => x.AuthorId == request.AuthorId);
+
+            if (request.AuthorLogin is { })
+                query = query.Where(x => x.AuthorLogin == request.AuthorLogin);
 
             if (request.Before is not null)
             {
