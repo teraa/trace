@@ -16,6 +16,6 @@ public class MessagesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(string channelId, CancellationToken cancellationToken)
-        => await _mediator.Send(new Index.Query(channelId), cancellationToken);
+    public async Task<IActionResult> Index(string channelId, int limit = 50, long? before = null, CancellationToken cancellationToken = default)
+        => await _mediator.Send(new Index.Query(channelId, limit, before), cancellationToken);
 }

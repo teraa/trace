@@ -3,12 +3,19 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TwitchLogger.Data;
+using TwitchLogger.Data.Models.Tmi;
 
 namespace TwitchLogger.Api.Features.Messages.Actions;
 
 public static class Index
 {
-    public record Query(string ChannelId) : IRequest<IActionResult>;
+    public record Query(
+        string ChannelId,
+        int Limit,
+        long? Before
+    ) : IRequest<IActionResult>;
+
+    // TODO: QueryValidator
 
     [PublicAPI]
     public record Result(
@@ -30,9 +37,33 @@ public static class Index
 
         public async Task<IActionResult> Handle(Query request, CancellationToken cancellationToken)
         {
-            var results = await _ctx.TmiMessages
+            IQueryable<Message> query = _ctx.TmiMessages
                 .Where(x => x.ChannelId == request.ChannelId)
                 .OrderByDescending(x => x.Timestamp)
+                .ThenBy(x => x.Id);
+
+            if (request.Before is not null)
+            {
+                var beforeTimestamp = await query
+                    .Where(x => x.Id == request.Before)
+                    .Select(x => (DateTimeOffset?)x.Timestamp)
+                    .FirstOrDefaultAsync(cancellationToken);
+
+                if (beforeTimestamp is null)
+                    return new BadRequestResult(); // TODO
+
+                int offset = await query
+                    .Where(x => x.Timestamp == beforeTimestamp)
+                    .Where(x => x.Id <= request.Before)
+                    .CountAsync(cancellationToken);
+
+                query = query
+                    .Where(x => x.Timestamp <= beforeTimestamp)
+                    .Skip(offset);
+            }
+
+            var results = await query
+                .Take(request.Limit)
                 .Select(x => new Result(
                     x.Id,
                     x.Timestamp,
