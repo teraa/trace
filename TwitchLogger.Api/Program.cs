@@ -45,6 +45,16 @@ builder.Services
 
 var app = builder.Build();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseCors(policy =>
+    {
+        policy.AllowAnyOrigin();
+        policy.AllowAnyHeader();
+        policy.AllowAnyMethod();
+    });
+}
+
 app.UseAuthentication();
 app.UseAuthorization();
 
