@@ -19,7 +19,6 @@ builder.Host
 builder.Services
     .AddControllers(options =>
     {
-        options.Filters.Add<ValidationExceptionFilter>();
         options.ModelValidatorProviders.Clear();
     })
     .Services

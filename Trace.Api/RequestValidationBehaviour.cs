@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Trace.Api;
 
-public class RequestValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
+public class RequestValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, IActionResult>
+    where TRequest : IRequest<TResponse>, IRequest<IActionResult>
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -13,7 +14,7 @@ public class RequestValidationBehaviour<TRequest, TResponse> : IPipelineBehavior
         _validators = validators;
     }
 
-    public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+    public Task<IActionResult> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<IActionResult> next)
     {
         if (!_validators.Any())
             return next();
@@ -26,9 +27,15 @@ public class RequestValidationBehaviour<TRequest, TResponse> : IPipelineBehavior
             .SelectMany(x => x.Errors)
             .ToList();
 
-        if (failures.Any())
-            throw new ValidationException(failures);
+        if (!failures.Any())
+            return next();
 
-        return next();
+        var errors = failures.GroupBy(x => x.PropertyName, x => x.ErrorMessage)
+            .ToDictionary(x => x.Key, x => x.ToArray());
+
+        var problemDetails = new ValidationProblemDetails(errors);
+        IActionResult result = new BadRequestObjectResult(problemDetails);
+
+        return Task.FromResult(result);
     }
 }
