@@ -5,7 +5,7 @@ using Index = TwitchLogger.Api.Features.Twitch.Messages.Actions.Index;
 namespace TwitchLogger.Api.Features.Twitch.Messages;
 
 [ApiController]
-[Route("[controller]")]
+[Route("twitch/[controller]")]
 public class MessagesController : ControllerBase
 {
     private readonly IMediator _mediator;

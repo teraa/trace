@@ -5,7 +5,7 @@ using Index = TwitchLogger.Api.Features.Twitch.Channels.Actions.Index;
 namespace TwitchLogger.Api.Features.Twitch.Channels;
 
 [ApiController]
-[Route("[controller]")]
+[Route("twitch/[controller]")]
 public class ChannelsController : ControllerBase
 {
     private readonly IMediator _mediator;
