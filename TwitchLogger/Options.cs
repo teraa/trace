@@ -3,7 +3,7 @@
 using JetBrains.Annotations;
 
 #pragma warning disable CS8618
-namespace TwitchLogger;
+namespace Trace;
 
 public class PubSubOptions
 {

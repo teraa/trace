@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using TwitchLogger.Data;
+using Trace.Data;
 
 #nullable disable
 
-namespace TwitchLogger.Migrations
+namespace Trace.Migrations
 {
-    [DbContext(typeof(TwitchLoggerDbContext))]
-    partial class TwitchLoggerDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(TraceDbContext))]
+    partial class TraceDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -22,7 +22,7 @@ namespace TwitchLogger.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("TwitchLogger.Data.Models.Pubsub.Config", b =>
+            modelBuilder.Entity("Trace.Data.Models.Pubsub.Config", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,7 +51,7 @@ namespace TwitchLogger.Migrations
                     b.ToTable("configs", "pubsub");
                 });
 
-            modelBuilder.Entity("TwitchLogger.Data.Models.Pubsub.ModeratorAction", b =>
+            modelBuilder.Entity("Trace.Data.Models.Pubsub.ModeratorAction", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -109,7 +109,7 @@ namespace TwitchLogger.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("ModeratorAction");
                 });
 
-            modelBuilder.Entity("TwitchLogger.Data.Models.Tmi.Config", b =>
+            modelBuilder.Entity("Trace.Data.Models.Tmi.Config", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -138,7 +138,7 @@ namespace TwitchLogger.Migrations
                     b.ToTable("configs", "tmi");
                 });
 
-            modelBuilder.Entity("TwitchLogger.Data.Models.Tmi.Message", b =>
+            modelBuilder.Entity("Trace.Data.Models.Tmi.Message", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -199,7 +199,7 @@ namespace TwitchLogger.Migrations
                     b.ToTable("messages", "tmi");
                 });
 
-            modelBuilder.Entity("TwitchLogger.Data.Models.Tmi.Source", b =>
+            modelBuilder.Entity("Trace.Data.Models.Tmi.Source", b =>
                 {
                     b.Property<short>("Id")
                         .ValueGeneratedOnAdd()
@@ -227,9 +227,9 @@ namespace TwitchLogger.Migrations
                     b.ToTable("sources", "tmi");
                 });
 
-            modelBuilder.Entity("TwitchLogger.Data.Models.Pubsub.Followers", b =>
+            modelBuilder.Entity("Trace.Data.Models.Pubsub.Followers", b =>
                 {
-                    b.HasBaseType("TwitchLogger.Data.Models.Pubsub.ModeratorAction");
+                    b.HasBaseType("Trace.Data.Models.Pubsub.ModeratorAction");
 
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("interval")
@@ -238,9 +238,9 @@ namespace TwitchLogger.Migrations
                     b.HasDiscriminator().HasValue("Followers");
                 });
 
-            modelBuilder.Entity("TwitchLogger.Data.Models.Pubsub.Raid", b =>
+            modelBuilder.Entity("Trace.Data.Models.Pubsub.Raid", b =>
                 {
-                    b.HasBaseType("TwitchLogger.Data.Models.Pubsub.ModeratorAction");
+                    b.HasBaseType("Trace.Data.Models.Pubsub.ModeratorAction");
 
                     b.Property<string>("TargetName")
                         .IsRequired()
@@ -250,9 +250,9 @@ namespace TwitchLogger.Migrations
                     b.HasDiscriminator().HasValue("Raid");
                 });
 
-            modelBuilder.Entity("TwitchLogger.Data.Models.Pubsub.Slow", b =>
+            modelBuilder.Entity("Trace.Data.Models.Pubsub.Slow", b =>
                 {
-                    b.HasBaseType("TwitchLogger.Data.Models.Pubsub.ModeratorAction");
+                    b.HasBaseType("Trace.Data.Models.Pubsub.ModeratorAction");
 
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("interval")
@@ -261,9 +261,9 @@ namespace TwitchLogger.Migrations
                     b.HasDiscriminator().HasValue("Slow");
                 });
 
-            modelBuilder.Entity("TwitchLogger.Data.Models.Pubsub.TargetedModeratorAction", b =>
+            modelBuilder.Entity("Trace.Data.Models.Pubsub.TargetedModeratorAction", b =>
                 {
-                    b.HasBaseType("TwitchLogger.Data.Models.Pubsub.ModeratorAction");
+                    b.HasBaseType("Trace.Data.Models.Pubsub.ModeratorAction");
 
                     b.Property<string>("TargetId")
                         .IsRequired()
@@ -281,9 +281,9 @@ namespace TwitchLogger.Migrations
                     b.HasDiscriminator().HasValue("TargetedModeratorAction");
                 });
 
-            modelBuilder.Entity("TwitchLogger.Data.Models.Pubsub.TermAction", b =>
+            modelBuilder.Entity("Trace.Data.Models.Pubsub.TermAction", b =>
                 {
-                    b.HasBaseType("TwitchLogger.Data.Models.Pubsub.ModeratorAction");
+                    b.HasBaseType("Trace.Data.Models.Pubsub.ModeratorAction");
 
                     b.Property<string>("TermId")
                         .IsRequired()
@@ -302,9 +302,9 @@ namespace TwitchLogger.Migrations
                     b.HasDiscriminator().HasValue("TermAction");
                 });
 
-            modelBuilder.Entity("TwitchLogger.Data.Models.Pubsub.Ban", b =>
+            modelBuilder.Entity("Trace.Data.Models.Pubsub.Ban", b =>
                 {
-                    b.HasBaseType("TwitchLogger.Data.Models.Pubsub.TargetedModeratorAction");
+                    b.HasBaseType("Trace.Data.Models.Pubsub.TargetedModeratorAction");
 
                     b.Property<string>("Reason")
                         .IsRequired()
@@ -314,9 +314,9 @@ namespace TwitchLogger.Migrations
                     b.HasDiscriminator().HasValue("Ban");
                 });
 
-            modelBuilder.Entity("TwitchLogger.Data.Models.Pubsub.Delete", b =>
+            modelBuilder.Entity("Trace.Data.Models.Pubsub.Delete", b =>
                 {
-                    b.HasBaseType("TwitchLogger.Data.Models.Pubsub.TargetedModeratorAction");
+                    b.HasBaseType("Trace.Data.Models.Pubsub.TargetedModeratorAction");
 
                     b.Property<string>("Message")
                         .IsRequired()
@@ -331,9 +331,9 @@ namespace TwitchLogger.Migrations
                     b.HasDiscriminator().HasValue("Delete");
                 });
 
-            modelBuilder.Entity("TwitchLogger.Data.Models.Pubsub.Timeout", b =>
+            modelBuilder.Entity("Trace.Data.Models.Pubsub.Timeout", b =>
                 {
-                    b.HasBaseType("TwitchLogger.Data.Models.Pubsub.TargetedModeratorAction");
+                    b.HasBaseType("Trace.Data.Models.Pubsub.TargetedModeratorAction");
 
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("interval")
@@ -347,9 +347,9 @@ namespace TwitchLogger.Migrations
                     b.HasDiscriminator().HasValue("Timeout");
                 });
 
-            modelBuilder.Entity("TwitchLogger.Data.Models.Pubsub.UnbanRequestAction", b =>
+            modelBuilder.Entity("Trace.Data.Models.Pubsub.UnbanRequestAction", b =>
                 {
-                    b.HasBaseType("TwitchLogger.Data.Models.Pubsub.TargetedModeratorAction");
+                    b.HasBaseType("Trace.Data.Models.Pubsub.TargetedModeratorAction");
 
                     b.Property<string>("ModeratorMessage")
                         .IsRequired()
@@ -359,9 +359,9 @@ namespace TwitchLogger.Migrations
                     b.HasDiscriminator().HasValue("UnbanRequestAction");
                 });
 
-            modelBuilder.Entity("TwitchLogger.Data.Models.Tmi.Message", b =>
+            modelBuilder.Entity("Trace.Data.Models.Tmi.Message", b =>
                 {
-                    b.HasOne("TwitchLogger.Data.Models.Tmi.Source", "Source")
+                    b.HasOne("Trace.Data.Models.Tmi.Source", "Source")
                         .WithMany("Messages")
                         .HasForeignKey("SourceId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -371,7 +371,7 @@ namespace TwitchLogger.Migrations
                     b.Navigation("Source");
                 });
 
-            modelBuilder.Entity("TwitchLogger.Data.Models.Tmi.Source", b =>
+            modelBuilder.Entity("Trace.Data.Models.Tmi.Source", b =>
                 {
                     b.Navigation("Messages");
                 });

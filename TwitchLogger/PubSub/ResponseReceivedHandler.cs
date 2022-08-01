@@ -2,7 +2,7 @@
 using MediatR;
 using Teraa.Twitch.PubSub.Notifications;
 
-namespace TwitchLogger.PubSub;
+namespace Trace.PubSub;
 
 [UsedImplicitly]
 public class ResponseReceivedHandler : INotificationHandler<ResponseReceived>

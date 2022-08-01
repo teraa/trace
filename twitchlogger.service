@@ -5,13 +5,13 @@ After=network-online.target
 [Service]
 User=tera
 Type=notify
-SyslogIdentifier=twitchlogger
-WorkingDirectory=/opt/twitchlogger/bin/publish
-ExecStart=/opt/twitchlogger/bin/publish/TwitchLogger
+SyslogIdentifier=trace
+WorkingDirectory=/opt/trace/bin/publish
+ExecStart=/opt/trace/bin/publish/Trace
 Restart=always
 Environment="DOTNET_ENVIRONMENT=Production"
-Environment="Tmi__MessageSourceName=TwitchLogger"
-Environment="Db__ConnectionString=Host=localhost;Port=5432;Database=twitchlogger;Username=postgres;Password=example;Include Error Detail=true"
+Environment="Tmi__MessageSourceName=Trace"
+Environment="Db__ConnectionString=Host=localhost;Port=5432;Database=trace;Username=postgres;Password=example;Include Error Detail=true"
 Environment="PubSub__Token=x"
 Environment="Seq__ServerUrl=x"
 Environment="Seq__ApiKey=x"

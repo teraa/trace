@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace TwitchLogger.Migrations
+namespace Trace.Migrations
 {
     public partial class RemoveUserNavigationProperties : Migration
     {

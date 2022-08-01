@@ -2,12 +2,12 @@ using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
 #pragma warning disable CS8618
-namespace TwitchLogger.Data;
+namespace Trace.Data;
 
 [PublicAPI]
-public partial class TwitchLoggerDbContext : DbContext
+public partial class TraceDbContext : DbContext
 {
-    public TwitchLoggerDbContext(DbContextOptions<TwitchLoggerDbContext> options)
+    public TraceDbContext(DbContextOptions<TraceDbContext> options)
         : base(options) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -19,6 +19,6 @@ public partial class TwitchLoggerDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(TwitchLoggerDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(TraceDbContext).Assembly);
     }
 }

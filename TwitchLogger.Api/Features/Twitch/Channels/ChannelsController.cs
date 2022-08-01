@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Index = TwitchLogger.Api.Features.Twitch.Channels.Actions.Index;
+using Index = Trace.Api.Features.Twitch.Channels.Actions.Index;
 
-namespace TwitchLogger.Api.Features.Twitch.Channels;
+namespace Trace.Api.Features.Twitch.Channels;
 
 [ApiController]
 [Route("twitch/[controller]")]

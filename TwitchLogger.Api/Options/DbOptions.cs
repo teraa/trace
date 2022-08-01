@@ -2,7 +2,7 @@
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 #pragma warning disable CS8618
 
-namespace TwitchLogger.Api.Options;
+namespace Trace.Api.Options;
 
 [UsedImplicitly]
 public class DbOptions

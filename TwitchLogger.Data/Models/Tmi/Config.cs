@@ -1,10 +1,10 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TwitchLogger.Data.Models.Tmi;
+using Trace.Data.Models.Tmi;
 
 #pragma warning disable CS8618
-namespace TwitchLogger.Data.Models.Tmi
+namespace Trace.Data.Models.Tmi
 {
     [PublicAPI]
     public class Config
@@ -27,9 +27,9 @@ namespace TwitchLogger.Data.Models.Tmi
     }
 }
 
-namespace TwitchLogger.Data
+namespace Trace.Data
 {
-    public partial class TwitchLoggerDbContext
+    public partial class TraceDbContext
     {
         public DbSet<Config> TmiConfigs { get; init; }
     }

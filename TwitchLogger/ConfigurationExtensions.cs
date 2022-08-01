@@ -1,4 +1,4 @@
-namespace TwitchLogger;
+namespace Trace;
 
 public static class ConfigurationExtensions
 {

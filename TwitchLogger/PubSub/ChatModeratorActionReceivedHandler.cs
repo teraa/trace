@@ -2,18 +2,18 @@
 using MediatR;
 using Teraa.Twitch.PubSub.Messages.ChatModeratorActions;
 using Teraa.Twitch.PubSub.Notifications;
-using TwitchLogger.Data;
+using Trace.Data;
 using Timeout = Teraa.Twitch.PubSub.Messages.ChatModeratorActions.Timeout;
 
 
-namespace TwitchLogger.PubSub;
+namespace Trace.PubSub;
 
 [UsedImplicitly]
 public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModeratorActionReceived>
 {
-    private readonly TwitchLoggerDbContext _ctx;
+    private readonly TraceDbContext _ctx;
 
-    public ChatModeratorActionReceivedHandler(TwitchLoggerDbContext ctx)
+    public ChatModeratorActionReceivedHandler(TraceDbContext ctx)
     {
         _ctx = ctx;
     }

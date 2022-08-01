@@ -1,14 +1,14 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using TwitchLogger.Data;
+using Trace.Data;
 
-namespace TwitchLogger;
+namespace Trace;
 
 [UsedImplicitly]
-internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<TwitchLoggerDbContext>
+internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<TraceDbContext>
 {
-    public TwitchLoggerDbContext CreateDbContext(string[] args)
+    public TraceDbContext CreateDbContext(string[] args)
     {
         var config = new ConfigurationBuilder()
             .AddUserSecrets<Program>(optional: false)
@@ -16,7 +16,7 @@ internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<TwitchLo
 
         var dbOptions = config.GetOptions<DbOptions>();
 
-        var optionsBuilder = new DbContextOptionsBuilder<TwitchLoggerDbContext>()
+        var optionsBuilder = new DbContextOptionsBuilder<TraceDbContext>()
             .UseNpgsql(dbOptions.ConnectionString,
                 contextOptions =>
                 {
@@ -24,6 +24,6 @@ internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<TwitchLo
                     contextOptions.CommandTimeout(600);
                 });
 
-        return new TwitchLoggerDbContext(optionsBuilder.Options);
+        return new TraceDbContext(optionsBuilder.Options);
     }
 }

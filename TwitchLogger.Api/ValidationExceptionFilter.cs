@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace TwitchLogger.Api;
+namespace Trace.Api;
 
 [UsedImplicitly]
 public class ValidationExceptionFilter : IExceptionFilter

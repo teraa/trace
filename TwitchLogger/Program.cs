@@ -2,10 +2,10 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Teraa.Twitch.PubSub;
 using Teraa.Twitch.Tmi;
-using TwitchLogger;
-using TwitchLogger.Data;
-using TwitchLogger.Initializers;
-using TwitchLogger.Tmi;
+using Trace;
+using Trace.Data;
+using Trace.Initializers;
+using Trace.Tmi;
 
 var host = Host.CreateDefaultBuilder(args)
     .UseSystemd()
@@ -22,7 +22,7 @@ var host = Host.CreateDefaultBuilder(args)
     {
         services
             .AddAsyncInitializer<MigrationInitializer>()
-            .AddDbContext<TwitchLoggerDbContext>((sp, options) =>
+            .AddDbContext<TraceDbContext>((sp, options) =>
             {
                 var dbOptions = sp
                     .GetRequiredService<IConfiguration>()

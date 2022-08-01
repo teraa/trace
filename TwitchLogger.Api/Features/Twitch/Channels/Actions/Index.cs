@@ -2,9 +2,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TwitchLogger.Data;
+using Trace.Data;
 
-namespace TwitchLogger.Api.Features.Twitch.Channels.Actions;
+namespace Trace.Api.Features.Twitch.Channels.Actions;
 
 public static class Index
 {
@@ -19,9 +19,9 @@ public static class Index
     [UsedImplicitly]
     public class Handler : IRequestHandler<Query, IActionResult>
     {
-        private readonly TwitchLoggerDbContext _ctx;
+        private readonly TraceDbContext _ctx;
 
-        public Handler(TwitchLoggerDbContext ctx)
+        public Handler(TraceDbContext ctx)
         {
             _ctx = ctx;
         }

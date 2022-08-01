@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using TwitchLogger.Data;
-using TwitchLogger.Data.Models.Tmi;
+using Trace.Data;
+using Trace.Data.Models.Tmi;
 
-namespace TwitchLogger.Tmi;
+namespace Trace.Tmi;
 
 public class SourceCache
 {
@@ -25,7 +25,7 @@ public class SourceCache
             return new Lazy<Task<short>>(async () =>
             {
                 await using var scope = _scopeFactory.CreateAsyncScope();
-                var ctx = scope.ServiceProvider.GetRequiredService<TwitchLoggerDbContext>();
+                var ctx = scope.ServiceProvider.GetRequiredService<TraceDbContext>();
                 var options = scope.ServiceProvider.GetRequiredService<IOptions<TmiOptions>>();
 
                 var source = await ctx.TmiSources

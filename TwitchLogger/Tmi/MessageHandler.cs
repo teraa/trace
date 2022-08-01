@@ -3,19 +3,19 @@ using MediatR;
 using Microsoft.Extensions.Options;
 using Teraa.Irc;
 using Teraa.Twitch.Tmi.Notifications;
-using TwitchLogger.Data;
+using Trace.Data;
 
-namespace TwitchLogger.Tmi;
+namespace Trace.Tmi;
 
 [UsedImplicitly]
 public class MessageHandler : INotificationHandler<MessageReceived>
 {
-    private readonly TwitchLoggerDbContext _ctx;
+    private readonly TraceDbContext _ctx;
     private readonly SourceCache _cache;
     private readonly ILogger<MessageHandler> _logger;
 
     public MessageHandler(
-        TwitchLoggerDbContext ctx,
+        TraceDbContext ctx,
         SourceCache cache,
         IOptions<TmiOptions> options,
         ILogger<MessageHandler> logger)

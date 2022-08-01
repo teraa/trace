@@ -5,20 +5,20 @@ using Microsoft.Extensions.Options;
 using Teraa.Twitch.PubSub;
 using Teraa.Twitch.PubSub.Notifications;
 using Teraa.Twitch.PubSub.Payloads;
-using TwitchLogger.Data;
+using Trace.Data;
 
-namespace TwitchLogger.PubSub;
+namespace Trace.PubSub;
 
 [UsedImplicitly]
 public class ConnectedHandler : INotificationHandler<Connected>
 {
     private readonly PubSubService _pubSub;
-    private readonly TwitchLoggerDbContext _ctx;
+    private readonly TraceDbContext _ctx;
     private readonly ILogger<ConnectedHandler> _logger;
     private readonly PubSubOptions _options;
 
     public ConnectedHandler(PubSubService pubSub,
-        TwitchLoggerDbContext ctx,
+        TraceDbContext ctx,
         ILogger<ConnectedHandler> logger,
         IOptions<PubSubOptions> options)
     {

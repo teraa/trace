@@ -1,4 +1,4 @@
-﻿namespace TwitchLogger.Api.Extensions;
+﻿namespace Trace.Api.Extensions;
 
 public static class ConfigurationExtensions
 {

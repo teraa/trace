@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace TwitchLogger.Migrations
+namespace Trace.Migrations
 {
     public partial class RemoveUser : Migration
     {

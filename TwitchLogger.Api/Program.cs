@@ -1,10 +1,10 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using TwitchLogger.Api;
-using TwitchLogger.Api.Extensions;
-using TwitchLogger.Api.Options;
-using TwitchLogger.Data;
+using Trace.Api;
+using Trace.Api.Extensions;
+using Trace.Api.Options;
+using Trace.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +27,7 @@ builder.Services
     .AddMediatR(typeof(Program))
     .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehaviour<,>))
     .AddValidatorsFromAssemblyContaining<Program>()
-    .AddDbContext<TwitchLoggerDbContext>((services, options) =>
+    .AddDbContext<TraceDbContext>((services, options) =>
     {
         var dbOptions = services
             .GetRequiredService<IConfiguration>()

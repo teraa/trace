@@ -4,20 +4,20 @@ using Microsoft.EntityFrameworkCore;
 using Teraa.Irc;
 using Teraa.Twitch.Tmi;
 using Teraa.Twitch.Tmi.Notifications;
-using TwitchLogger.Data;
+using Trace.Data;
 
-namespace TwitchLogger.Tmi;
+namespace Trace.Tmi;
 
 [UsedImplicitly]
 public class ConnectedHandler : INotificationHandler<Connected>
 {
     private readonly TmiService _tmi;
-    private readonly TwitchLoggerDbContext _ctx;
+    private readonly TraceDbContext _ctx;
     private readonly ILogger<ConnectedHandler> _logger;
 
     public ConnectedHandler(
         TmiService tmi,
-        TwitchLoggerDbContext ctx,
+        TraceDbContext ctx,
         ILogger<ConnectedHandler> logger)
     {
         _tmi = tmi;

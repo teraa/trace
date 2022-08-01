@@ -1,10 +1,10 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TwitchLogger.Data.Models.Pubsub;
+using Trace.Data.Models.Pubsub;
 
 #pragma warning disable CS8618
-namespace TwitchLogger.Data.Models.Pubsub
+namespace Trace.Data.Models.Pubsub
 {
     [PublicAPI]
     public class Config
@@ -27,9 +27,9 @@ namespace TwitchLogger.Data.Models.Pubsub
     }
 }
 
-namespace TwitchLogger.Data
+namespace Trace.Data
 {
-    public partial class TwitchLoggerDbContext
+    public partial class TraceDbContext
     {
         public DbSet<Config> PubsubConfigs { get; init; }
     }

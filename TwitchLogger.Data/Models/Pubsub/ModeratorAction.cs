@@ -1,11 +1,11 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TwitchLogger.Data.Models.Pubsub;
-using Timeout = TwitchLogger.Data.Models.Pubsub.Timeout;
+using Trace.Data.Models.Pubsub;
+using Timeout = Trace.Data.Models.Pubsub.Timeout;
 
 #pragma warning disable CS8618
-namespace TwitchLogger.Data.Models.Pubsub
+namespace Trace.Data.Models.Pubsub
 {
     [PublicAPI]
     public class ModeratorAction
@@ -99,9 +99,9 @@ namespace TwitchLogger.Data.Models.Pubsub
     }
 }
 
-namespace TwitchLogger.Data
+namespace Trace.Data
 {
-    public partial class TwitchLoggerDbContext
+    public partial class TraceDbContext
     {
         public DbSet<ModeratorAction> ModeratorActions { get; init; }
 
