@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TwitchLogger.Data;
 
-namespace TwitchLogger.Api.Features.Channels.Actions;
+namespace TwitchLogger.Api.Features.Twitch.Channels.Actions;
 
 public static class Index
 {

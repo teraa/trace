@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using TwitchLogger.Data;
 using TwitchLogger.Data.Models.Tmi;
 
-namespace TwitchLogger.Api.Features.Messages.Actions;
+namespace TwitchLogger.Api.Features.Twitch.Messages.Actions;
 
 public static class Index
 {
