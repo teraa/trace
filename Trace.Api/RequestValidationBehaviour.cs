@@ -21,21 +21,19 @@ public class RequestValidationBehaviour<TRequest, TResponse> : IPipelineBehavior
 
         var context = new ValidationContext<TRequest>(request);
 
-        var failures = _validators
+        var errors = _validators
             .Select(x => x.Validate(context))
             .Where(x => !x.IsValid)
             .SelectMany(x => x.Errors)
-            .ToList();
-
-        if (!failures.Any())
-            return next();
-
-        var errors = failures.GroupBy(x => x.PropertyName, x => x.ErrorMessage)
+            .GroupBy(x => x.PropertyName, x => x.ErrorMessage)
             .ToDictionary(x => x.Key, x => x.ToArray());
 
-        var problemDetails = new ValidationProblemDetails(errors);
-        IActionResult result = new BadRequestObjectResult(problemDetails);
+        if (!errors.Any())
+            return next();
 
-        return Task.FromResult(result);
+        var problemDetails = new ValidationProblemDetails(errors);
+        var result = new BadRequestObjectResult(problemDetails);
+
+        return Task.FromResult<IActionResult>(result);
     }
 }
