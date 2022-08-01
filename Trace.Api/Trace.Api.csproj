@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TwitchLogger.Data\TwitchLogger.Data.csproj" />
+    <ProjectReference Include="..\Trace.Data\Trace.Data.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchLogger", "TwitchLogger\TwitchLogger.csproj", "{C29CE1E5-2C0D-400C-86CE-A3EF967812E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trace", "Trace\Trace.csproj", "{C29CE1E5-2C0D-400C-86CE-A3EF967812E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchLogger.Data", "TwitchLogger.Data\TwitchLogger.Data.csproj", "{68220480-20E9-4311-879B-C2743D127DFD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trace.Data", "Trace.Data\Trace.Data.csproj", "{68220480-20E9-4311-879B-C2743D127DFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchLogger.Api", "TwitchLogger.Api\TwitchLogger.Api.csproj", "{F900E486-ED7A-4548-BDAB-365802DE4E49}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trace.Api", "Trace.Api\Trace.Api.csproj", "{F900E486-ED7A-4548-BDAB-365802DE4E49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
