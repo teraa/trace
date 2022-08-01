@@ -48,10 +48,11 @@ public static class Index
 
         public async Task<IActionResult> Handle(Query request, CancellationToken cancellationToken)
         {
-            IQueryable<Message> query = _ctx.TmiMessages
+            var query = _ctx.TmiMessages
                 .Where(x => x.ChannelId == request.ChannelId)
                 .OrderByDescending(x => x.Timestamp)
-                .ThenBy(x => x.Id);
+                .ThenBy(x => x.Id)
+                .AsQueryable();
 
             if (request.AuthorId is { })
                 query = query.Where(x => x.AuthorId == request.AuthorId);
