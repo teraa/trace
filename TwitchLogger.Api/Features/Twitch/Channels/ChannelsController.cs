@@ -8,14 +8,14 @@ namespace TwitchLogger.Api.Features.Twitch.Channels;
 [Route("twitch/[controller]")]
 public class ChannelsController : ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly ISender _sender;
 
-    public ChannelsController(IMediator mediator)
+    public ChannelsController(ISender sender)
     {
-        _mediator = mediator;
+        _sender = sender;
     }
 
     [HttpGet]
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
-        => await _mediator.Send(new Index.Query(), cancellationToken);
+        => await _sender.Send(new Index.Query(), cancellationToken);
 }
