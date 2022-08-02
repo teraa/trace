@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Trace.Api;
 using Trace.Api.Extensions;
+using Trace.Api.Features.Auth;
 using Trace.Api.Options;
 using Trace.Data;
 
@@ -41,6 +42,11 @@ builder.Services
     .AddMediatR(typeof(Program))
     .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehaviour<,>))
     .AddValidatorsFromAssemblyContaining<Program>()
+    .AddMemoryCache()
+    .AddHttpClient()
+    .AddOptionsWithSection<TwitchOptions>(builder.Configuration)
+    .AddOptionsWithSection<JwtOptions>(builder.Configuration)
+    .AddSingleton<TokenService>()
     ;
 
 var app = builder.Build();
