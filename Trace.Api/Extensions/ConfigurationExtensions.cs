@@ -1,4 +1,6 @@
-﻿namespace Trace.Api.Extensions;
+﻿using JetBrains.Annotations;
+
+namespace Trace.Api.Extensions;
 
 public static class ConfigurationExtensions
 {
@@ -14,12 +16,12 @@ public static class ConfigurationExtensions
         return configuration.GetRequiredSection(name);
     }
 
-    public static TOptions GetOptions<TOptions>(this IConfiguration configuration)
+    public static TOptions GetOptions<[MeansImplicitUse] TOptions>(this IConfiguration configuration)
     {
         return configuration.GetOptionsSection<TOptions>().Get<TOptions>();
     }
 
-    public static IServiceCollection AddOptionsWithSection<TOptions>(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddOptionsWithSection<[MeansImplicitUse] TOptions>(this IServiceCollection services, IConfiguration configuration)
         where TOptions : class
     {
         return services.Configure<TOptions>(configuration.GetOptionsSection<TOptions>());
