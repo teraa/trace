@@ -1,6 +1,5 @@
 using JetBrains.Annotations;
 using MediatR;
-using Microsoft.Extensions.Options;
 using Teraa.Irc;
 using Teraa.Twitch.Tmi.Notifications;
 using Trace.Data;
@@ -17,7 +16,6 @@ public class MessageHandler : INotificationHandler<MessageReceived>
     public MessageHandler(
         TraceDbContext ctx,
         SourceCache cache,
-        IOptions<TmiOptions> options,
         ILogger<MessageHandler> logger)
     {
         _ctx = ctx;
