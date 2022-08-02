@@ -139,7 +139,7 @@ public static class Token
 
             var refreshTokenEntity = new RefreshToken
             {
-                Id = Guid.NewGuid(),
+                Id = refreshToken.Value,
                 User = userEntity,
                 IssuedAt = now,
                 ExpiresAt = now + refreshToken.ExpiresIn,
