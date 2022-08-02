@@ -26,11 +26,12 @@ public class SourceCache
             {
                 await using var scope = _scopeFactory.CreateAsyncScope();
                 var ctx = scope.ServiceProvider.GetRequiredService<TraceDbContext>();
-                var options = scope.ServiceProvider.GetRequiredService<IOptions<TmiOptions>>();
+                var options = scope.ServiceProvider.GetRequiredService<IOptionsMonitor<TmiOptions>>();
+                var sourceName = options.CurrentValue.MessageSourceName;
 
                 var source = await ctx.TmiSources
                     .AsNoTracking()
-                    .Where(x => x.Name == options.Value.MessageSourceName)
+                    .Where(x => x.Name == sourceName)
                     .FirstOrDefaultAsync(cancellationToken);
 
                 if (source is not null)
@@ -38,7 +39,7 @@ public class SourceCache
 
                 source = new Source
                 {
-                    Name = options.Value.MessageSourceName,
+                    Name = sourceName,
                 };
 
                 ctx.TmiSources.Add(source);

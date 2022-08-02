@@ -15,17 +15,17 @@ public class ConnectedHandler : INotificationHandler<Connected>
     private readonly PubSubService _pubSub;
     private readonly TraceDbContext _ctx;
     private readonly ILogger<ConnectedHandler> _logger;
-    private readonly PubSubOptions _options;
+    private readonly IOptionsMonitor<PubSubOptions> _options;
 
     public ConnectedHandler(PubSubService pubSub,
         TraceDbContext ctx,
         ILogger<ConnectedHandler> logger,
-        IOptions<PubSubOptions> options)
+        IOptionsMonitor<PubSubOptions> options)
     {
         _pubSub = pubSub;
         _ctx = ctx;
         _logger = logger;
-        _options = options.Value;
+        _options = options;
     }
 
     public async Task Handle(Connected notification, CancellationToken cancellationToken)
@@ -37,6 +37,6 @@ public class ConnectedHandler : INotificationHandler<Connected>
         _logger.LogInformation("Joining: {Topics}", topics);
 
         foreach (string topic in topics)
-            _pubSub.EnqueueMessage(Payload.CreateListen(new List<string> {topic}, _options.Token, topic));
+            _pubSub.EnqueueMessage(Payload.CreateListen(new List<string> {topic}, _options.CurrentValue.Token, topic));
     }
 }
