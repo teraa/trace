@@ -70,16 +70,16 @@ public static class Refresh
 
             refreshTokenEntity = new RefreshToken
             {
-                Id = tokenData.RefreshToken,
+                Id = tokenData.RefreshToken.Value,
                 UserId = refreshTokenEntity.UserId,
                 IssuedAt = now,
-                ExpiresAt = now + tokenData.RefreshTokenExpiresIn,
+                ExpiresAt = now + tokenData.RefreshToken.ExpiresIn,
             };
 
             _ctx.RefreshTokens.Add(refreshTokenEntity);
             await _ctx.SaveChangesAsync(cancellationToken);
 
-            var result = new Result(tokenData.Token, (int) tokenData.TokenExpiresIn.TotalSeconds, tokenData.RefreshToken);
+            var result = new Result(tokenData.Token.Value, (int) tokenData.Token.ExpiresIn.TotalSeconds, tokenData.RefreshToken.Value);
             return new OkObjectResult(result);
         }
     }
