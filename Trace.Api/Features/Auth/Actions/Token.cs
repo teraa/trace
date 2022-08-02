@@ -134,21 +134,20 @@ public static class Token
             }
 
             var now = DateTimeOffset.UtcNow;
-            var token = _tokenService.CreateToken(now, userEntity.Id);
-            var refreshToken = _tokenService.CreateRefreshToken();
+            var tokenData = _tokenService.CreateToken(now, userEntity.Id);
 
             var refreshTokenEntity = new RefreshToken
             {
-                Id = refreshToken.Value,
+                Id = tokenData.RefreshToken,
                 User = userEntity,
                 IssuedAt = now,
-                ExpiresAt = now + refreshToken.ExpiresIn,
+                ExpiresAt = now + tokenData.RefreshTokenExpiresIn,
             };
 
             _ctx.RefreshTokens.Add(refreshTokenEntity);
             await _ctx.SaveChangesAsync(cancellationToken);
 
-            var result = new Result(token.Value, (int) token.ExpiresIn.TotalSeconds, refreshToken.Value);
+            var result = new Result(tokenData.Token, (int) tokenData.TokenExpiresIn.TotalSeconds, tokenData.RefreshToken);
             return new OkObjectResult(result);
         }
 

@@ -30,12 +30,12 @@ public static class Refresh
         int ExpiresIn,
         Guid RefreshToken);
 
+    [UsedImplicitly]
     public class Handler : IRequestHandler<Command, IActionResult>
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly TraceDbContext _ctx;
         private readonly TokenService _tokenService;
-
 
         public Handler(IHttpContextAccessor httpContextAccessor, TraceDbContext ctx, TokenService tokenService)
         {
@@ -66,21 +66,20 @@ public static class Refresh
                 return Results.BadRequestDetails("Expired refresh token.");
             }
 
-            var token = _tokenService.CreateToken(now, refreshTokenEntity.UserId);
-            var refreshToken = _tokenService.CreateRefreshToken();
+            var tokenData = _tokenService.CreateToken(now, refreshTokenEntity.UserId);
 
             refreshTokenEntity = new RefreshToken
             {
-                Id = refreshToken.Value,
+                Id = tokenData.RefreshToken,
                 UserId = refreshTokenEntity.UserId,
                 IssuedAt = now,
-                ExpiresAt = now + refreshToken.ExpiresIn,
+                ExpiresAt = now + tokenData.RefreshTokenExpiresIn,
             };
 
             _ctx.RefreshTokens.Add(refreshTokenEntity);
             await _ctx.SaveChangesAsync(cancellationToken);
 
-            var result = new Result(token.Value, (int) token.ExpiresIn.TotalSeconds, refreshToken.Value);
+            var result = new Result(tokenData.Token, (int) tokenData.TokenExpiresIn.TotalSeconds, tokenData.RefreshToken);
             return new OkObjectResult(result);
         }
     }

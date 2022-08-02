@@ -50,12 +50,11 @@ public class TokenService : IDisposable
         SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
         string tokenValue = tokenHandler.WriteToken(token);
 
-        return new TokenData(tokenValue, _options.CurrentValue.TokenLifetime);
-    }
-
-    public RefreshTokenData CreateRefreshToken()
-    {
-        return new RefreshTokenData(Guid.NewGuid(), _options.CurrentValue.RefreshTokenLifetime);
+        return new TokenData(
+            tokenValue,
+            _options.CurrentValue.TokenLifetime,
+            Guid.NewGuid(),
+            _options.CurrentValue.RefreshTokenLifetime);
     }
 
     public bool IsValid(DateTimeOffset now, DateTimeOffset expiresAt)
@@ -66,7 +65,9 @@ public class TokenService : IDisposable
         _optionsChangeListener.Dispose();
     }
 
-    public record TokenData(string Value, TimeSpan ExpiresIn);
-
-    public record RefreshTokenData(Guid Value, TimeSpan ExpiresIn);
+    public record TokenData(
+        string Token,
+        TimeSpan TokenExpiresIn,
+        Guid RefreshToken,
+        TimeSpan RefreshTokenExpiresIn);
 }
