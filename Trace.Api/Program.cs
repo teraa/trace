@@ -44,6 +44,7 @@ builder.Services
     .AddValidatorsFromAssemblyContaining<Program>()
     .AddMemoryCache()
     .AddHttpClient()
+    .AddHttpContextAccessor()
     .AddOptionsWithSection<TwitchOptions>(builder.Configuration)
     .AddOptionsWithSection<JwtOptions>(builder.Configuration)
     .AddSingleton<TokenService>()

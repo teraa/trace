@@ -58,6 +58,9 @@ public class TokenService : IDisposable
         return new RefreshTokenData(Guid.NewGuid(), _options.CurrentValue.RefreshTokenLifetime);
     }
 
+    public bool IsValid(DateTimeOffset now, DateTimeOffset expiresAt)
+        => now + _options.CurrentValue.ClockSkew > expiresAt;
+
     public void Dispose()
     {
         _optionsChangeListener.Dispose();
