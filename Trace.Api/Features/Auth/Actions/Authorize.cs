@@ -37,7 +37,7 @@ public static class Authorize
                     ["response_type"] = "code",
                     ["scope"] = _options.CurrentValue.Scope,
                     ["state"] = state,
-                    ["force_verify"] = "true", // TODO: Temporary
+                    // ["force_verify"] = "true",
                 })
                 .ToString();
 

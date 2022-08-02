@@ -28,7 +28,7 @@ public class TokenService : IDisposable
         _signingKey = new SymmetricSecurityKey(bytes);
     }
 
-    public string CreateToken(Guid userId)
+    public TokenData CreateToken(DateTimeOffset issuedAt, Guid userId)
     {
         SecurityTokenDescriptor tokenDescriptor = new()
         {
@@ -37,21 +37,33 @@ public class TokenService : IDisposable
                 new(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 // new(JwtRegisteredClaimNames.Name, username),
             }),
-            Expires = DateTime.UtcNow + _options.CurrentValue.TokenLifetime,
+            Expires = issuedAt.UtcDateTime + _options.CurrentValue.TokenLifetime,
             SigningCredentials = new SigningCredentials(
                 key: _signingKey,
                 algorithm: SecurityAlgorithms.HmacSha256Signature),
             Audience = _options.CurrentValue.Audience,
             Issuer = _options.CurrentValue.Issuer,
+            IssuedAt = issuedAt.UtcDateTime
         };
 
         JwtSecurityTokenHandler tokenHandler = new();
         SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
+        string tokenValue = tokenHandler.WriteToken(token);
+
+        return new TokenData(tokenValue, _options.CurrentValue.TokenLifetime);
+    }
+
+    public RefreshTokenData CreateRefreshToken()
+    {
+        return new RefreshTokenData(Guid.NewGuid(), _options.CurrentValue.RefreshTokenLifetime);
     }
 
     public void Dispose()
     {
         _optionsChangeListener.Dispose();
     }
+
+    public record TokenData(string Value, TimeSpan ExpiresIn);
+
+    public record RefreshTokenData(Guid Value, TimeSpan ExpiresIn);
 }

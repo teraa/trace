@@ -6,9 +6,12 @@ using FluentValidation;
 using JetBrains.Annotations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Trace.Api.Options;
+using Trace.Data;
+using Trace.Data.Models;
 
 namespace Trace.Api.Features.Auth.Actions;
 
@@ -33,6 +36,12 @@ public static class Token
         }
     }
 
+    [PublicAPI]
+    public record Result(
+        string Token,
+        int ExpiresIn,
+        Guid RefreshToken);
+
     [UsedImplicitly]
     public class Handler : IRequestHandler<Command, IActionResult>
     {
@@ -40,13 +49,15 @@ public static class Token
         private readonly IOptionsMonitor<TwitchOptions> _options;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly TokenService _tokenService;
+        private readonly TraceDbContext _ctx;
 
-        public Handler(IMemoryCache cache, IOptionsMonitor<TwitchOptions> options, IHttpClientFactory httpClientFactory, TokenService tokenService)
+        public Handler(IMemoryCache cache, IOptionsMonitor<TwitchOptions> options, IHttpClientFactory httpClientFactory, TokenService tokenService, TraceDbContext ctx)
         {
             _cache = cache;
             _options = options;
             _httpClientFactory = httpClientFactory;
             _tokenService = tokenService;
+            _ctx = ctx;
         }
 
         public async Task<IActionResult> Handle(Command request, CancellationToken cancellationToken)
@@ -106,9 +117,39 @@ public static class Token
                 validateResponse = data;
             }
 
-            string token = _tokenService.CreateToken(Guid.NewGuid()); // TODO
+            var userEntity = await _ctx.Users
+                .Where(x => x.TwitchId == validateResponse.UserId)
+                .FirstOrDefaultAsync(cancellationToken);
 
-            return new OkObjectResult(new {tokenResponse, validateResponse, token});
+            if (userEntity is null)
+            {
+                userEntity = new User
+                {
+                    Id = Guid.NewGuid(),
+                    TwitchId = validateResponse.UserId,
+                    TwitchLogin = validateResponse.Login,
+                };
+
+                _ctx.Users.Add(userEntity);
+            }
+
+            var now = DateTimeOffset.UtcNow;
+            var token = _tokenService.CreateToken(now, userEntity.Id);
+            var refreshToken = _tokenService.CreateRefreshToken();
+
+            var refreshTokenEntity = new RefreshToken
+            {
+                Id = Guid.NewGuid(),
+                User = userEntity,
+                IssuedAt = now,
+                ExpiresAt = now + refreshToken.ExpiresIn,
+            };
+
+            _ctx.RefreshTokens.Add(refreshTokenEntity);
+            await _ctx.SaveChangesAsync(cancellationToken);
+
+            var result = new Result(token.Value, (int) token.ExpiresIn.TotalSeconds, refreshToken.Value);
+            return new OkObjectResult(result);
         }
 
         [UsedImplicitly]
