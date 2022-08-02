@@ -17,15 +17,12 @@ builder.Host
     .UseSystemd();
 
 builder.Services
+    .AddAsyncInitialization()
     .AddControllers(options =>
     {
         options.ModelValidatorProviders.Clear();
     })
     .Services
-    .AddAsyncInitialization()
-    .AddMediatR(typeof(Program))
-    .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehaviour<,>))
-    .AddValidatorsFromAssemblyContaining<Program>()
     .AddDbContext<TraceDbContext>((services, options) =>
     {
         var dbOptions = services
@@ -40,7 +37,11 @@ builder.Services
 #if DEBUG
         options.EnableSensitiveDataLogging();
 #endif
-    });
+    })
+    .AddMediatR(typeof(Program))
+    .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehaviour<,>))
+    .AddValidatorsFromAssemblyContaining<Program>()
+    ;
 
 var app = builder.Build();
 
