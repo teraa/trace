@@ -4,7 +4,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Trace.Data;
-using Trace.Data.Models.Tmi;
 
 namespace Trace.Api.Features.Twitch.Messages.Actions;
 
@@ -48,6 +47,7 @@ public static class Index
 
         public async Task<IActionResult> Handle(Query request, CancellationToken cancellationToken)
         {
+
             var query = _ctx.TmiMessages
                 .Where(x => x.ChannelId == request.ChannelId)
                 .OrderByDescending(x => x.Timestamp)
