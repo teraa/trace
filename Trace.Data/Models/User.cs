@@ -12,6 +12,7 @@ namespace Trace.Data.Models
         public Guid Id { get; set; }
         public string TwitchId { get; set; }
         public string TwitchLogin { get; set; }
+        public bool IsVerified { get; set; }
 
         public ICollection<RefreshToken> RefreshTokens { get; set; }
     }

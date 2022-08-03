@@ -127,9 +127,20 @@ public static class Token
                     Id = Guid.NewGuid(),
                     TwitchId = validateResponse.UserId,
                     TwitchLogin = validateResponse.Login,
+                    IsVerified = false,
                 };
 
                 _ctx.Users.Add(userEntity);
+            }
+            else
+            {
+                userEntity.TwitchLogin = validateResponse.Login;
+            }
+
+            if (!userEntity.IsVerified)
+            {
+                await _ctx.SaveChangesAsync(cancellationToken);
+                return new ForbidResult();
             }
 
             var now = DateTimeOffset.UtcNow;
