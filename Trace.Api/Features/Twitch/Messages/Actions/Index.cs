@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Trace.Api.Extensions;
 using Trace.Data;
 
 namespace Trace.Api.Features.Twitch.Messages.Actions;
@@ -39,14 +40,29 @@ public static class Index
     public class Handler : IRequestHandler<Query, IActionResult>
     {
         private readonly TraceDbContext _ctx;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public Handler(TraceDbContext ctx)
+        public Handler(TraceDbContext ctx, IHttpContextAccessor httpContextAccessor)
         {
             _ctx = ctx;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IActionResult> Handle(Query request, CancellationToken cancellationToken)
         {
+            var userId = _httpContextAccessor.HttpContext!.GetUserId();
+            bool hasPermission = await _ctx.Users
+                .Where(x => x.Id == userId)
+                .Join(
+                    _ctx.ChannelPermissions,
+                    x => x.TwitchId,
+                    y => y.UserId,
+                    (x, y) => y
+                ).Where(x => x.ChannelId == request.ChannelId)
+                .AnyAsync(cancellationToken);
+
+            if (!hasPermission)
+                return new OkObjectResult(Array.Empty<Result>());
 
             var query = _ctx.TmiMessages
                 .Where(x => x.ChannelId == request.ChannelId)
