@@ -1,9 +1,9 @@
 ﻿using JetBrains.Annotations;
 using MediatR;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using Trace.Api.Extensions;
 using Trace.Api.Options;
 
 namespace Trace.Api.Features.Auth.Actions;
@@ -29,7 +29,8 @@ public static class Authorize
             string state = _cache.CreateState(_options.CurrentValue.StateLifetime);
 
             var url = new UriBuilder(_options.CurrentValue.AuthorizationEndpoint)
-                .AddQuery(new Dictionary<string, string?>
+            {
+                Query = new QueryBuilder(new Dictionary<string, string>
                 {
                     ["client_id"] = _options.CurrentValue.ClientId,
                     ["redirect_uri"] = _options.CurrentValue.RedirectUri.ToString(),
@@ -37,8 +38,8 @@ public static class Authorize
                     ["scope"] = _options.CurrentValue.Scope,
                     ["state"] = state,
                     // ["force_verify"] = "true",
-                })
-                .ToString();
+                }).ToString()
+            }.ToString();
 
             var result = new RedirectResult(url);
 
