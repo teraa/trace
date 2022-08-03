@@ -68,7 +68,7 @@ public static class Index
                     .FirstOrDefaultAsync(cancellationToken);
 
                 if (beforeTimestamp is null)
-                    return new BadRequestResult(); // TODO
+                    return Results.BadRequestDetails("Invalid before ID.");
 
                 int offset = await query
                     .Where(x => x.Timestamp == beforeTimestamp)
