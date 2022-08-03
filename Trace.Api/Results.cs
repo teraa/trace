@@ -4,9 +4,9 @@ namespace Trace.Api;
 
 public static class Results
 {
-    public static BadRequestObjectResult BadRequestDetails(string detail)
+    public static BadRequestObjectResult BadRequestDetails(string title)
         => new(new ProblemDetails
         {
-            Title = detail,
+            Title = title,
         });
 }
