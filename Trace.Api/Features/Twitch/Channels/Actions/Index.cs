@@ -1,8 +1,8 @@
-﻿using System.Security.Claims;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Trace.Api.Extensions;
 using Trace.Data;
 
 namespace Trace.Api.Features.Twitch.Channels.Actions;
@@ -31,8 +31,7 @@ public static class Index
 
         public async Task<IActionResult> Handle(Query request, CancellationToken cancellationToken)
         {
-            var userIdValue = _httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = new Guid(userIdValue);
+            var userId = _httpContextAccessor.HttpContext!.GetUserId();
 
             var twitchUserId = await _ctx.Users
                 .Where(x => x.Id == userId)

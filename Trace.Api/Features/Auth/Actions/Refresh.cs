@@ -1,9 +1,9 @@
-﻿using System.Security.Claims;
-using FluentValidation;
+﻿using FluentValidation;
 using JetBrains.Annotations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Trace.Api.Extensions;
 using Trace.Data;
 using Trace.Data.Models;
 
@@ -46,8 +46,7 @@ public static class Refresh
 
         public async Task<IActionResult> Handle(Command request, CancellationToken cancellationToken)
         {
-            var userIdValue = _httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = new Guid(userIdValue);
+            var userId = _httpContextAccessor.HttpContext!.GetUserId();
             var now = DateTimeOffset.UtcNow;
 
             var refreshTokenEntity = await _ctx.RefreshTokens
