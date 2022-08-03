@@ -24,4 +24,9 @@ public class AuthController : ControllerBase
     [Route("[action]")]
     public async Task<IActionResult> Token(string code,  string scope, string state, CancellationToken cancellationToken = default)
         => await _sender.Send(new Token.Command(code, scope, state), cancellationToken);
+
+    [HttpPost]
+    [Route("[action]")]
+    public async Task<IActionResult> Refresh(Guid refreshToken, CancellationToken cancellationToken)
+        => await _sender.Send(new Refresh.Command(refreshToken), cancellationToken);
 }
