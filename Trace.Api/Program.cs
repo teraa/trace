@@ -48,6 +48,7 @@ builder.Services
     .AddOptionsWithSection<TwitchOptions>(builder.Configuration)
     .AddOptionsWithSection<JwtOptions>(builder.Configuration)
     .AddSingleton<TokenService>()
+    .AddSingleton<JwtSigningKeyProvider>()
     ;
 
 var app = builder.Build();

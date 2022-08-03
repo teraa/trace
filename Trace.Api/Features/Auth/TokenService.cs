@@ -1,31 +1,20 @@
-using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Trace.Api.Options;
 
 namespace Trace.Api.Features.Auth;
 
-public class TokenService : IDisposable
+public class TokenService
 {
     private readonly IOptionsMonitor<JwtOptions> _options;
-    private readonly IDisposable _optionsChangeListener;
-    private SymmetricSecurityKey _signingKey;
+    private readonly JwtSigningKeyProvider _signingKeyProvider;
 
-    public TokenService(IOptionsMonitor<JwtOptions> options)
+    public TokenService(IOptionsMonitor<JwtOptions> options, JwtSigningKeyProvider signingKeyProvider)
     {
         _options = options;
-        _optionsChangeListener = options.OnChange(UpdateKey);
-        UpdateKey(options.CurrentValue, null);
-    }
-
-    [MemberNotNull(nameof(_signingKey))]
-    private void UpdateKey(JwtOptions options, string? name)
-    {
-        byte[] bytes = Encoding.ASCII.GetBytes(options.SigningKey);
-        _signingKey = new SymmetricSecurityKey(bytes);
+        _signingKeyProvider = signingKeyProvider;
     }
 
     public TokenData CreateToken(DateTimeOffset issuedAt, Guid userId)
@@ -39,7 +28,7 @@ public class TokenService : IDisposable
             }),
             Expires = issuedAt.UtcDateTime + _options.CurrentValue.TokenLifetime,
             SigningCredentials = new SigningCredentials(
-                key: _signingKey,
+                key: _signingKeyProvider.Key,
                 algorithm: SecurityAlgorithms.HmacSha256Signature),
             Audience = _options.CurrentValue.Audience,
             Issuer = _options.CurrentValue.Issuer,
@@ -57,11 +46,6 @@ public class TokenService : IDisposable
 
     public bool IsValid(DateTimeOffset now, DateTimeOffset expiresAt)
         => now + _options.CurrentValue.ClockSkew > expiresAt;
-
-    public void Dispose()
-    {
-        _optionsChangeListener.Dispose();
-    }
 
     public record TokenData(
         (string Value, TimeSpan ExpiresIn) Token,
