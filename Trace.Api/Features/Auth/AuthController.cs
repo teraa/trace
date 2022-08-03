@@ -23,7 +23,7 @@ public class AuthController : ControllerBase
 
     [HttpGet]
     [Route("[action]")]
-    public async Task<IActionResult> Token(string code,  string scope, string state, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Token(string code,  string scope, string state, CancellationToken cancellationToken)
         => await _sender.Send(new Token.Command(code, scope, state), cancellationToken);
 
     [HttpPost]
