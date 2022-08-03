@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Security.Claims;
+using JetBrains.Annotations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,17 +21,39 @@ public static class Index
     public class Handler : IRequestHandler<Query, IActionResult>
     {
         private readonly TraceDbContext _ctx;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public Handler(TraceDbContext ctx)
+        public Handler(TraceDbContext ctx, IHttpContextAccessor httpContextAccessor)
         {
             _ctx = ctx;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IActionResult> Handle(Query request, CancellationToken cancellationToken)
         {
-            var results = await _ctx.TmiConfigs
-                .OrderBy(x => x.ChannelLogin)
-                .Select(x => new Result(x.ChannelId, x.ChannelLogin))
+            var userIdValue = _httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = new Guid(userIdValue);
+
+            var twitchUserId = await _ctx.Users
+                .Where(x => x.Id == userId)
+                .Select(x => x.TwitchId)
+                .FirstAsync(cancellationToken);
+
+            var results = await _ctx.ChannelPermissions
+                .Where(x => x.UserId == twitchUserId)
+                .Join(
+                    _ctx.TmiMessages,
+                    x => x.ChannelId,
+                    x => x.AuthorId,
+                    (x, y) => y
+                )
+                .GroupBy(x => x.AuthorId)
+                .Select(x => new
+                {
+                    Id = x.Key,
+                    Login = x.OrderByDescending(y => y.Timestamp).First().AuthorLogin
+                })
+                .Select(x => new Result(x.Id, x.Login))
                 .ToListAsync(cancellationToken);
 
             return new OkObjectResult(results);
