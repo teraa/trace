@@ -45,7 +45,7 @@ public class TokenService
     }
 
     public bool IsValid(DateTimeOffset now, DateTimeOffset expiresAt)
-        => now + _options.CurrentValue.ClockSkew > expiresAt;
+        => now + _options.CurrentValue.ClockSkew < expiresAt;
 
     public record TokenData(
         (string Value, TimeSpan ExpiresIn) Token,
