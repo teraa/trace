@@ -29,6 +29,6 @@ public class AuthController : ControllerBase
     [HttpPost]
     [Route("[action]")]
     [Authorize(AuthenticationSchemes = AppAuthScheme.ExpiredBearer)]
-    public async Task<IActionResult> Refresh(Guid refreshToken, CancellationToken cancellationToken)
-        => await _sender.Send(new Refresh.Command(refreshToken), cancellationToken);
+    public async Task<IActionResult> Refresh(Refresh.Command command, CancellationToken cancellationToken)
+        => await _sender.Send(command, cancellationToken);
 }
