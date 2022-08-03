@@ -44,8 +44,8 @@ public class TokenService
             (Guid.NewGuid(), _options.CurrentValue.RefreshTokenLifetime));
     }
 
-    public bool IsValid(DateTimeOffset now, DateTimeOffset expiresAt)
-        => now + _options.CurrentValue.ClockSkew < expiresAt;
+    public bool IsValid(DateTimeOffset checkAt, DateTimeOffset expiresAt)
+        => checkAt + _options.CurrentValue.ClockSkew < expiresAt;
 
     public record TokenData(
         (string Value, TimeSpan ExpiresIn) Token,
