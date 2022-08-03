@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Text.Json.Serialization;
-using DefaultNamespace;
 using FluentValidation;
 using JetBrains.Annotations;
 using MediatR;

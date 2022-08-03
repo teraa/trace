@@ -1,5 +1,4 @@
-﻿using DefaultNamespace;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;

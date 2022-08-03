@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace DefaultNamespace;
+namespace Trace.Api.Features.Auth;
 
 public static class MemoryCacheExtensions
 {

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Trace.Api.Features.Auth.Actions;
 
-namespace DefaultNamespace;
+namespace Trace.Api.Features.Auth;
 
 [ApiController]
 [Route("[controller]")]
