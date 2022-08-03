@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Trace.Api.Features.Auth.Actions;
 
@@ -27,6 +28,7 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("[action]")]
+    [Authorize(AuthenticationSchemes = AppAuthScheme.ExpiredBearer)]
     public async Task<IActionResult> Refresh(Guid refreshToken, CancellationToken cancellationToken)
         => await _sender.Send(new Refresh.Command(refreshToken), cancellationToken);
 }
