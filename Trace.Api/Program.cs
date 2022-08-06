@@ -1,11 +1,15 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Trace.Api;
 using Trace.Api.Extensions;
 using Trace.Api.Features.Auth;
 using Trace.Api.Options;
 using Trace.Data;
+
+Serilog.Debugging.SelfLog
+    .Enable(x => Console.WriteLine($"<4>SERILOG: {x}"));
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +19,11 @@ builder.Host
         options.ValidateOnBuild = true;
         options.ValidateScopes = true;
     })
-    .UseSystemd();
+    .UseSystemd()
+    .UseSerilog((hostContext, options) =>
+    {
+        options.ReadFrom.Configuration(hostContext.Configuration);
+    });
 
 builder.Services
     .AddAsyncInitialization()
