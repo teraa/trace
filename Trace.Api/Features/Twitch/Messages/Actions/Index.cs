@@ -15,7 +15,8 @@ public static class Index
         int Limit,
         long? Before,
         string? AuthorId,
-        string? AuthorLogin
+        string? AuthorLogin,
+        DateTimeOffset? BeforeTimestamp
     ) : IRequest<IActionResult>;
 
     [UsedImplicitly]
@@ -76,7 +77,7 @@ public static class Index
             if (request.AuthorLogin is { })
                 query = query.Where(x => x.AuthorLogin == request.AuthorLogin);
 
-            if (request.Before is not null)
+            if (request.Before is { })
             {
                 var beforeTimestamp = await query
                     .Where(x => x.Id == request.Before)
@@ -94,6 +95,12 @@ public static class Index
                 query = query
                     .Where(x => x.Timestamp <= beforeTimestamp)
                     .Skip(offset);
+            }
+
+            if (request.BeforeTimestamp is { })
+            {
+                var beforeTimestamp = request.BeforeTimestamp.Value.ToUniversalTime();
+                query = query.Where(x => x.Timestamp <= beforeTimestamp);
             }
 
             var results = await query

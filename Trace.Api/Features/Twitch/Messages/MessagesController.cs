@@ -18,6 +18,6 @@ public class MessagesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(string channelId, int limit, long? before, string? authorId, string? authorLogin, CancellationToken cancellationToken)
-        => await _sender.Send(new Index.Query(channelId, limit, before, authorId, authorLogin), cancellationToken);
+    public async Task<IActionResult> Index(string channelId, int limit, long? before, string? authorId, string? authorLogin, DateTimeOffset? beforeTimestamp, CancellationToken cancellationToken)
+        => await _sender.Send(new Index.Query(channelId, limit, before, authorId, authorLogin, beforeTimestamp), cancellationToken);
 }
