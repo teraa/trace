@@ -18,6 +18,6 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(string? id, string? login, CancellationToken cancellationToken)
-        => await _sender.Send(new Index.Query(id, login), cancellationToken);
+    public async Task<IActionResult> Index([FromQuery] Index.Query query, CancellationToken cancellationToken)
+        => await _sender.Send(query, cancellationToken);
 }
