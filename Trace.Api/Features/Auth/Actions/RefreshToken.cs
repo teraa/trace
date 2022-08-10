@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Trace.Api.Extensions;
 using Trace.Data;
+using Results = Teraa.Extensions.AspNetCore.Results;
 
 namespace Trace.Api.Features.Auth.Actions;
 

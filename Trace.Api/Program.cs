@@ -2,6 +2,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Teraa.Extensions.AspNetCore;
 using Teraa.Extensions.Configuration;
 using Trace.Api;
 using Trace.Api.Features.Auth;
@@ -58,7 +59,7 @@ builder.Services
 #endif
     })
     .AddMediatR(typeof(Program))
-    .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehaviour<,>))
+    .AddRequestValidationBehaviour()
     .AddValidatorsFromAssemblyContaining<Program>()
     .AddMemoryCache()
     .AddHttpClient()

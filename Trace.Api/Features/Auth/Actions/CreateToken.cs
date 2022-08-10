@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Trace.Api.Options;
 using Trace.Data;
 using Trace.Data.Models;
+using Results = Teraa.Extensions.AspNetCore.Results;
 
 namespace Trace.Api.Features.Auth.Actions;
 
