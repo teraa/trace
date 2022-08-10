@@ -8,7 +8,7 @@ using Trace.Api.Options;
 
 namespace Trace.Api.Features.Auth.Actions;
 
-public static class Authorize
+public static class Redirect
 {
     public record Command : IRequest<IActionResult>;
 

@@ -14,7 +14,7 @@ using Trace.Data.Models;
 
 namespace Trace.Api.Features.Auth.Actions;
 
-public static class Token
+public static class CreateToken
 {
     public record Command(
         string Code,
@@ -146,7 +146,7 @@ public static class Token
             var now = DateTimeOffset.UtcNow;
             var tokenData = _tokenService.CreateToken(now, userEntity.Id);
 
-            var refreshTokenEntity = new RefreshToken
+            var refreshTokenEntity = new Data.Models.RefreshToken
             {
                 Id = tokenData.RefreshToken.Value,
                 User = userEntity,

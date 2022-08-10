@@ -16,19 +16,16 @@ public class AuthController : ControllerBase
         _sender = sender;
     }
 
-    [HttpGet]
-    [Route("[action]")]
-    public async Task<IActionResult> Authorize(CancellationToken cancellationToken)
-        => await _sender.Send(new Authorize.Command(), cancellationToken);
+    [HttpGet("[action]")]
+    public async Task<IActionResult> Login(CancellationToken cancellationToken)
+        => await _sender.Send(new Redirect.Command(), cancellationToken);
 
-    [HttpGet]
-    [Route("[action]")]
-    public async Task<IActionResult> Token(string code,  string scope, string state, CancellationToken cancellationToken)
-        => await _sender.Send(new Token.Command(code, scope, state), cancellationToken);
+    [HttpGet("[action]")]
+    public async Task<IActionResult> Callback(string code, string scope, string state, CancellationToken cancellationToken)
+        => await _sender.Send(new CreateToken.Command(code, scope, state), cancellationToken);
 
-    [HttpPost]
-    [Route("[action]")]
+    [HttpPost("[action]")]
     [Authorize(AuthenticationSchemes = AppAuthScheme.ExpiredBearer)]
-    public async Task<IActionResult> Refresh(Refresh.Command command, CancellationToken cancellationToken)
+    public async Task<IActionResult> Refresh(RefreshToken.Command command, CancellationToken cancellationToken)
         => await _sender.Send(command, cancellationToken);
 }

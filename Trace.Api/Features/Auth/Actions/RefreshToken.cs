@@ -5,11 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Trace.Api.Extensions;
 using Trace.Data;
-using Trace.Data.Models;
 
 namespace Trace.Api.Features.Auth.Actions;
 
-public static class Refresh
+public static class RefreshToken
 {
     public record Command(
         Guid RefreshToken
@@ -67,7 +66,7 @@ public static class Refresh
 
             var tokenData = _tokenService.CreateToken(now, refreshTokenEntity.UserId);
 
-            refreshTokenEntity = new RefreshToken
+            refreshTokenEntity = new Data.Models.RefreshToken
             {
                 Id = tokenData.RefreshToken.Value,
                 UserId = refreshTokenEntity.UserId,
