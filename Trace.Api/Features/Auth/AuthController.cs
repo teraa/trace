@@ -21,8 +21,8 @@ public class AuthController : ControllerBase
         => await _sender.Send(new Redirect.Command(), cancellationToken);
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> Callback(string code, string scope, string state, CancellationToken cancellationToken)
-        => await _sender.Send(new CreateToken.Command(code, scope, state), cancellationToken);
+    public async Task<IActionResult> Callback([FromQuery] CreateToken.Command command, CancellationToken cancellationToken)
+        => await _sender.Send(command, cancellationToken);
 
     [HttpPost("[action]")]
     [Authorize(AuthenticationSchemes = AppAuthScheme.ExpiredBearer)]
