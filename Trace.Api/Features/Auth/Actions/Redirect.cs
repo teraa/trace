@@ -42,7 +42,6 @@ public static class Redirect
             }.ToString();
 
             var result = new RedirectResult(url);
-
             return Task.FromResult<IActionResult>(result);
         }
     }

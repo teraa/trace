@@ -36,7 +36,10 @@ public static class RefreshToken
         private readonly TraceDbContext _ctx;
         private readonly TokenService _tokenService;
 
-        public Handler(IHttpContextAccessor httpContextAccessor, TraceDbContext ctx, TokenService tokenService)
+        public Handler(
+            IHttpContextAccessor httpContextAccessor,
+            TraceDbContext ctx,
+            TokenService tokenService)
         {
             _httpContextAccessor = httpContextAccessor;
             _ctx = ctx;

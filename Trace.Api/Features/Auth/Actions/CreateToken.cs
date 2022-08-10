@@ -50,7 +50,12 @@ public static class CreateToken
         private readonly TokenService _tokenService;
         private readonly TraceDbContext _ctx;
 
-        public Handler(IMemoryCache cache, IOptionsMonitor<TwitchOptions> options, IHttpClientFactory httpClientFactory, TokenService tokenService, TraceDbContext ctx)
+        public Handler(
+            IMemoryCache cache,
+            IOptionsMonitor<TwitchOptions> options,
+            IHttpClientFactory httpClientFactory,
+            TokenService tokenService,
+            TraceDbContext ctx)
         {
             _cache = cache;
             _options = options;
