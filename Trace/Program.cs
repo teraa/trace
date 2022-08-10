@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Teraa.Extensions.Configuration;
 using Teraa.Twitch.PubSub;
 using Teraa.Twitch.Tmi;
 using Trace;
