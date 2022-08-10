@@ -15,27 +15,27 @@ public static class Redirect
     [UsedImplicitly]
     public class Handler : IRequestHandler<Command, IActionResult>
     {
-        private readonly IOptionsMonitor<TwitchOptions> _options;
+        private readonly TwitchOptions _options;
         private readonly IMemoryCache _cache;
 
         public Handler(IOptionsMonitor<TwitchOptions> options, IMemoryCache cache)
         {
-            _options = options;
+            _options = options.CurrentValue;
             _cache = cache;
         }
 
         public Task<IActionResult> Handle(Command request, CancellationToken cancellationToken)
         {
-            string state = _cache.CreateState(_options.CurrentValue.StateLifetime);
+            string state = _cache.CreateState(_options.StateLifetime);
 
-            var url = new UriBuilder(_options.CurrentValue.AuthorizationEndpoint)
+            var url = new UriBuilder(_options.AuthorizationEndpoint)
             {
                 Query = new QueryBuilder(new Dictionary<string, string>
                 {
-                    ["client_id"] = _options.CurrentValue.ClientId,
-                    ["redirect_uri"] = _options.CurrentValue.RedirectUri.ToString(),
+                    ["client_id"] = _options.ClientId,
+                    ["redirect_uri"] = _options.RedirectUri.ToString(),
                     ["response_type"] = "code",
-                    ["scope"] = _options.CurrentValue.Scope,
+                    ["scope"] = _options.Scope,
                     ["state"] = state,
                     // ["force_verify"] = "true",
                 }).ToString()

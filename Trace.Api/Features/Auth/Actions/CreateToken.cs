@@ -45,7 +45,7 @@ public static class CreateToken
     public class Handler : IRequestHandler<Command, IActionResult>
     {
         private readonly IMemoryCache _cache;
-        private readonly IOptionsMonitor<TwitchOptions> _options;
+        private readonly TwitchOptions _options;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly TokenService _tokenService;
         private readonly TraceDbContext _ctx;
@@ -58,7 +58,7 @@ public static class CreateToken
             TraceDbContext ctx)
         {
             _cache = cache;
-            _options = options;
+            _options = options.CurrentValue;
             _httpClientFactory = httpClientFactory;
             _tokenService = tokenService;
             _ctx = ctx;
@@ -76,14 +76,14 @@ public static class CreateToken
                 using var httpRequest = new HttpRequestMessage
                 {
                     Method = HttpMethod.Post,
-                    RequestUri = _options.CurrentValue.TokenEndpoint,
+                    RequestUri = _options.TokenEndpoint,
                     Content = new FormUrlEncodedContent(new Dictionary<string, string>
                     {
-                        ["client_id"] = _options.CurrentValue.ClientId,
-                        ["client_secret"] = _options.CurrentValue.ClientSecret,
+                        ["client_id"] = _options.ClientId,
+                        ["client_secret"] = _options.ClientSecret,
                         ["grant_type"] = "authorization_code",
                         ["code"] = request.Code,
-                        ["redirect_uri"] = _options.CurrentValue.RedirectUri.ToString(),
+                        ["redirect_uri"] = _options.RedirectUri.ToString(),
                     }),
                 };
 
@@ -103,7 +103,7 @@ public static class CreateToken
                 using var httpRequest = new HttpRequestMessage
                 {
                     Method = HttpMethod.Get,
-                    RequestUri = _options.CurrentValue.ValidateEndpoint,
+                    RequestUri = _options.ValidateEndpoint,
                     Headers =
                     {
                         Authorization = new AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken),
