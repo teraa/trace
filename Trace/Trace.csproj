@@ -18,7 +18,7 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="6.0.0" />
     <PackageReference Include="Seq.Extensions.Logging" Version="6.0.0" />
-    <PackageReference Include="Teraa.Extensions.Configuration" Version="1.0.0-alpha.2" />
+    <PackageReference Include="Teraa.Extensions.Configuration" Version="1.0.0-alpha.4" />
     <PackageReference Include="Teraa.Twitch.PubSub" Version="1.0.0-alpha.21" />
     <PackageReference Include="Teraa.Twitch.Tmi" Version="1.0.0-alpha.21" />
   </ItemGroup>
