@@ -13,6 +13,8 @@ public class PubSubOptions
 public class TmiOptions
 {
     public string MessageSourceName { get; init; }
+    public string Login { get; init; }
+    public string Token { get; init; }
 }
 
 [UsedImplicitly]
