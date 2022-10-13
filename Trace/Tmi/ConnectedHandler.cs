@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Teraa.Irc;
 using Teraa.Twitch.Tmi;
@@ -13,8 +12,6 @@ namespace Trace.Tmi;
 public class ConnectedHandler : INotificationHandler<Connected>
 {
     private readonly TmiService _tmi;
-    private readonly TraceDbContext _ctx;
-    private readonly ILogger<ConnectedHandler> _logger;
     private readonly IOptionsMonitor<TmiOptions> _options;
 
     public ConnectedHandler(
@@ -24,12 +21,10 @@ public class ConnectedHandler : INotificationHandler<Connected>
         IOptionsMonitor<TmiOptions> options)
     {
         _tmi = tmi;
-        _ctx = ctx;
-        _logger = logger;
         _options = options;
     }
 
-    public async Task Handle(Connected notification, CancellationToken cancellationToken)
+    public Task Handle(Connected notification, CancellationToken cancellationToken)
     {
         _tmi.EnqueueMessage(new Message(
             Command.PASS,
@@ -44,15 +39,6 @@ public class ConnectedHandler : INotificationHandler<Connected>
             Arg: "REQ",
             Content: new Content("twitch.tv/tags twitch.tv/commands")));
 
-        var channels = await _ctx.TmiConfigs
-            .Select(x => x.ChannelLogin)
-            .ToListAsync(cancellationToken);
-
-        _logger.LogInformation("Joining: {Channels}", channels);
-
-        foreach (string channel in channels)
-            _tmi.EnqueueMessage(new Message(
-                Command: Command.JOIN,
-                Content: new Content($"#{channel}")));
+        return Task.CompletedTask;
     }
 }
