@@ -6,8 +6,8 @@ After=network-online.target
 User=tera
 Type=notify
 SyslogIdentifier=trace
-WorkingDirectory=/opt/trace/bin/publish
-ExecStart=/opt/trace/bin/publish/Trace
+WorkingDirectory=/opt/trace/bin/current
+ExecStart=/opt/trace/bin/current/Trace
 Restart=always
 Environment="DOTNET_ENVIRONMENT=Production"
 Environment="Tmi__MessageSourceName=Trace"
