@@ -40,8 +40,6 @@ jobs:
           -p:GenerateDocumentationFile=false
           -p:PublishSingleFile=true
           -p:DebugType=None
-          -p:UseSharedCompilation=false
-          -nodeReuse:false
 
       - name: SSH Config
         run: |
@@ -60,7 +58,7 @@ jobs:
         run: rsync -avzh --chown=$user:$user bin/publish deploy:/opt/trace/bin
 
       - name: Deploy
-        run: ssh deploy 'cd /opt/trace/ && ./deploy.sh'
+        run: ssh deploy 'cd /opt/trace/ && bash -s' < deploy.sh
 
 env:
   DOTNET_NOLOGO: true
