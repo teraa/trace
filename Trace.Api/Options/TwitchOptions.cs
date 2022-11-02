@@ -10,13 +10,12 @@ public class TwitchOptions
 {
     public string ClientId { get; init; }
     public string ClientSecret { get; init; }
-
     public TimeSpan StateLifetime { get; init; }
     public Uri AuthorizationEndpoint { get; init; }
     public Uri RedirectUri { get; init; }
-    public string Scope { get; set; }
     public Uri TokenEndpoint { get; init; }
     public Uri ValidateEndpoint { get; init; }
+    public string Scope { get; set; }
 
     [UsedImplicitly]
     public class Validator : AbstractValidator<TwitchOptions>
@@ -30,6 +29,7 @@ public class TwitchOptions
             RuleFor(x => x.RedirectUri).NotEmpty();
             RuleFor(x => x.TokenEndpoint).NotEmpty();
             RuleFor(x => x.ValidateEndpoint).NotEmpty();
+            RuleFor(x => x.Scope).NotNull();
         }
     }
 }
