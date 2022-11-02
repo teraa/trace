@@ -1,6 +1,7 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Teraa.Extensions.Configuration;
 using Teraa.Twitch.PubSub;
 using Teraa.Twitch.Tmi;
@@ -29,9 +30,10 @@ var host = Host.CreateDefaultBuilder(args)
             .AddOptionsWithValidation<DbOptions>()
             .AddDbContext<TraceDbContext>((sp, options) =>
             {
-                var dbOptions = sp
-                    .GetRequiredService<IConfiguration>()
-                    .GetOptions<DbOptions>();
+                using var scope = sp.CreateScope();
+                var dbOptions = scope.ServiceProvider
+                    .GetRequiredService<IOptionsMonitor<DbOptions>>()
+                    .CurrentValue;
 
                 options.UseNpgsql(dbOptions.ConnectionString, contextOptions =>
                 {
