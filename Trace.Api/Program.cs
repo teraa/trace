@@ -1,6 +1,7 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Serilog;
 using Teraa.Extensions.AspNetCore;
 using Teraa.Extensions.Configuration;
@@ -45,9 +46,10 @@ builder.Services
     .Services
     .AddDbContext<TraceDbContext>((services, options) =>
     {
-        var dbOptions = services
-            .GetRequiredService<IConfiguration>()
-            .GetOptions<DbOptions>();
+        using var scope = services.CreateScope();
+        var dbOptions = scope.ServiceProvider
+            .GetRequiredService<IOptionsMonitor<DbOptions>>()
+            .CurrentValue;
 
         options.UseNpgsql(dbOptions.ConnectionString, contextOptions =>
         {
