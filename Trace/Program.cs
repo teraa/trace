@@ -1,3 +1,4 @@
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Teraa.Extensions.Configuration;
@@ -22,7 +23,9 @@ var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostContext, services) =>
     {
         services
+            .AddValidatorsFromAssemblyContaining<Program>()
             .AddAsyncInitializer<MigrationInitializer>()
+            .AddOptionsWithValidation<DbOptions>()
             .AddDbContext<TraceDbContext>((sp, options) =>
             {
                 var dbOptions = sp
@@ -42,9 +45,9 @@ var host = Host.CreateDefaultBuilder(args)
             .AddMemoryCache()
             .AddMediatR(typeof(Program))
             .AddSingleton<SourceCache>()
-            .AddBoundOptions<TmiOptions>()
+            .AddOptionsWithValidation<TmiOptions>()
             .AddTmiService()
-            .AddBoundOptions<PubSubOptions>()
+            .AddOptionsWithValidation<PubSubOptions>()
             .AddPubSubService()
             ;
     })
