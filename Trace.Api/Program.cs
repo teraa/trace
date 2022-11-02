@@ -64,8 +64,9 @@ builder.Services
     .AddMemoryCache()
     .AddHttpClient()
     .AddHttpContextAccessor()
-    .AddBoundOptions<TwitchOptions>()
-    .AddBoundOptions<JwtOptions>()
+    .AddOptionsWithValidation<DbOptions>()
+    .AddOptionsWithValidation<JwtOptions>()
+    .AddOptionsWithValidation<TwitchOptions>()
     .AddSingleton<TokenService>()
     .AddSingleton<JwtSigningKeyProvider>()
     ;
