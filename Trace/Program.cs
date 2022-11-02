@@ -7,6 +7,7 @@ using Teraa.Twitch.Tmi;
 using Trace;
 using Trace.Data;
 using Trace.Initializers;
+using Trace.Options;
 using Trace.Tmi;
 
 var host = Host.CreateDefaultBuilder(args)

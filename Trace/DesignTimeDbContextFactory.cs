@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Teraa.Extensions.Configuration;
 using Trace.Data;
+using Trace.Options;
 
 namespace Trace;
 

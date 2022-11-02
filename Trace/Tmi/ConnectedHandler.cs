@@ -5,6 +5,7 @@ using Teraa.Irc;
 using Teraa.Twitch.Tmi;
 using Teraa.Twitch.Tmi.Notifications;
 using Trace.Data;
+using Trace.Options;
 
 namespace Trace.Tmi;
 

@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace Trace;
+namespace Trace.Options;
 
 #pragma warning disable CS8618
 public class DbOptions
