@@ -19,7 +19,7 @@ public class JwtOptions
     {
         public Validator()
         {
-            RuleFor(x => x.SigningKey).NotEmpty();
+            RuleFor(x => x.SigningKey).MinimumLength(32);
             RuleFor(x => x.Audience).NotEmpty();
             RuleFor(x => x.Issuer).NotEmpty();
             RuleFor(x => x.TokenLifetime).GreaterThan(TimeSpan.Zero);
