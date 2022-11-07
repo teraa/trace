@@ -21,6 +21,7 @@ public class SourceCache
 
     public async Task<short> GetOrLoadSourceIdAsync(CancellationToken cancellationToken)
     {
+        // ReSharper disable once UnusedParameter.Local
         var lazy = _cache.GetOrCreate(new SourceKey(), entry =>
         {
             return new Lazy<Task<short>>(async () =>

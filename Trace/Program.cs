@@ -5,7 +5,6 @@ using Microsoft.Extensions.Options;
 using Teraa.Extensions.Configuration;
 using Teraa.Twitch.PubSub;
 using Teraa.Twitch.Tmi;
-using Trace;
 using Trace.Data;
 using Trace.Initializers;
 using Trace.Options;
@@ -22,6 +21,7 @@ var host = Host.CreateDefaultBuilder(args)
     {
         builder.AddSeq(hostContext.Configuration.GetSection("Seq"));
     })
+    // ReSharper disable once UnusedParameter.Local
     .ConfigureServices((hostContext, services) =>
     {
         services
