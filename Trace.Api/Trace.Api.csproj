@@ -23,7 +23,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Extensions\AspNetCore\Extensions.AspNetCore.csproj" />
     <ProjectReference Include="..\Extensions\Configuration\Extensions.Configuration.csproj" />
-    <ProjectReference Include="..\Extensions\Serilog\Extensions.Serilog.csproj" />
+    <ProjectReference Include="..\Extensions\Serilog.Seq\Extensions.Serilog.Seq.csproj" />
+    <ProjectReference Include="..\Extensions\Serilog.Systemd\Extensions.Serilog.Systemd.csproj" />
     <ProjectReference Include="..\Trace.Data\Trace.Data.csproj" />
   </ItemGroup>
 

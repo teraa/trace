@@ -1,12 +1,12 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting.Systemd;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Teraa.Extensions.AspNetCore;
 using Teraa.Extensions.Configuration;
-using Teraa.Extensions.Serilog;
+using Teraa.Extensions.Serilog.Seq;
+using Teraa.Extensions.Serilog.Systemd;
 using Trace.Api;
 using Trace.Api.Features.Auth;
 using Trace.Api.Options;
@@ -25,31 +25,8 @@ builder.Host
     {
         options
             .ReadFrom.Configuration(hostContext.Configuration)
-            .Enrich.FromLogContext();
-
-        var seqOptions = hostContext.Configuration.GetOptions(new[] {new SeqOptions.Validator()});
-        if (seqOptions is { })
-        {
-            options.WriteTo.Seq(seqOptions.ServerUrl.ToString(), apiKey: seqOptions.ApiKey);
-        }
-
-        if (SystemdHelpers.IsSystemdService())
-        {
-            Serilog.Debugging.SelfLog
-                .Enable(x => Console.WriteLine($"<4>SERILOG: {x}"));
-
-            options
-                .Enrich.With(new SyslogSeverityEnricher())
-                .WriteTo.Console(outputTemplate: "<{SyslogSeverity}>{SourceContext}: {Message:j}{NewLine}");
-        }
-        else
-        {
-            Serilog.Debugging.SelfLog
-                .Enable(x => Console.WriteLine($"SERILOG: {x}"));
-
-            options.WriteTo.Console(
-                outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {SourceContext}: {Message:lj}{NewLine}{Exception}");
-        }
+            .ConfigureSystemdConsole()
+            .ConfigureSeq(hostContext);
     });
 
 builder.Services
