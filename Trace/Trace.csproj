@@ -25,6 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Trace.Data\Trace.Data.csproj" />
-    <ProjectReference Include="..\Extensions\Configuration\Configuration.csproj" />
+    <ProjectReference Include="..\Extensions\Configuration\Extensions.Configuration.csproj" />
   </ItemGroup>
 </Project>

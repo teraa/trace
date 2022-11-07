@@ -11,9 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trace.Api", "Trace.Api\Trac
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{4D51C0C7-2D0C-4A48-9F3E-607F5E13988F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Configuration", "Extensions\Configuration\Configuration.csproj", "{2D93D1EA-C5DF-4DB7-8B0E-D405E6389B80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Configuration", "Extensions\Configuration\Extensions.Configuration.csproj", "{2D93D1EA-C5DF-4DB7-8B0E-D405E6389B80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore", "Extensions\AspNetCore\AspNetCore.csproj", "{CDA6DD1E-5D0D-43A9-B570-49695E6BB154}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore", "Extensions\AspNetCore\Extensions.AspNetCore.csproj", "{CDA6DD1E-5D0D-43A9-B570-49695E6BB154}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

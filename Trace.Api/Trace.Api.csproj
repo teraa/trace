@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Extensions\AspNetCore\AspNetCore.csproj" />
-    <ProjectReference Include="..\Extensions\Configuration\Configuration.csproj" />
+    <ProjectReference Include="..\Extensions\AspNetCore\Extensions.AspNetCore.csproj" />
+    <ProjectReference Include="..\Extensions\Configuration\Extensions.Configuration.csproj" />
     <ProjectReference Include="..\Trace.Data\Trace.Data.csproj" />
   </ItemGroup>
 
