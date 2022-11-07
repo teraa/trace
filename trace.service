@@ -1,5 +1,5 @@
 [Unit]
-Description=Twitch Logger
+Description=Trace - Twitch Logger
 After=network-online.target
 
 [Service]
@@ -10,12 +10,10 @@ WorkingDirectory=/opt/trace/bin/current
 ExecStart=/opt/trace/bin/current/Trace
 Restart=always
 Environment="DOTNET_ENVIRONMENT=Production"
-Environment="Tmi__MessageSourceName=Trace"
 Environment="Tmi__Login=tera_"
 Environment="Tmi__Token=x"
-Environment="Db__ConnectionString=Host=localhost;Port=5432;Database=trace;Username=postgres;Password=example;Include Error Detail=true"
+Environment="Db__ConnectionString=Host=localhost;Database=trace;Username=user;Password=pass;Include Error Detail=true"
 Environment="PubSub__Token=x"
-Environment="Seq__ServerUrl=x"
 Environment="Seq__ApiKey=x"
 
 [Install]

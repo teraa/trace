@@ -1,7 +1,6 @@
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-
 using FluentValidation;
 using JetBrains.Annotations;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Trace.Api.Options;
 
@@ -10,11 +9,11 @@ public class TwitchOptions
 {
     public string ClientId { get; init; }
     public string ClientSecret { get; init; }
-    public TimeSpan StateLifetime { get; init; }
-    public Uri AuthorizationEndpoint { get; init; }
+    public TimeSpan StateLifetime { get; init; } = TimeSpan.FromMinutes(5);
+    public Uri AuthorizationEndpoint { get; init; } = new("https://id.twitch.tv/oauth2/authorize");
     public Uri RedirectUri { get; init; }
-    public Uri TokenEndpoint { get; init; }
-    public Uri ValidateEndpoint { get; init; }
+    public Uri TokenEndpoint { get; init; } = new("https://id.twitch.tv/oauth2/token");
+    public Uri ValidateEndpoint { get; init; } = new("https://id.twitch.tv/oauth2/validate");
     public string Scope { get; set; }
 
     [UsedImplicitly]

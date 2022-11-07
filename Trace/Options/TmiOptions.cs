@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using JetBrains.Annotations;
-
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Trace.Options;
@@ -8,9 +7,9 @@ namespace Trace.Options;
 #pragma warning disable CS8618
 public class TmiOptions
 {
-    public string MessageSourceName { get; init; }
-    public string Login { get; init; }
-    public string Token { get; init; }
+    public string MessageSourceName { get; init; } = "Trace";
+    public string Login { get; init; } = "justinfan1";
+    public string Token { get; init; } = "x";
 
     [UsedImplicitly]
     public class Validator : AbstractValidator<TmiOptions>

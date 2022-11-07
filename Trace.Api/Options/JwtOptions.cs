@@ -10,9 +10,9 @@ public class JwtOptions
     public string SigningKey { get; init; }
     public string Audience { get; init; }
     public string Issuer { get; init; }
-    public TimeSpan TokenLifetime { get; init; }
-    public TimeSpan RefreshTokenLifetime { get; init; }
-    public TimeSpan ClockSkew { get; init; }
+    public TimeSpan TokenLifetime { get; init; } = TimeSpan.FromMinutes(5);
+    public TimeSpan RefreshTokenLifetime { get; init; } = TimeSpan.FromDays(7);
+    public TimeSpan ClockSkew { get; init; } = TimeSpan.Zero;
 
     [UsedImplicitly]
     public class Validator : AbstractValidator<JwtOptions>

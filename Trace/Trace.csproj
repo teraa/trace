@@ -18,12 +18,14 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="6.0.0" />
-    <PackageReference Include="Seq.Extensions.Logging" Version="6.1.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="5.2.1" />
     <PackageReference Include="Teraa.Twitch.PubSub" Version="1.0.0-alpha.21" />
     <PackageReference Include="Teraa.Twitch.Tmi" Version="1.0.0-alpha.21" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Extensions\Serilog\Extensions.Serilog.csproj" />
     <ProjectReference Include="..\Trace.Data\Trace.Data.csproj" />
     <ProjectReference Include="..\Extensions\Configuration\Extensions.Configuration.csproj" />
   </ItemGroup>
