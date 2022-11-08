@@ -16,7 +16,6 @@ public static class Index
         int Limit,
         long? Before,
         string? AuthorId,
-        string? AuthorLogin,
         DateTimeOffset? BeforeTimestamp
     ) : IRequest<IActionResult>;
 
@@ -74,9 +73,6 @@ public static class Index
 
             if (request.AuthorId is { })
                 query = query.Where(x => x.AuthorId == request.AuthorId);
-
-            if (request.AuthorLogin is { })
-                query = query.Where(x => x.AuthorLogin == request.AuthorLogin);
 
             if (request.Before is { })
             {

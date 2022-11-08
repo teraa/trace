@@ -38,20 +38,14 @@ public static class Index
                 .Select(x => x.TwitchId)
                 .FirstAsync(cancellationToken);
 
-            var results = await _ctx.ChannelPermissions
+            var channelIds = await _ctx.ChannelPermissions
                 .Where(x => x.UserId == twitchUserId)
-                .Join(
-                    _ctx.TmiMessages,
-                    x => x.ChannelId,
-                    x => x.AuthorId,
-                    (x, y) => y
-                )
-                .GroupBy(x => x.AuthorId)
-                .Select(x => new
-                {
-                    Id = x.Key,
-                    Login = x.OrderByDescending(y => y.Timestamp).First().AuthorLogin
-                })
+                .Select(x => x.ChannelId)
+                .ToListAsync(cancellationToken);
+
+            var results = await _ctx.TwitchUsers
+                .Where(x => channelIds.Contains(x.Id))
+                .OrderByDescending(x => x.LastSeen)
                 .Select(x => new Result(x.Id, x.Login))
                 .ToListAsync(cancellationToken);
 

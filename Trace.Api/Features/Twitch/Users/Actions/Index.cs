@@ -28,7 +28,9 @@ public static class Index
     [PublicAPI]
     public record Result(
         string Id,
-        string Login);
+        string Login,
+        DateTimeOffset FirstSeen,
+        DateTimeOffset LastSeen);
 
     [UsedImplicitly]
     public class Handler : IRequestHandler<Query, IActionResult>
@@ -42,18 +44,17 @@ public static class Index
 
         public async Task<IActionResult> Handle(Query request, CancellationToken cancellationToken)
         {
-            var query = _ctx.TmiMessages
+            var query = _ctx.TwitchUsers
                 .AsQueryable();
 
             if (request.Id is { })
-                query = query.Where(x => x.AuthorId == request.Id);
+                query = query.Where(x => x.Id == request.Id);
 
             if (request.Login is { })
-                query = query.Where(x => x.AuthorLogin == request.Login);
+                query = query.Where(x => x.Login == request.Login);
 
             var results = await query
-                .Select(x => new Result(x.AuthorId, x.AuthorLogin))
-                .Distinct()
+                .Select(x => new Result(x.Id, x.Login, x.FirstSeen, x.LastSeen))
                 .ToListAsync(cancellationToken);
 
             return new OkObjectResult(results);
