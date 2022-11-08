@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trace", "Trace\Trace.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trace.Data", "Trace.Data\Trace.Data.csproj", "{68220480-20E9-4311-879B-C2743D127DFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trace.Api", "Trace.Api\Trace.Api.csproj", "{F900E486-ED7A-4548-BDAB-365802DE4E49}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trace.Old", "Trace.Old\Trace.Old.csproj", "{F900E486-ED7A-4548-BDAB-365802DE4E49}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{4D51C0C7-2D0C-4A48-9F3E-607F5E13988F}"
 EndProject
