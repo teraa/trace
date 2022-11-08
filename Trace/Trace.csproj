@@ -27,4 +27,8 @@
     <ProjectReference Include="..\Trace.Data\Trace.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Api" />
+  </ItemGroup>
+
 </Project>
