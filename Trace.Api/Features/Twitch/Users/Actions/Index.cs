@@ -11,7 +11,8 @@ public static class Index
 {
     public record Query(
         string? Id,
-        string? Login
+        string? Login,
+        bool? Recursive
     ) : IRequest<IActionResult>;
 
     [UsedImplicitly]
@@ -51,7 +52,22 @@ public static class Index
                 query = query.Where(x => x.Id == request.Id);
 
             if (request.Login is { })
-                query = query.Where(x => x.Login == request.Login);
+            {
+                if (request.Recursive is true)
+                {
+                    var userIds = await _ctx.TwitchUsers
+                        .Where(x => x.Login == request.Login)
+                        .Select(x => x.Id)
+                        .Distinct()
+                        .ToListAsync(cancellationToken);
+
+                    query = query.Where(x => userIds.Contains(x.Id));
+                }
+                else
+                {
+                    query = query.Where(x => x.Login == request.Login);
+                }
+            }
 
             var results = await query
                 .Select(x => new Result(x.Id, x.Login, x.FirstSeen, x.LastSeen))
