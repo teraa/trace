@@ -12,7 +12,7 @@ Restart=always
 Environment="DOTNET_ENVIRONMENT=Production"
 Environment="Tmi__Login=tera_"
 Environment="Tmi__Token=x"
-Environment="Db__ConnectionString=Host=localhost;Database=trace;Username=user;Password=pass;Include Error Detail=true"
+Environment="Db__ConnectionString=Host=localhost;Database=trace;Username=user;Password=pass;Include Error Detail=true;Command Timeout=30"
 Environment="PubSub__Token=x"
 Environment="Seq__ApiKey=x"
 
