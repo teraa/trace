@@ -32,6 +32,7 @@ var host = Host.CreateDefaultBuilder(args)
     {
         services
             .AddValidatorsFromAssemblyContaining<Program>()
+            .AddAsyncInitialization()
             .AddAsyncInitializer<MigrationInitializer>()
             .AddOptionsWithValidation<DbOptions>()
             .AddDbContext<TraceDbContext>((sp, options) =>

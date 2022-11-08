@@ -1,8 +1,10 @@
 using JetBrains.Annotations;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Teraa.Irc;
 using Teraa.Twitch.Tmi.Notifications;
 using Trace.Data;
+using Trace.Data.Models.Twitch;
 
 namespace Trace.Tmi;
 
@@ -47,6 +49,28 @@ public class MessageHandler : INotificationHandler<MessageReceived>
             long.Parse(notification.Message.Tags["tmi-sent-ts"]));
 
         short sourceId = await _cache.GetOrLoadSourceIdAsync(cancellationToken);
+
+        var userEntity = await _ctx.TwitchUsers
+            .Where(x => x.Id == userId)
+            .OrderByDescending(x => x.LastSeen)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (userEntity is { })
+        {
+            userEntity.LastSeen = timestamp;
+        }
+        else
+        {
+            userEntity = new User
+            {
+                Id = userId,
+                Login = userLogin,
+                FirstSeen = timestamp,
+                LastSeen = timestamp,
+            };
+
+            _ctx.TwitchUsers.Add(userEntity);
+        }
 
         var messageEntity = new Data.Models.Tmi.Message
         {
