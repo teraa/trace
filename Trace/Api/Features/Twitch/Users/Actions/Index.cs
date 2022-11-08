@@ -51,12 +51,16 @@ public static class Index
             if (request.Id is { })
                 query = query.Where(x => x.Id == request.Id);
 
-            if (request.Login is { })
+            var login = request.Login;
+            if (login is { })
+                login = login.ToLowerInvariant();
+
+            if (login is { })
             {
                 if (request.Recursive is true)
                 {
                     var userIds = await _ctx.TwitchUsers
-                        .Where(x => x.Login == request.Login)
+                        .Where(x => x.Login == login)
                         .Select(x => x.Id)
                         .Distinct()
                         .ToListAsync(cancellationToken);
@@ -65,7 +69,7 @@ public static class Index
                 }
                 else
                 {
-                    query = query.Where(x => x.Login == request.Login);
+                    query = query.Where(x => x.Login == login);
                 }
             }
 
