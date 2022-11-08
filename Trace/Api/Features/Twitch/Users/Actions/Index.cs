@@ -51,12 +51,10 @@ public static class Index
             if (request.Id is { })
                 query = query.Where(x => x.Id == request.Id);
 
-            var login = request.Login;
-            if (login is { })
+            if (request.Login is { } login)
+            {
                 login = login.ToLowerInvariant();
 
-            if (login is { })
-            {
                 if (request.Recursive is true)
                 {
                     var userIds = await _ctx.TwitchUsers
