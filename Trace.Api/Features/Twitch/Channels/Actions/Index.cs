@@ -43,11 +43,16 @@ public static class Index
                 .Select(x => x.ChannelId)
                 .ToListAsync(cancellationToken);
 
-            var results = await _ctx.TwitchUsers
+            var channels = await _ctx.TwitchUsers
+                .AsNoTracking()
                 .Where(x => channelIds.Contains(x.Id))
-                .OrderByDescending(x => x.LastSeen)
-                .Select(x => new Result(x.Id, x.Login))
                 .ToListAsync(cancellationToken);
+
+            var results = channels
+                .GroupBy(x => x.Id)
+                .Select(x => x.MaxBy(static x => x.LastSeen)!)
+                .Select(x => new Result(x.Id, x.Login))
+                .ToList();
 
             return new OkObjectResult(results);
         }
