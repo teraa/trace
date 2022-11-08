@@ -7,7 +7,7 @@ namespace Trace.Api.Features.Twitch.Users;
 
 [ApiController]
 [Route("twitch/[controller]")]
-[Authorize(AuthenticationSchemes = AppAuthScheme.Bearer)]
+// [Authorize(AuthenticationSchemes = AppAuthScheme.Bearer)]
 public class UsersController : ControllerBase
 {
     private readonly ISender _sender;
