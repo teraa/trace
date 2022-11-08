@@ -24,6 +24,8 @@ namespace Trace.Data.Models.Twitch
             builder.Metadata.SetTableName("users");
 
             builder.HasKey(x => x.EntryId);
+            builder.HasIndex(x => x.Id);
+            builder.HasIndex(x => x.Login);
         }
     }
 }
