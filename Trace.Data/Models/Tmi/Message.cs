@@ -28,10 +28,8 @@ namespace Trace.Data.Models.Tmi
             builder.Metadata.SetTableName("messages");
 
             builder.HasIndex(x => x.Timestamp);
-            builder.HasIndex(x => new {x.AuthorId, x.Timestamp});
-            builder.HasIndex(x => new {x.AuthorLogin, x.Timestamp});
+            builder.HasIndex(x => new {x.ChannelId, x.Timestamp});
             builder.HasIndex(x => new {x.ChannelId, x.AuthorId, x.Timestamp});
-            builder.HasIndex(x => new {x.ChannelId, x.AuthorLogin, x.Timestamp});
 
             builder.HasOne(x => x.Source)
                 .WithMany(x => x.Messages)
