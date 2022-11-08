@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using Trace.Api.Options;
 using Trace.Data;
 using Trace.Data.Models;
+using Trace.Options;
 using Results = Teraa.Extensions.AspNetCore.Results;
 
 namespace Trace.Api.Features.Auth.Actions;

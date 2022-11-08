@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using Trace.Api.Options;
+using Trace.Options;
 
 namespace Trace.Api.Features.Auth.Actions;
 

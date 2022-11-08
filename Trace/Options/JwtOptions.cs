@@ -1,8 +1,9 @@
 using FluentValidation;
 using JetBrains.Annotations;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace Trace.Api.Options;
+namespace Trace.Options;
 
 #pragma warning disable CS8618
 public class JwtOptions

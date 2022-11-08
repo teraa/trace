@@ -7,10 +7,14 @@ using Teraa.Extensions.AspNetCore;
 using Teraa.Extensions.Configuration;
 using Teraa.Extensions.Serilog.Seq;
 using Teraa.Extensions.Serilog.Systemd;
+using Teraa.Twitch.PubSub;
+using Teraa.Twitch.Tmi;
 using Trace.Api;
 using Trace.Api.Features.Auth;
-using Trace.Api.Options;
 using Trace.Data;
+using Trace.Initializers;
+using Trace.Options;
+using Trace.Tmi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +35,7 @@ builder.Host
 
 builder.Services
     .AddAsyncInitialization()
+    .AddAsyncInitializer<MigrationInitializer>()
     .ConfigureOptions<ConfigureJwtBearerOptions>()
     .AddAuthentication(options =>
     {
@@ -66,13 +71,18 @@ builder.Services
     .AddRequestValidationBehaviour()
     .AddValidatorsFromAssemblyContaining<Program>()
     .AddMemoryCache()
+    .AddSingleton<SourceCache>()
     .AddHttpClient()
     .AddHttpContextAccessor()
     .AddOptionsWithValidation<DbOptions>()
     .AddOptionsWithValidation<JwtOptions>()
     .AddOptionsWithValidation<TwitchOptions>()
+    .AddOptionsWithValidation<TmiOptions>()
+    .AddOptionsWithValidation<PubSubOptions>()
     .AddSingleton<TokenService>()
     .AddSingleton<JwtSigningKeyProvider>()
+    .AddTmiService()
+    .AddPubSubService()
     ;
 
 var app = builder.Build();

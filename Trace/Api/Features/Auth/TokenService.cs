@@ -2,7 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Trace.Api.Options;
+using Trace.Options;
 
 namespace Trace.Api.Features.Auth;
 
