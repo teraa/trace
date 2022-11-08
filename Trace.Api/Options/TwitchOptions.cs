@@ -14,7 +14,7 @@ public class TwitchOptions
     public Uri RedirectUri { get; init; }
     public Uri TokenEndpoint { get; init; } = new("https://id.twitch.tv/oauth2/token");
     public Uri ValidateEndpoint { get; init; } = new("https://id.twitch.tv/oauth2/validate");
-    public string Scope { get; set; }
+    public string Scope { get; set; } = "";
 
     [UsedImplicitly]
     public class Validator : AbstractValidator<TwitchOptions>
