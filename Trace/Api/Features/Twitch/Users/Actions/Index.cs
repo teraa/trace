@@ -12,7 +12,7 @@ public static class Index
     public record Query(
         string? Id,
         string? Login,
-        bool? Recursive
+        bool Recursive = false
     ) : IRequest<IActionResult>;
 
     [UsedImplicitly]
@@ -55,7 +55,7 @@ public static class Index
             {
                 login = login.ToLowerInvariant();
 
-                if (request.Recursive is true)
+                if (request.Recursive)
                 {
                     var userIds = await _ctx.TwitchUsers
                         .Where(x => x.Login == login)
