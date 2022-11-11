@@ -17,6 +17,8 @@ Environment="Tmi__Login=x"
 Environment="Seq__ApiKey=x"
 Environment="PubSub__Token=x"
 Environment="Jwt__SigningKey=x"
+Environment="Jwt__Audience=localhost"
+Environment="Jwt__Issuer=localhost"
 Environment="Db__ConnectionString=Host=localhost;Database=trace;Username=user;Password=pass;Include Error Detail=true;Command Timeout=30"
 
 [Install]
