@@ -1,17 +1,19 @@
 ﻿using FluentValidation;
 using JetBrains.Annotations;
+using LinqKit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Trace.Data;
+using Trace.Data.Models.Twitch;
 
 namespace Trace.Api.Features.Twitch.Users.Actions;
 
 public static class Index
 {
     public record Query(
-        string? Id,
-        string? Login,
+        IReadOnlyList<string>? Ids,
+        IReadOnlyList<string>? Logins,
         bool Recursive = false
     ) : IRequest<IActionResult>;
 
@@ -20,9 +22,12 @@ public static class Index
     {
         public QueryValidator()
         {
+            RuleForEach(x => x.Ids).NotEmpty();
+            RuleForEach(x => x.Logins).NotEmpty();
+
             RuleFor(x => x)
-                .Must(x => x.Id is { } || x.Login is { })
-                .WithMessage($"Must include at least one of {nameof(Query.Id)} and {nameof(Query.Login)}");
+                .Must(x => x is {Ids: { }} or {Logins: { }})
+                .WithMessage($"Must include at least one of {nameof(Query.Ids)} and {nameof(Query.Logins)}");
         }
     }
 
@@ -45,33 +50,33 @@ public static class Index
 
         public async Task<IActionResult> Handle(Query request, CancellationToken cancellationToken)
         {
-            var query = _ctx.TwitchUsers
-                .AsQueryable();
+            var predicate = PredicateBuilder.New<User>();
 
-            if (request.Id is { })
-                query = query.Where(x => x.Id == request.Id);
+            if (request.Ids is { })
+                predicate = predicate.Or(x => request.Ids.Contains(x.Id));
 
-            if (request.Login is { } login)
+            if (request.Logins is { })
             {
-                login = login.ToLowerInvariant();
+                var logins = request.Logins.Select(x => x.ToLowerInvariant());
 
                 if (request.Recursive)
                 {
                     var userIds = await _ctx.TwitchUsers
-                        .Where(x => x.Login == login)
+                        .Where(x => logins.Contains(x.Login))
                         .Select(x => x.Id)
                         .Distinct()
                         .ToListAsync(cancellationToken);
 
-                    query = query.Where(x => userIds.Contains(x.Id));
+                    predicate = predicate.Or(x => userIds.Contains(x.Id));
                 }
                 else
                 {
-                    query = query.Where(x => x.Login == login);
+                    predicate = predicate.Or(x => logins.Contains(x.Login));
                 }
             }
 
-            var results = await query
+            var results = await _ctx.TwitchUsers
+                .Where(predicate)
                 .Select(x => new Result(x.Id, x.Login, x.FirstSeen, x.LastSeen))
                 .ToListAsync(cancellationToken);
 
