@@ -47,30 +47,27 @@ public static class CreateToken
     {
         private readonly IMemoryCache _cache;
         private readonly TwitchOptions _options;
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly TokenService _tokenService;
         private readonly TraceDbContext _ctx;
+        private readonly HttpClient _client;
 
         public Handler(
             IMemoryCache cache,
             IOptionsMonitor<TwitchOptions> options,
-            IHttpClientFactory httpClientFactory,
             TokenService tokenService,
-            TraceDbContext ctx)
+            TraceDbContext ctx, HttpClient client)
         {
             _cache = cache;
             _options = options.CurrentValue;
-            _httpClientFactory = httpClientFactory;
             _tokenService = tokenService;
             _ctx = ctx;
+            _client = client;
         }
 
         public async Task<IActionResult> Handle(Command request, CancellationToken cancellationToken)
         {
             if (!_cache.InvalidateState(request.State))
                 return Results.BadRequestDetails("Invalid state.");
-
-            var client = _httpClientFactory.CreateClient();
 
             TokenResponse tokenResponse;
             {
@@ -88,7 +85,7 @@ public static class CreateToken
                     }),
                 };
 
-                using var httpResponse = await client.SendAsync(httpRequest, cancellationToken);
+                using var httpResponse = await _client.SendAsync(httpRequest, cancellationToken);
                 if (!httpResponse.IsSuccessStatusCode)
                     return Results.BadRequestDetails("Authorization failed.");
 
@@ -111,7 +108,7 @@ public static class CreateToken
                     },
                 };
 
-                using var httpResponse = await client.SendAsync(httpRequest, cancellationToken);
+                using var httpResponse = await _client.SendAsync(httpRequest, cancellationToken);
                 if (!httpResponse.IsSuccessStatusCode)
                     return Results.BadRequestDetails("Token validation failed.");
 
