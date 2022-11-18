@@ -28,7 +28,7 @@ public static class Index
             RuleForEach(x => x.Ids).NotEmpty();
             RuleForEach(x => x.Logins).NotEmpty();
             RuleFor(x => x.LoginPattern).MinimumLength(1);
-            RuleFor(x => x.PatternLimit).InclusiveBetween(1, 100);
+            RuleFor(x => x.PatternLimit).InclusiveBetween(1, 1000);
 
             RuleFor(x => x)
                 .Must(x => x is {Ids: { }} or {Logins: { }} or {LoginPattern: { }})
