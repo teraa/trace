@@ -49,6 +49,8 @@ builder.Services
     .AddControllers(options =>
     {
         options.ModelValidatorProviders.Clear();
+        options.ModelMetadataDetailsProviders.Add(new EmptyStringMetadataProvider());
+
     })
     .Services
     .AddDbContext<TraceDbContext>((services, options) =>
