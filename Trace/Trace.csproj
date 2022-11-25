@@ -35,4 +35,15 @@
     <ProjectReference Include="..\Trace.Data\Trace.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="appsettings.yml" />
+    <Content Include="appsettings.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="appsettings.Development.yml" />
+    <Content Include="appsettings.Development.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
