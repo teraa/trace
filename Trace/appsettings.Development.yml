@@ -1,0 +1,6 @@
+  Jwt:
+    Audience: localhost
+    Issuer: localhost
+    TokenLifetime: "365.00:00:00"
+  Tmi:
+    MessageSourceName: "Trace-Dev"

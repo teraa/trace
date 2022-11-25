@@ -1,0 +1,14 @@
+Urls: "http://localhost:5173"
+AllowedHosts: "*"
+Serilog:
+  MinimumLevel:
+    Default: Debug
+    Override:
+      Teraa: Verbose
+      Trace: Verbose
+      Microsoft.AspNetCore: Information
+      Microsoft.EntityFrameworkCore: Information
+      Microsoft.Extensions.Http.DefaultHttpClientFactory: Information
+      System.Net.Http.HttpClient: Debug
+Twitch:
+  RedirectUri: "http://localhost:5173/auth/callback"

@@ -18,6 +18,10 @@ using Trace.Tmi;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration
+    .AddYamlFile("appsettings.yml", optional: true, reloadOnChange: true)
+    .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yml", optional: true, reloadOnChange: true);
+
 builder.Host
     .UseDefaultServiceProvider(options =>
     {
