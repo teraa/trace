@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics;
+using System.Security.Claims;
 
 namespace Trace.Api.Extensions;
 
@@ -6,7 +7,8 @@ public static class HttpContextExtensions
 {
     public static Guid GetUserId(this HttpContext context)
     {
-        string value = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var value = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        Debug.Assert(value is { });
         return new Guid(value);
     }
 }

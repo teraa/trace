@@ -1,4 +1,5 @@
 ﻿using MediatR;
+// ReSharper disable once RedundantUsingDirective
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Index = Trace.Api.Features.Twitch.Users.Actions.Index;

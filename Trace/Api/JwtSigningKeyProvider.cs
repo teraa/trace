@@ -8,7 +8,7 @@ namespace Trace.Api;
 
 public class JwtSigningKeyProvider : IDisposable
 {
-    private readonly IDisposable _optionsChangeListener;
+    private readonly IDisposable? _optionsChangeListener;
 
     public SymmetricSecurityKey Key { get; private set; }
 
@@ -27,6 +27,6 @@ public class JwtSigningKeyProvider : IDisposable
 
     public void Dispose()
     {
-        _optionsChangeListener.Dispose();
+        _optionsChangeListener?.Dispose();
     }
 }

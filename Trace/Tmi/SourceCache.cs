@@ -51,7 +51,7 @@ public class SourceCache
             });
         });
 
-        return await lazy.Value;
+        return await lazy!.Value;
     }
 
     private record SourceKey;
