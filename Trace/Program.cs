@@ -73,7 +73,10 @@ builder.Services
         options.EnableSensitiveDataLogging();
 #endif
     })
-    .AddMediatR(typeof(Program))
+    .AddMediatR(config =>
+    {
+        config.RegisterServicesFromAssemblyContaining<Program>();
+    })
     .AddRequestValidationBehaviour()
     .AddValidatorsFromAssemblyContaining<Program>()
     .AddMemoryCache()
