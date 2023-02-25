@@ -1,5 +1,4 @@
 using FluentValidation;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
@@ -9,6 +8,7 @@ using Teraa.Extensions.Serilog.Seq;
 using Teraa.Extensions.Serilog.Systemd;
 using Teraa.Twitch.PubSub;
 using Teraa.Twitch.Tmi;
+using Trace;
 using Trace.Api;
 using Trace.Api.Features.Auth;
 using Trace.Data;
@@ -20,7 +20,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration
     .AddYamlFile("appsettings.yml", optional: true, reloadOnChange: true)
-    .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yml", optional: true, reloadOnChange: true);
+    .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yml", optional: true, reloadOnChange: true)
+    .AddVault();
 
 builder.Host
     .UseDefaultServiceProvider(options =>
@@ -54,7 +55,6 @@ builder.Services
     {
         options.ModelValidatorProviders.Clear();
         options.ModelMetadataDetailsProviders.Add(new EmptyStringMetadataProvider());
-
     })
     .Services
     .AddDbContext<TraceDbContext>((services, options) =>
