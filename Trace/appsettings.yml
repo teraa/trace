@@ -12,5 +12,3 @@ Serilog:
       System.Net.Http.HttpClient: Debug
 Twitch:
   RedirectUri: "http://localhost:5173/auth/callback"
-Vault:
-  IsEnabled: False
