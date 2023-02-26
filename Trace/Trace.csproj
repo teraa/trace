@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Extensions\AspNetCore\Extensions.AspNetCore.csproj" />
+    <ProjectReference Include="..\Extensions\Configuration.Vault.Options\Extensions.Configuration.Vault.Options.csproj" />
     <ProjectReference Include="..\Extensions\Configuration.Vault\Extensions.Configuration.Vault.csproj" />
     <ProjectReference Include="..\Extensions\Configuration\Extensions.Configuration.csproj" />
     <ProjectReference Include="..\Extensions\Serilog.Seq\Extensions.Serilog.Seq.csproj" />
