@@ -12,3 +12,7 @@ Serilog:
       System.Net.Http.HttpClient: Debug
 Twitch:
   RedirectUri: "http://localhost:5173/auth/callback"
+Vault:
+  Address: "http://localhost:8200"
+  Mount: kv
+  Path: Trace
