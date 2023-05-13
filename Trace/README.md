@@ -3,13 +3,12 @@ Secrets needed for minimal setup
 ```
 Db:ConnectionString
 
-Twitch:ClientId
-Twitch:ClientSecret
-Twitch:RedirectUri
+Jwt:Audience
+Jwt:Issuer
+Jwt:SigningKey
 
 PubSub:Token
 
-Jwt:SigningKey
-Jwt:Audience
-Jwt:Issuer
+Twitch:ClientId
+Twitch:ClientSecret
 ```
