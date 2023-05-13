@@ -41,6 +41,7 @@ builder.Host
 builder.Services
     .AddAsyncInitialization()
     .AddAsyncInitializer<MigrationInitializer>()
+    .AddAsyncInitializer<SourceInitializer>()
     .ConfigureOptions<ConfigureJwtBearerOptions>()
     .AddAuthentication(options =>
     {
@@ -80,7 +81,8 @@ builder.Services
     .AddRequestValidationBehaviour()
     .AddValidatorsFromAssemblyContaining<Program>()
     .AddMemoryCache()
-    .AddSingleton<SourceCache>()
+    .AddSingleton<SourceProvider>()
+    .AddSingleton<ISourceProvider>(services => services.GetRequiredService<SourceProvider>())
     .AddHttpClient()
     .AddHttpContextAccessor()
     .AddOptionsWithValidation<DbOptions>()

@@ -12,16 +12,16 @@ namespace Trace.Tmi;
 public class MessageHandler : INotificationHandler<MessageReceived>
 {
     private readonly TraceDbContext _ctx;
-    private readonly SourceCache _cache;
+    private readonly ISourceProvider _sourceProvider;
     private readonly ILogger<MessageHandler> _logger;
 
     public MessageHandler(
         TraceDbContext ctx,
-        SourceCache cache,
+        ISourceProvider sourceProvider,
         ILogger<MessageHandler> logger)
     {
         _ctx = ctx;
-        _cache = cache;
+        _sourceProvider = sourceProvider;
         _logger = logger;
     }
 
@@ -48,8 +48,6 @@ public class MessageHandler : INotificationHandler<MessageReceived>
         var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(
             long.Parse(notification.Message.Tags["tmi-sent-ts"]));
 
-        short sourceId = await _cache.GetOrLoadSourceIdAsync(cancellationToken);
-
         var userEntity = await _ctx.TwitchUsers
             .Where(x => x.Id == userId)
             .OrderByDescending(x => x.LastSeen)
@@ -75,7 +73,7 @@ public class MessageHandler : INotificationHandler<MessageReceived>
         var messageEntity = new Data.Models.Tmi.Message
         {
             Timestamp = timestamp,
-            SourceId = sourceId,
+            SourceId = _sourceProvider.SourceId,
             ChannelId = channelId,
             AuthorId = userId,
             AuthorLogin = userLogin,
