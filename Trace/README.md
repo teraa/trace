@@ -1,14 +1,13 @@
 # Secrets
-- Needed secrets to run the project:
+Secrets needed for minimal setup
 ```
 Db:ConnectionString
-
-Serilog:WriteTo:Seq:Args:serverUrl
-Serilog:WriteTo:Seq:Args:apiKey
 
 Twitch:ClientId
 Twitch:ClientSecret
 Twitch:RedirectUri
+
+PubSub:Token
 
 Jwt:SigningKey
 Jwt:Audience
