@@ -12,7 +12,7 @@ using Teraa.Twitch.Tmi;
 using Trace.Api;
 using Trace.Api.Features.Auth;
 using Trace.Data;
-using Trace.Initializers;
+using Trace.Migrations;
 using Trace.Options;
 using Trace.Tmi;
 

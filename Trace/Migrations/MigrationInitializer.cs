@@ -1,9 +1,9 @@
-﻿using Extensions.Hosting.AsyncInitialization;
+using Extensions.Hosting.AsyncInitialization;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Trace.Data;
 
-namespace Trace.Initializers;
+namespace Trace.Migrations;
 
 [UsedImplicitly]
 public class MigrationInitializer : IAsyncInitializer

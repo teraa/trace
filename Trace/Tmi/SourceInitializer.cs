@@ -1,13 +1,12 @@
-﻿using Extensions.Hosting.AsyncInitialization;
+using Extensions.Hosting.AsyncInitialization;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Trace.Data;
 using Trace.Data.Models.Tmi;
 using Trace.Options;
-using Trace.Tmi;
 
-namespace Trace.Initializers;
+namespace Trace.Tmi;
 
 [UsedImplicitly]
 public class SourceInitializer : IAsyncInitializer

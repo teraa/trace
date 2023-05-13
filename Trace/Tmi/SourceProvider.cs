@@ -1,4 +1,4 @@
-﻿namespace Trace.Tmi;
+namespace Trace.Tmi;
 
 public interface ISourceProvider
 {
