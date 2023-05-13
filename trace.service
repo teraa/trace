@@ -3,23 +3,15 @@ Description=Trace - Twitch Logger
 After=network-online.target
 
 [Service]
-User=tera
+User=trace
 Type=notify
 SyslogIdentifier=trace
 WorkingDirectory=/opt/trace/bin/current
 ExecStart=/opt/trace/bin/current/Trace
 Restart=always
 Environment="ASPNETCORE_ENVIRONMENT=Production"
-Environment="Twitch__ClientSecret=x"
-Environment="Twitch__ClientId=x"
-Environment="Tmi__Token=oauth:x"
-Environment="Tmi__Login=x"
-Environment="Seq__ApiKey=x"
-Environment="PubSub__Token=x"
-Environment="Jwt__SigningKey=x"
-Environment="Jwt__Audience=localhost"
-Environment="Jwt__Issuer=localhost"
-Environment="Db__ConnectionString=Host=localhost;Database=trace;Username=user;Password=pass;Include Error Detail=true;Command Timeout=30"
+Environment="Vault__IsEnabled=True"
+Environment="Vault__Token=x"
 
 [Install]
 WantedBy=multi-user.target
