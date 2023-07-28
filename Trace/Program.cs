@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
+using Serilog.Settings.Configuration;
 using Teraa.Extensions.AspNetCore;
 using Teraa.Extensions.Configuration;
 using Teraa.Extensions.Configuration.Vault.Options;
@@ -33,7 +34,8 @@ builder.Host
     .UseSerilog((hostContext, options) =>
     {
         options
-            .ReadFrom.Configuration(hostContext.Configuration)
+            .ReadFrom.Configuration(hostContext.Configuration,
+                new ConfigurationReaderOptions(typeof(ConsoleLoggerExtensions).Assembly))
             .ConfigureSystemdConsole()
             .ConfigureSeq(hostContext);
     });
