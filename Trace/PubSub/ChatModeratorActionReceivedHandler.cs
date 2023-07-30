@@ -24,7 +24,7 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
     {
         var timestamp = DateTimeOffset.UtcNow;
 
-        var action = notification.Action switch
+        var entity = notification.Action switch
         {
             Ban x => new Data.Models.Pubsub.Ban
             {
@@ -80,34 +80,35 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
             _ => new Data.Models.Pubsub.ModeratorAction()
         };
 
-        if (notification.Action is ITargetedModeratorAction evt)
+        if (notification.Action is ITargetedModeratorAction targetedAction)
         {
-            var act = (Data.Models.Pubsub.TargetedModeratorAction) action;
-            act.TargetId = evt.Target.Id;
-            act.TargetName = evt.Target.Login;
+            var targetedEntity = (Data.Models.Pubsub.TargetedModeratorAction) entity;
+            targetedEntity.TargetId = targetedAction.Target.Id;
+            targetedEntity.TargetName = targetedAction.Target.Login;
         }
-        action.Timestamp = timestamp;
-        action.ChannelId = notification.Topic.ChannelId;
-        action.Action = notification.Action.Action;
-        action.InitiatorId = notification.Action.InitiatorId;
+
+        entity.Timestamp = timestamp;
+        entity.ChannelId = notification.Topic.ChannelId;
+        entity.Action = notification.Action.Action;
+        entity.InitiatorId = notification.Action.InitiatorId;
 
         switch (notification.Action)
         {
             case IInitiatorModeratorAction x:
-                action.InitiatorName = x.Initiator.Login;
+                entity.InitiatorName = x.Initiator.Login;
                 break;
             case Raid x:
-                action.InitiatorName = x.InitiatorDisplayName;
+                entity.InitiatorName = x.InitiatorDisplayName;
                 break;
             case Unraid x:
-                action.InitiatorName = x.InitiatorDisplayName;
+                entity.InitiatorName = x.InitiatorDisplayName;
                 break;
             default:
                 _logger.LogWarning("InitiatorName not set for {@Action}", notification.Action);
                 break;
         }
 
-        _ctx.ModeratorActions.Add(action);
+        _ctx.ModeratorActions.Add(entity);
         await _ctx.SaveChangesAsync(cancellationToken);
     }
 }
