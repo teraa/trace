@@ -12,10 +12,12 @@ namespace Trace.PubSub;
 public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModeratorActionReceived>
 {
     private readonly TraceDbContext _ctx;
+    private readonly ILogger<ChatModeratorActionReceivedHandler> _logger;
 
-    public ChatModeratorActionReceivedHandler(TraceDbContext ctx)
+    public ChatModeratorActionReceivedHandler(TraceDbContext ctx, ILogger<ChatModeratorActionReceivedHandler> logger)
     {
         _ctx = ctx;
+        _logger = logger;
     }
 
     public async Task Handle(ChatModeratorActionReceived notification, CancellationToken cancellationToken)
@@ -42,7 +44,7 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
 
             Raid x => new Data.Models.Pubsub.Raid
             {
-                TargetName = x.Target,
+                TargetName = x.TargetDisplayName,
             },
 
             Slow x => new Data.Models.Pubsub.Slow
@@ -81,17 +83,29 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
         if (notification.Action is ITargetedModeratorAction evt)
         {
             var act = (Data.Models.Pubsub.TargetedModeratorAction) action;
-            act.TargetId = evt.TargetId;
-            act.TargetName = evt.Target;
+            act.TargetId = evt.Target.Id;
+            act.TargetName = evt.Target.Login;
         }
-
         action.Timestamp = timestamp;
         action.ChannelId = notification.Topic.ChannelId;
         action.Action = notification.Action.Action;
         action.InitiatorId = notification.Action.InitiatorId;
-        action.InitiatorName = notification.Action.Initiator;
 
-        // if (notification.Action is not (Raid or Unraid)) { }
+        switch (notification.Action)
+        {
+            case IInitiatorModeratorAction x:
+                action.InitiatorName = x.Initiator.Login;
+                break;
+            case Raid x:
+                action.InitiatorName = x.InitiatorDisplayName;
+                break;
+            case Unraid x:
+                action.InitiatorName = x.InitiatorDisplayName;
+                break;
+            default:
+                _logger.LogWarning("InitiatorName not set for {@Action}", notification.Action);
+                break;
+        }
 
         _ctx.ModeratorActions.Add(action);
         await _ctx.SaveChangesAsync(cancellationToken);
