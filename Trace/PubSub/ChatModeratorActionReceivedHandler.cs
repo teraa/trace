@@ -32,6 +32,11 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
             InitiatorId = notification.Action.InitiatorId,
         };
 
+        if (notification.Action is IInitiatorModeratorAction initiatorAction)
+        {
+            entity.InitiatorName = initiatorAction.Initiator.Login;
+        }
+
         if (notification.Action is ITargetedModeratorAction targetedAction)
         {
             entity.TargetId = targetedAction.Target.Id;
@@ -52,6 +57,10 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
                 break;
             case Raid x:
                 entity.TargetName = x.TargetDisplayName;
+                entity.InitiatorName = x.InitiatorDisplayName;
+                break;
+            case Unraid x:
+                entity.InitiatorName = x.InitiatorDisplayName;
                 break;
             case Slow x:
                 entity.Duration = x.Duration;
@@ -73,21 +82,10 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
                 break;
         }
 
-        // InitiatorName handling to log any occurrences where it's not set
-        switch (notification.Action)
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (entity.InitiatorName is null)
         {
-            case IInitiatorModeratorAction x:
-                entity.InitiatorName = x.Initiator.Login;
-                break;
-            case Raid x:
-                entity.InitiatorName = x.InitiatorDisplayName;
-                break;
-            case Unraid x:
-                entity.InitiatorName = x.InitiatorDisplayName;
-                break;
-            default:
-                _logger.LogWarning("InitiatorName not set for {@Action}", notification.Action);
-                break;
+            _logger.LogWarning("InitiatorName not set for {@Action}", notification.Action);
         }
 
         _ctx.ModeratorActions.Add(entity);
