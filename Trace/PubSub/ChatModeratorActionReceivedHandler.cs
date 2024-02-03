@@ -24,60 +24,12 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
     {
         var timestamp = DateTimeOffset.UtcNow;
 
-        var entity = notification.Action switch
+        var entity = new Data.Models.Pubsub.ModeratorAction
         {
-            Ban x => new Data.Models.Pubsub.ModeratorAction
-            {
-                Reason = x.Reason,
-            },
-
-            Delete x => new Data.Models.Pubsub.ModeratorAction
-            {
-                MessageId = x.MessageId,
-                Message = x.Message,
-            },
-
-            Followers x => new Data.Models.Pubsub.ModeratorAction
-            {
-                Duration = x.Duration,
-            },
-
-            Raid x => new Data.Models.Pubsub.ModeratorAction
-            {
-                TargetName = x.TargetDisplayName,
-            },
-
-            Slow x => new Data.Models.Pubsub.ModeratorAction
-            {
-                Duration = x.Duration,
-            },
-
-            Timeout x => new Data.Models.Pubsub.ModeratorAction
-            {
-                Duration = x.Duration,
-                Reason = x.Reason,
-            },
-
-            ApproveUnbanRequest x => new Data.Models.Pubsub.ModeratorAction
-            {
-                ModeratorMessage = x.ModeratorMessage,
-            },
-
-            DenyUnbanRequest x => new Data.Models.Pubsub.ModeratorAction
-            {
-                ModeratorMessage = x.ModeratorMessage,
-            },
-
-            ITargetedModeratorAction => new Data.Models.Pubsub.ModeratorAction(),
-
-            ITermModeratorAction x => new Data.Models.Pubsub.ModeratorAction
-            {
-                TermId = x.Id,
-                TermText = x.Text,
-                UpdatedAt = x.UpdatedAt,
-            },
-
-            _ => new Data.Models.Pubsub.ModeratorAction()
+            Timestamp = timestamp,
+            ChannelId = notification.Topic.ChannelId,
+            Action = notification.Action.Action,
+            InitiatorId = notification.Action.InitiatorId,
         };
 
         if (notification.Action is ITargetedModeratorAction targetedAction)
@@ -86,10 +38,40 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
             entity.TargetName = targetedAction.Target.Login;
         }
 
-        entity.Timestamp = timestamp;
-        entity.ChannelId = notification.Topic.ChannelId;
-        entity.Action = notification.Action.Action;
-        entity.InitiatorId = notification.Action.InitiatorId;
+        switch (notification.Action)
+        {
+            case Ban x:
+                entity.Reason = x.Reason;
+                break;
+            case Delete x:
+                entity.MessageId = x.MessageId;
+                entity.Message = x.Message;
+                break;
+            case Followers x:
+                entity.Duration = x.Duration;
+                break;
+            case Raid x:
+                entity.TargetName = x.TargetDisplayName;
+                break;
+            case Slow x:
+                entity.Duration = x.Duration;
+                break;
+            case Timeout x:
+                entity.Duration = x.Duration;
+                entity.Reason = x.Reason;
+                break;
+            case ApproveUnbanRequest x:
+                entity.ModeratorMessage = x.ModeratorMessage;
+                break;
+            case DenyUnbanRequest x:
+                entity.ModeratorMessage = x.ModeratorMessage;
+                break;
+            case ITermModeratorAction x:
+                entity.TermId = x.Id;
+                entity.TermText = x.Text;
+                entity.UpdatedAt = x.UpdatedAt;
+                break;
+        }
 
         switch (notification.Action)
         {
