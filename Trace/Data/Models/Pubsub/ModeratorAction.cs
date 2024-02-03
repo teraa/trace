@@ -2,13 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Trace.Data.Models.Pubsub;
-using Timeout = Trace.Data.Models.Pubsub.Timeout;
 
 #pragma warning disable CS8618
 namespace Trace.Data.Models.Pubsub
 {
     [PublicAPI]
-    public class ModeratorAction
+    public sealed class ModeratorAction
     {
         public long Id { get; set; }
         public DateTimeOffset Timestamp { get; set; }
@@ -16,6 +15,30 @@ namespace Trace.Data.Models.Pubsub
         public string Action { get; set; }
         public string InitiatorId { get; set; }
         public string InitiatorName { get; set; }
+
+        // Term
+        public string? TermId { get; set; }
+        public string? TermText { get; set; }
+        public DateTimeOffset? UpdatedAt { get; set; } // maybe drop
+
+        // Unban request
+        public string? ModeratorMessage { get; set; } // Maybe merge with message?
+
+        // Timeout, Followers, Slow
+        public TimeSpan? Duration { get; set; }
+
+        // Timeout, Ban
+        public string? Reason { get; set; }
+
+        // Targeted
+        public string? TargetId { get; set; }
+
+        // Targeted, Raid
+        public string? TargetName { get; set; }
+
+        // Delete
+        public string? MessageId { get; set; }
+        public string? Message { get; set; }
     }
 
     public class ModeratorActionConfiguration : IEntityTypeConfiguration<ModeratorAction>
@@ -28,74 +51,8 @@ namespace Trace.Data.Models.Pubsub
             builder.HasIndex(x => x.Action);
             builder.HasIndex(x => x.ChannelId);
             builder.HasIndex(x => x.InitiatorId);
-        }
-    }
-
-    [PublicAPI]
-    public class TargetedModeratorAction : ModeratorAction
-    {
-        public string TargetId { get; set; }
-        public string TargetName { get; set; }
-    }
-
-    public class TargetedModeratorActionConfiguration : IEntityTypeConfiguration<TargetedModeratorAction>
-    {
-        public void Configure(EntityTypeBuilder<TargetedModeratorAction> builder)
-        {
             builder.HasIndex(x => x.TargetId);
         }
-    }
-
-    [PublicAPI]
-    public class Ban : TargetedModeratorAction
-    {
-        public string Reason { get; set; }
-    }
-
-    [PublicAPI]
-    public class Delete : TargetedModeratorAction
-    {
-        public string MessageId { get; set; }
-        public string Message { get; set; }
-    }
-
-    [PublicAPI]
-    public class Followers : ModeratorAction
-    {
-        public TimeSpan Duration { get; set; }
-    }
-
-    [PublicAPI]
-    public class Raid : ModeratorAction
-    {
-        public string TargetName { get; set; }
-    }
-
-    [PublicAPI]
-    public class Slow : ModeratorAction
-    {
-        public TimeSpan Duration { get; set; }
-    }
-
-    [PublicAPI]
-    public class Timeout : TargetedModeratorAction
-    {
-        public TimeSpan Duration { get; set; }
-        public string Reason { get; set; }
-    }
-
-    [PublicAPI]
-    public class UnbanRequestAction : TargetedModeratorAction
-    {
-        public string ModeratorMessage { get; set; }
-    }
-
-    [PublicAPI]
-    public class TermAction : ModeratorAction
-    {
-        public string TermId { get; set; }
-        public string Text { get; set; }
-        public DateTimeOffset UpdatedAt { get; set; }
     }
 }
 
@@ -104,14 +61,5 @@ namespace Trace.Data
     public partial class TraceDbContext
     {
         public DbSet<ModeratorAction> ModeratorActions { get; init; }
-
-        public DbSet<Ban> Bans { get; init; }
-        public DbSet<Delete> Deletes { get; init; }
-        public DbSet<Followers> Followers { get; init; }
-        public DbSet<Raid> Raids { get; init; }
-        public DbSet<Slow> Slows { get; init; }
-        public DbSet<Timeout> Timeouts { get; init; }
-        public DbSet<UnbanRequestAction> UnbanRequestActions { get; init; }
-        public DbSet<TermAction> TermActions { get; init; }
     }
 }

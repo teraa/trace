@@ -26,54 +26,54 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
 
         var entity = notification.Action switch
         {
-            Ban x => new Data.Models.Pubsub.Ban
+            Ban x => new Data.Models.Pubsub.ModeratorAction
             {
                 Reason = x.Reason,
             },
 
-            Delete x => new Data.Models.Pubsub.Delete
+            Delete x => new Data.Models.Pubsub.ModeratorAction
             {
                 MessageId = x.MessageId,
                 Message = x.Message,
             },
 
-            Followers x => new Data.Models.Pubsub.Followers
+            Followers x => new Data.Models.Pubsub.ModeratorAction
             {
                 Duration = x.Duration,
             },
 
-            Raid x => new Data.Models.Pubsub.Raid
+            Raid x => new Data.Models.Pubsub.ModeratorAction
             {
                 TargetName = x.TargetDisplayName,
             },
 
-            Slow x => new Data.Models.Pubsub.Slow
+            Slow x => new Data.Models.Pubsub.ModeratorAction
             {
                 Duration = x.Duration,
             },
 
-            Timeout x => new Data.Models.Pubsub.Timeout
+            Timeout x => new Data.Models.Pubsub.ModeratorAction
             {
                 Duration = x.Duration,
                 Reason = x.Reason,
             },
 
-            ApproveUnbanRequest x => new Data.Models.Pubsub.UnbanRequestAction
+            ApproveUnbanRequest x => new Data.Models.Pubsub.ModeratorAction
             {
                 ModeratorMessage = x.ModeratorMessage,
             },
 
-            DenyUnbanRequest x => new Data.Models.Pubsub.UnbanRequestAction
+            DenyUnbanRequest x => new Data.Models.Pubsub.ModeratorAction
             {
                 ModeratorMessage = x.ModeratorMessage,
             },
 
-            ITargetedModeratorAction => new Data.Models.Pubsub.TargetedModeratorAction(),
+            ITargetedModeratorAction => new Data.Models.Pubsub.ModeratorAction(),
 
-            ITermModeratorAction x => new Data.Models.Pubsub.TermAction
+            ITermModeratorAction x => new Data.Models.Pubsub.ModeratorAction
             {
                 TermId = x.Id,
-                Text = x.Text,
+                TermText = x.Text,
                 UpdatedAt = x.UpdatedAt,
             },
 
@@ -82,9 +82,8 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
 
         if (notification.Action is ITargetedModeratorAction targetedAction)
         {
-            var targetedEntity = (Data.Models.Pubsub.TargetedModeratorAction) entity;
-            targetedEntity.TargetId = targetedAction.Target.Id;
-            targetedEntity.TargetName = targetedAction.Target.Login;
+            entity.TargetId = targetedAction.Target.Id;
+            entity.TargetName = targetedAction.Target.Login;
         }
 
         entity.Timestamp = timestamp;

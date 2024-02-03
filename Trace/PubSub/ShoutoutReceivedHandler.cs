@@ -20,7 +20,7 @@ public sealed class ShoutoutReceivedHandler : INotificationHandler<ShoutoutRecei
     {
         var timestamp = DateTimeOffset.UtcNow;
 
-        var entity = new TargetedModeratorAction
+        var entity = new ModeratorAction
         {
             Action = "shoutout",
             ChannelId = notification.Topic.ChannelId,
