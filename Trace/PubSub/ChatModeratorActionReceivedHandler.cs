@@ -22,11 +22,9 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
 
     public async Task Handle(ChatModeratorActionReceived notification, CancellationToken cancellationToken)
     {
-        var timestamp = DateTimeOffset.UtcNow;
-
         var entity = new Data.Models.Pubsub.ModeratorAction
         {
-            Timestamp = timestamp,
+            Timestamp = notification.ReceivedAt,
             ChannelId = notification.Topic.ChannelId,
             Action = notification.Action.Action,
             InitiatorId = notification.Action.InitiatorId,

@@ -18,15 +18,13 @@ public sealed class ShoutoutReceivedHandler : INotificationHandler<ShoutoutRecei
 
     public async Task Handle(ShoutoutReceived notification, CancellationToken cancellationToken)
     {
-        var timestamp = DateTimeOffset.UtcNow;
-
         var entity = new ModeratorAction
         {
             Action = "shoutout",
             ChannelId = notification.Topic.ChannelId,
             InitiatorId = notification.Shoutout.SourceUserId,
             InitiatorName = notification.Shoutout.SourceLogin,
-            Timestamp = timestamp,
+            Timestamp = notification.ReceivedAt,
             TargetId = notification.Shoutout.TargetUserId,
             TargetName = notification.Shoutout.TargetLogin,
         };
