@@ -73,6 +73,7 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
                 break;
         }
 
+        // InitiatorName handling to log any occurrences where it's not set
         switch (notification.Action)
         {
             case IInitiatorModeratorAction x:

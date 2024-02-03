@@ -19,10 +19,10 @@ namespace Trace.Data.Models.Pubsub
         // Term
         public string? TermId { get; set; }
         public string? TermText { get; set; }
-        public DateTimeOffset? UpdatedAt { get; set; } // maybe drop
+        public DateTimeOffset? UpdatedAt { get; set; }
 
         // Unban request
-        public string? ModeratorMessage { get; set; } // Maybe merge with message?
+        public string? ModeratorMessage { get; set; }
 
         // Timeout, Followers, Slow
         public TimeSpan? Duration { get; set; }
