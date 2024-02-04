@@ -1,4 +1,4 @@
-ARG dotnet_version=7.0
+ARG dotnet_version=8.0
 
 FROM mcr.microsoft.com/dotnet/sdk:$dotnet_version AS build
 WORKDIR /src
