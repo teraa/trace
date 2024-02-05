@@ -1,7 +1,7 @@
 # Trace
 - The API part of the project is WIP
 
-## Minimal Docker example
+## Minimal docker-compose example
 
 ```yaml
 services:
