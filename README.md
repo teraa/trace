@@ -5,6 +5,15 @@
 
 ```yaml
 services:
+  trace:
+    container_name: trace-app
+    image: ghcr.io/teraa/trace:master
+    environment:
+      - Db__ConnectionString=Host=trace-db;Port=5432;Database=trace;Username=postgres;Password=example;Include Error Detail=true;Command Timeout=60
+      - PubSub__Token=x
+    depends_on:
+      - db
+
   db:
     container_name: trace-db
     image: docker.io/postgres:16
@@ -12,11 +21,4 @@ services:
       - POSTGRES_PASSWORD=example
     ports:
       - 127.0.0.1:5432:5432
-
-  trace:
-    container_name: trace
-    image: ghcr.io/teraa/trace:master
-    environment:
-      - Db__ConnectionString=Host=trace-db;Port=5432;Database=trace;Username=postgres;Password=example;Include Error Detail=true;Command Timeout=60
-      - PubSub__Token=x
 ```
