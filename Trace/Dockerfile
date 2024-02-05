@@ -33,4 +33,5 @@ RUN dotnet publish "Trace.csproj" -c $configuration -o /app/publish /p:UseAppHos
 FROM mcr.microsoft.com/dotnet/aspnet:$dotnet_version AS runtime
 WORKDIR /app
 COPY --from=publish /app/publish .
+ENV ASPNETCORE_ENVIRONMENT=Docker
 ENTRYPOINT ["dotnet", "Trace.dll"]
