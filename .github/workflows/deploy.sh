@@ -1,6 +1,6 @@
 #!/bin/bash
 # # edit sudoers file to allow for passwordless service stop/start
-# $ sudo visudo -f /etc/sudoers.d/trace
+# $ sudo visudo -f /etc/sudoers.d/ci
 # %ci ALL=NOPASSWD: /bin/systemctl stop trace.service, /bin/systemctl start trace.service
 svc=trace.service
 
