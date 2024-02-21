@@ -17,6 +17,7 @@ COPY ["Extensions/AspNetCore/Extensions.AspNetCore.csproj", "Extensions/AspNetCo
 COPY ["Extensions/Configuration.Vault.Options/Extensions.Configuration.Vault.Options.csproj", "Extensions/Configuration.Vault.Options/"]
 COPY ["Extensions/Configuration.Vault/Extensions.Configuration.Vault.csproj", "Extensions/Configuration.Vault/"]
 COPY ["Extensions/Configuration/Extensions.Configuration.csproj", "Extensions/Configuration/"]
+COPY ["Extensions/Identity/Extensions.Identity.csproj", "Extensions/Identity/"]
 COPY ["Extensions/Serilog.Seq/Extensions.Serilog.Seq.csproj", "Extensions/Serilog.Seq/"]
 COPY ["Extensions/Serilog.Systemd/Extensions.Serilog.Systemd.csproj", "Extensions/Serilog.Systemd/"]
 RUN dotnet restore "Trace/Trace.csproj"
