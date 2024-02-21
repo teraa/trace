@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
@@ -10,6 +11,7 @@ using Teraa.Extensions.Serilog.Seq;
 using Teraa.Extensions.Serilog.Systemd;
 using Teraa.Twitch.PubSub;
 using Teraa.Twitch.Tmi;
+using Trace.Api.Auth;
 using Trace.Data;
 using Trace.Migrations;
 using Trace.Options;
@@ -60,6 +62,35 @@ builder.Services
         options.EnableSensitiveDataLogging();
 #endif
     })
+    .AddIdentity<AppUser, IdentityRole>(options =>
+    {
+        options.User.AllowedUserNameCharacters += ":";
+        // options.SignIn.RequireConfirmedAccount = true;
+    })
+    .AddEntityFrameworkStores<AppDbContext>()
+    // .AddUserConfirmation<>()
+    .Services
+    .ConfigureApplicationCookie(options => { options.Cookie.Name = "Auth"; })
+    .ConfigureExternalCookie(options => { options.Cookie.Name = "External"; })
+    .AddAuthentication(options =>
+    {
+        options.DefaultChallengeScheme = CustomAuthenticationHandler.SchemeName;
+        options.DefaultForbidScheme = CustomAuthenticationHandler.SchemeName;
+        options.AddScheme<CustomAuthenticationHandler>(CustomAuthenticationHandler.SchemeName, null);
+    })
+    .AddTwitch(authOptions =>
+    {
+        var twitchOptions = builder.Configuration.GetValidatedRequiredOptions([new TwitchOptions.Validator()]);
+        authOptions.ClientId = twitchOptions.ClientId;
+        authOptions.ClientSecret = twitchOptions.ClientSecret;
+
+        authOptions.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
+        authOptions.CorrelationCookie.Name = "Correlation.";
+
+        // options.SaveTokens = true;
+    })
+    .Services
+    .AddAuthorization()
     .AddMediatR(config =>
     {
         config.RegisterServicesFromAssemblyContaining<Program>();
