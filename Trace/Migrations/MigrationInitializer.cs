@@ -17,6 +17,9 @@ public class MigrationInitializer : IAsyncInitializer
 
     public async Task InitializeAsync(CancellationToken cancellationToken)
     {
+        if (_ctx.Database.HasPendingModelChanges())
+            throw new InvalidOperationException("Changes have been made to the model since the last migration. Add a new migration.");
+
         await _ctx.Database.MigrateAsync(cancellationToken);
     }
 }
