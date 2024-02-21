@@ -10,8 +10,6 @@ using Teraa.Extensions.Serilog.Seq;
 using Teraa.Extensions.Serilog.Systemd;
 using Teraa.Twitch.PubSub;
 using Teraa.Twitch.Tmi;
-using Trace.Api;
-using Trace.Api.Features.Auth;
 using Trace.Data;
 using Trace.Migrations;
 using Trace.Options;
@@ -38,19 +36,8 @@ builder.Host
     });
 
 builder.Services
-    .AddAsyncInitialization()
     .AddAsyncInitializer<MigrationInitializer>()
     .AddAsyncInitializer<SourceInitializer>()
-    .ConfigureOptions<ConfigureJwtBearerOptions>()
-    .AddAuthentication(options =>
-    {
-        // https://stackoverflow.com/a/46224126
-        options.DefaultAuthenticateScheme = AppAuthScheme.Bearer;
-        options.DefaultChallengeScheme = AppAuthScheme.Bearer;
-    })
-    .AddJwtBearer(AppAuthScheme.Bearer, _ => { })
-    .AddJwtBearer(AppAuthScheme.ExpiredBearer, _ => { })
-    .Services
     .AddControllers(options =>
     {
         options.ModelValidatorProviders.Clear();
@@ -85,12 +72,9 @@ builder.Services
     .AddHttpClient()
     .AddHttpContextAccessor()
     .AddOptionsWithValidation<DbOptions>()
-    .AddOptionsWithValidation<JwtOptions>()
     .AddOptionsWithValidation<TwitchOptions>()
     .AddOptionsWithValidation<TmiOptions>()
     .AddOptionsWithValidation<PubSubOptions>()
-    .AddSingleton<TokenService>()
-    .AddSingleton<JwtSigningKeyProvider>()
     .AddTmiService()
     .AddPubSubService()
     ;
