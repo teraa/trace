@@ -11,7 +11,7 @@ using Trace.Data;
 
 namespace Trace.Migrations
 {
-    [DbContext(typeof(TraceDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20240203124807_Remove_Actions_Inheritance")]
     partial class Remove_Actions_Inheritance
     {

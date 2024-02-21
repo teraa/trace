@@ -11,7 +11,7 @@ using Trace.Data;
 
 namespace Trace.Migrations
 {
-    [DbContext(typeof(TraceDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20220803125349_AddUserIsVerified")]
     partial class AddUserIsVerified
     {

@@ -8,9 +8,9 @@ namespace Trace.Migrations;
 [UsedImplicitly]
 public class MigrationInitializer : IAsyncInitializer
 {
-    private readonly TraceDbContext _ctx;
+    private readonly AppDbContext _ctx;
 
-    public MigrationInitializer(TraceDbContext ctx)
+    public MigrationInitializer(AppDbContext ctx)
     {
         _ctx = ctx;
     }

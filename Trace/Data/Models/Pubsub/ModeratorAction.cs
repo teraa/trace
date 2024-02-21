@@ -58,7 +58,7 @@ namespace Trace.Data.Models.Pubsub
 
 namespace Trace.Data
 {
-    public partial class TraceDbContext
+    public partial class AppDbContext
     {
         public DbSet<ModeratorAction> ModeratorActions { get; init; }
     }

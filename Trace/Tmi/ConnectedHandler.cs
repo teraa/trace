@@ -17,7 +17,7 @@ public class ConnectedHandler : INotificationHandler<Connected>
 
     public ConnectedHandler(
         TmiService tmi,
-        TraceDbContext ctx,
+        AppDbContext ctx,
         ILogger<ConnectedHandler> logger,
         IOptionsMonitor<TmiOptions> options)
     {

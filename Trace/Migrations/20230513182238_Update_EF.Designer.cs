@@ -11,7 +11,7 @@ using Trace.Data;
 
 namespace Trace.Migrations
 {
-    [DbContext(typeof(TraceDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20230513182238_Update_EF")]
     partial class Update_EF
     {

@@ -11,7 +11,7 @@ using Trace.Data;
 
 namespace Trace.Migrations
 {
-    [DbContext(typeof(TraceDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20240221103634_Remove_User_Models")]
     partial class Remove_User_Models
     {

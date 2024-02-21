@@ -40,7 +40,7 @@ namespace Trace.Data.Models.Tmi
 
 namespace Trace.Data
 {
-    public partial class TraceDbContext
+    public partial class AppDbContext
     {
         public DbSet<Message> TmiMessages { get; init; }
     }

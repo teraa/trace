@@ -11,7 +11,7 @@ using Trace.Data;
 
 namespace Trace.Migrations
 {
-    [DbContext(typeof(TraceDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20221108162734_Add_Twitch_User_Id_Login_Index")]
     partial class Add_Twitch_User_Id_Login_Index
     {

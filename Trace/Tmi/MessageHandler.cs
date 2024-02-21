@@ -11,12 +11,12 @@ namespace Trace.Tmi;
 [UsedImplicitly]
 public class MessageHandler : INotificationHandler<MessageReceived>
 {
-    private readonly TraceDbContext _ctx;
+    private readonly AppDbContext _ctx;
     private readonly ISourceProvider _sourceProvider;
     private readonly ILogger<MessageHandler> _logger;
 
     public MessageHandler(
-        TraceDbContext ctx,
+        AppDbContext ctx,
         ISourceProvider sourceProvider,
         ILogger<MessageHandler> logger)
     {

@@ -9,9 +9,9 @@ namespace Trace.PubSub;
 [UsedImplicitly]
 public sealed class ShoutoutReceivedHandler : INotificationHandler<ShoutoutReceived>
 {
-    private readonly TraceDbContext _ctx;
+    private readonly AppDbContext _ctx;
 
-    public ShoutoutReceivedHandler(TraceDbContext ctx)
+    public ShoutoutReceivedHandler(AppDbContext ctx)
     {
         _ctx = ctx;
     }

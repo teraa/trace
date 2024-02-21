@@ -6,9 +6,9 @@ using Teraa.Extensions.Identity;
 #pragma warning disable CS8618
 namespace Trace.Data;
 
-public partial class TraceDbContext : IdentityDbContext<AppUser>
+public partial class AppDbContext : IdentityDbContext<AppUser>
 {
-    public TraceDbContext(DbContextOptions<TraceDbContext> options)
+    public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -20,7 +20,7 @@ public partial class TraceDbContext : IdentityDbContext<AppUser>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(TraceDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         modelBuilder.UseSnakeCaseIdentityNames<AppUser>();
     }
 }

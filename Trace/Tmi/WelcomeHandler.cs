@@ -11,11 +11,11 @@ namespace Trace.Tmi;
 [UsedImplicitly]
 public class WelcomeHandler : INotificationHandler<MessageReceived>
 {
-    private readonly TraceDbContext _ctx;
+    private readonly AppDbContext _ctx;
     private readonly ILogger<WelcomeHandler> _logger;
     private readonly TmiService _tmi;
 
-    public WelcomeHandler(TraceDbContext ctx, ILogger<WelcomeHandler> logger, TmiService tmi)
+    public WelcomeHandler(AppDbContext ctx, ILogger<WelcomeHandler> logger, TmiService tmi)
     {
         _ctx = ctx;
         _logger = logger;

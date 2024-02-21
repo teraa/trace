@@ -8,9 +8,9 @@ using Trace.Options;
 namespace Trace;
 
 [UsedImplicitly]
-internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<TraceDbContext>
+internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
-    public TraceDbContext CreateDbContext(string[] args)
+    public AppDbContext CreateDbContext(string[] args)
     {
         var config = new ConfigurationBuilder()
             .AddUserSecrets<Program>(optional: false)
@@ -18,7 +18,7 @@ internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<TraceDbC
 
         var dbOptions = config.GetValidatedRequiredOptions<DbOptions>();
 
-        var optionsBuilder = new DbContextOptionsBuilder<TraceDbContext>()
+        var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
             .UseNpgsql(dbOptions.ConnectionString,
                 contextOptions =>
                 {
@@ -26,6 +26,6 @@ internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<TraceDbC
                     contextOptions.CommandTimeout(600);
                 });
 
-        return new TraceDbContext(optionsBuilder.Options);
+        return new AppDbContext(optionsBuilder.Options);
     }
 }

@@ -11,7 +11,7 @@ using Trace.Data;
 
 namespace Trace.Migrations
 {
-    [DbContext(typeof(TraceDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20220726160315_UpdateTmiMessagesIndices")]
     partial class UpdateTmiMessagesIndices
     {

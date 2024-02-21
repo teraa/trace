@@ -11,10 +11,10 @@ namespace Trace.PubSub;
 [UsedImplicitly]
 public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModeratorActionReceived>
 {
-    private readonly TraceDbContext _ctx;
+    private readonly AppDbContext _ctx;
     private readonly ILogger<ChatModeratorActionReceivedHandler> _logger;
 
-    public ChatModeratorActionReceivedHandler(TraceDbContext ctx, ILogger<ChatModeratorActionReceivedHandler> logger)
+    public ChatModeratorActionReceivedHandler(AppDbContext ctx, ILogger<ChatModeratorActionReceivedHandler> logger)
     {
         _ctx = ctx;
         _logger = logger;

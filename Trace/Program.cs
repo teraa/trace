@@ -44,7 +44,7 @@ builder.Services
         options.ModelMetadataDetailsProviders.Add(new EmptyStringMetadataProvider());
     })
     .Services
-    .AddDbContext<TraceDbContext>((services, options) =>
+    .AddDbContext<AppDbContext>((services, options) =>
     {
         using var scope = services.CreateScope();
         var dbOptions = scope.ServiceProvider

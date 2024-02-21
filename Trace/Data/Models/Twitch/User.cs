@@ -32,7 +32,7 @@ namespace Trace.Data.Models.Twitch
 
 namespace Trace.Data
 {
-    public partial class TraceDbContext
+    public partial class AppDbContext
     {
         public DbSet<User> TwitchUsers { get; init; }
     }

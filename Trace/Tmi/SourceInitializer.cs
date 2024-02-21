@@ -11,11 +11,11 @@ namespace Trace.Tmi;
 [UsedImplicitly]
 public class SourceInitializer : IAsyncInitializer
 {
-    private readonly TraceDbContext _ctx;
+    private readonly AppDbContext _ctx;
     private readonly IOptionsMonitor<TmiOptions> _options;
     private readonly SourceProvider _sourceProvider;
 
-    public SourceInitializer(TraceDbContext ctx, IOptionsMonitor<TmiOptions> options, SourceProvider sourceProvider)
+    public SourceInitializer(AppDbContext ctx, IOptionsMonitor<TmiOptions> options, SourceProvider sourceProvider)
     {
         _ctx = ctx;
         _options = options;
