@@ -16,7 +16,7 @@ internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<TraceDbC
             .AddUserSecrets<Program>(optional: false)
             .Build();
 
-        var dbOptions = config.GetRequiredOptions<DbOptions>();
+        var dbOptions = config.GetValidatedRequiredOptions<DbOptions>();
 
         var optionsBuilder = new DbContextOptionsBuilder<TraceDbContext>()
             .UseNpgsql(dbOptions.ConnectionString,
