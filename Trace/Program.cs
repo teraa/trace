@@ -11,6 +11,7 @@ using Teraa.Extensions.Serilog.Seq;
 using Teraa.Extensions.Serilog.Systemd;
 using Teraa.Twitch.PubSub;
 using Teraa.Twitch.Tmi;
+using Trace.Api;
 using Trace.Api.Auth;
 using Trace.Data;
 using Trace.Migrations;
@@ -91,6 +92,7 @@ builder.Services
     })
     .Services
     .AddAuthorization()
+    .AddSingleton<IUserAccessor, UserAccessor>()
     .AddMediatR(config =>
     {
         config.RegisterServicesFromAssemblyContaining<Program>();
