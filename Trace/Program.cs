@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -91,7 +92,12 @@ builder.Services
         // options.SaveTokens = true;
     })
     .Services
-    .AddAuthorization()
+    .AddAuthorization(options =>
+    {
+        options.AddPolicy(AppAuthzPolicies.Channel,
+            policy => { policy.Requirements.Add(new ChannelAuthorizationHandler.Requirement()); });
+    })
+    .AddSingleton<IAuthorizationHandler, ChannelAuthorizationHandler>()
     .AddSingleton<IUserAccessor, UserAccessor>()
     .AddMediatR(config =>
     {
