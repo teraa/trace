@@ -87,8 +87,8 @@ public sealed class AuthController : ControllerBase
 
         identityResult = await _userManager.AddClaimsAsync(user,
         [
-            new Claim("twitch.id", twitchId.Value),
-            new Claim("twitch.login", twitchLogin)
+            new Claim(AppClaimTypes.TwitchId, twitchId.Value),
+            new Claim(AppClaimTypes.TwitchLogin, twitchLogin)
         ]);
 
         if (!identityResult.Succeeded)
