@@ -28,9 +28,9 @@ public sealed class TreatmentUpdateReceivedHandler : INotificationHandler<LowTru
             // notification.TreatmentUpdate.UpdatedBy.Name
             TargetId = notification.TreatmentUpdate.TargetUserId,
             TargetName = notification.TreatmentUpdate.TargetUser,
-            LowUserTrustTreatment = notification.TreatmentUpdate.Treatment,
-            LowUserTrustTypes = notification.TreatmentUpdate.Types.ToList(),
-            LowUserTrustBanEvasionEvaluation = notification.TreatmentUpdate.BanEvasionEvaluation,
+            LowTrustUserTreatment = notification.TreatmentUpdate.Treatment,
+            LowTrustUserTypes = notification.TreatmentUpdate.Types.ToList(),
+            LowTrustUserBanEvasionEvaluation = notification.TreatmentUpdate.BanEvasionEvaluation,
             UpdatedAt = notification.TreatmentUpdate.UpdatedAt,
         };
 

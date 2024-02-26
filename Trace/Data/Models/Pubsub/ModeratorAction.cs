@@ -19,6 +19,8 @@ namespace Trace.Data.Models.Pubsub
         // Term
         public string? TermId { get; set; }
         public string? TermText { get; set; }
+
+        // Term, LowTrustUser
         public DateTimeOffset? UpdatedAt { get; set; }
 
         // Unban request
@@ -40,10 +42,10 @@ namespace Trace.Data.Models.Pubsub
         public string? MessageId { get; set; }
         public string? Message { get; set; }
 
-        // LowUserTrust
-        public string? LowUserTrustTreatment { get; set; }
-        public List<string>? LowUserTrustTypes { get; set; }
-        public string? LowUserTrustBanEvasionEvaluation { get; set; }
+        // LowTrustUser
+        public string? LowTrustUserTreatment { get; set; }
+        public List<string>? LowTrustUserTypes { get; set; }
+        public string? LowTrustUserBanEvasionEvaluation { get; set; }
     }
 
     public class ModeratorActionConfiguration : IEntityTypeConfiguration<ModeratorAction>
