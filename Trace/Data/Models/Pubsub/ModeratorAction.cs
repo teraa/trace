@@ -39,6 +39,11 @@ namespace Trace.Data.Models.Pubsub
         // Delete
         public string? MessageId { get; set; }
         public string? Message { get; set; }
+
+        // LowUserTrust
+        public string? LowUserTrustTreatment { get; set; }
+        public List<string>? LowUserTrustTypes { get; set; }
+        public string? LowUserTrustBanEvasionEvaluation { get; set; }
     }
 
     public class ModeratorActionConfiguration : IEntityTypeConfiguration<ModeratorAction>
