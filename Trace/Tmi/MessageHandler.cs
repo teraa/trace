@@ -53,7 +53,7 @@ public class MessageHandler : INotificationHandler<MessageReceived>
             .OrderByDescending(x => x.LastSeen)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (userEntity is { })
+        if (userEntity is not null && string.Equals(userEntity.Login, userLogin, StringComparison.Ordinal))
         {
             userEntity.LastSeen = timestamp;
         }
