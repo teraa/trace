@@ -1,10 +1,8 @@
 using JetBrains.Annotations;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Teraa.Irc;
 using Teraa.Twitch.Tmi.Notifications;
 using Trace.Data;
-using Trace.Data.Models.Twitch;
 
 namespace Trace.Tmi;
 
@@ -14,15 +12,18 @@ public class MessageHandler : INotificationHandler<MessageReceived>
     private readonly AppDbContext _ctx;
     private readonly ISourceProvider _sourceProvider;
     private readonly ILogger<MessageHandler> _logger;
+    private readonly ISender _sender;
 
     public MessageHandler(
         AppDbContext ctx,
         ISourceProvider sourceProvider,
-        ILogger<MessageHandler> logger)
+        ILogger<MessageHandler> logger,
+        ISender sender)
     {
         _ctx = ctx;
         _sourceProvider = sourceProvider;
         _logger = logger;
+        _sender = sender;
     }
 
     public async Task Handle(MessageReceived notification, CancellationToken cancellationToken)
@@ -48,28 +49,6 @@ public class MessageHandler : INotificationHandler<MessageReceived>
         var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(
             long.Parse(notification.Message.Tags["tmi-sent-ts"]));
 
-        var userEntity = await _ctx.TwitchUsers
-            .Where(x => x.Id == userId)
-            .OrderByDescending(x => x.LastSeen)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        if (userEntity is null || !string.Equals(userEntity.Login, userLogin, StringComparison.Ordinal))
-        {
-            userEntity = new User
-            {
-                Id = userId,
-                Login = userLogin,
-                FirstSeen = timestamp,
-                LastSeen = timestamp,
-            };
-
-            _ctx.TwitchUsers.Add(userEntity);
-        }
-        else
-        {
-            userEntity.LastSeen = timestamp;
-        }
-
         var messageEntity = new Data.Models.Tmi.Message
         {
             Timestamp = timestamp,
@@ -82,5 +61,6 @@ public class MessageHandler : INotificationHandler<MessageReceived>
 
         _ctx.TmiMessages.Add(messageEntity);
         await _ctx.SaveChangesAsync(cancellationToken);
+        await _sender.Send(new Trace.Features.Users.UpdateUser.Command(userId, userLogin, timestamp), cancellationToken);
     }
 }
