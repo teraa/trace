@@ -3,6 +3,7 @@ using MediatR;
 using Teraa.Twitch.PubSub.Messages.ChatModeratorActions;
 using Teraa.Twitch.PubSub.Notifications;
 using Trace.Data;
+using Trace.Features.Users;
 using Timeout = Teraa.Twitch.PubSub.Messages.ChatModeratorActions.Timeout;
 
 
@@ -13,11 +14,13 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
 {
     private readonly AppDbContext _ctx;
     private readonly ILogger<ChatModeratorActionReceivedHandler> _logger;
+    private readonly ISender _sender;
 
-    public ChatModeratorActionReceivedHandler(AppDbContext ctx, ILogger<ChatModeratorActionReceivedHandler> logger)
+    public ChatModeratorActionReceivedHandler(AppDbContext ctx, ILogger<ChatModeratorActionReceivedHandler> logger, ISender sender)
     {
         _ctx = ctx;
         _logger = logger;
+        _sender = sender;
     }
 
     public async Task Handle(ChatModeratorActionReceived notification, CancellationToken cancellationToken)
@@ -30,15 +33,27 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
             InitiatorId = notification.Action.InitiatorId,
         };
 
+        var userUpdates = new List<UpdateUser.Command>(2);
+
         if (notification.Action is IInitiatorModeratorAction initiatorAction)
         {
             entity.InitiatorName = initiatorAction.Initiator.Login;
+
+            userUpdates.Add(new UpdateUser.Command(
+                initiatorAction.Initiator.Id,
+                initiatorAction.Initiator.Login,
+                notification.ReceivedAt));
         }
 
         if (notification.Action is ITargetedModeratorAction targetedAction)
         {
             entity.TargetId = targetedAction.Target.Id;
             entity.TargetName = targetedAction.Target.Login;
+
+            userUpdates.Add(new UpdateUser.Command(
+                targetedAction.Target.Id,
+                targetedAction.Target.Login,
+                notification.ReceivedAt));
         }
 
         switch (notification.Action)
@@ -88,5 +103,10 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
 
         _ctx.ModeratorActions.Add(entity);
         await _ctx.SaveChangesAsync(cancellationToken);
+
+        foreach (var update in userUpdates)
+        {
+            await _sender.Send(update, cancellationToken);
+        }
     }
 }
