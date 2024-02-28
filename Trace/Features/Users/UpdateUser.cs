@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Trace.Data;
@@ -17,15 +18,25 @@ public static class UpdateUser
     [UsedImplicitly]
     public sealed class Handler : IRequestHandler<Command>
     {
-        private readonly AppDbContext _ctx;
+        private static readonly Regex s_loginRegex = new Regex("^[a-z0-9_]+$", RegexOptions.Compiled);
 
-        public Handler(AppDbContext ctx)
+        private readonly AppDbContext _ctx;
+        private readonly ILogger<Handler> _logger;
+
+        public Handler(AppDbContext ctx, ILogger<Handler> logger)
         {
             _ctx = ctx;
+            _logger = logger;
         }
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
+            if (!s_loginRegex.IsMatch(request.Login))
+            {
+                _logger.LogWarning("Skipped updating user with non-login value as a name: {UserName} ({UserId})", request.Login, request.Id);
+                return;
+            }
+
             var entity = await _ctx.TwitchUsers
                 .Where(x => x.Id == request.Id)
                 .OrderByDescending(x => x.LastSeen)
