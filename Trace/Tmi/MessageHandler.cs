@@ -53,11 +53,7 @@ public class MessageHandler : INotificationHandler<MessageReceived>
             .OrderByDescending(x => x.LastSeen)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (userEntity is not null && string.Equals(userEntity.Login, userLogin, StringComparison.Ordinal))
-        {
-            userEntity.LastSeen = timestamp;
-        }
-        else
+        if (userEntity is null || !string.Equals(userEntity.Login, userLogin, StringComparison.Ordinal))
         {
             userEntity = new User
             {
@@ -68,6 +64,10 @@ public class MessageHandler : INotificationHandler<MessageReceived>
             };
 
             _ctx.TwitchUsers.Add(userEntity);
+        }
+        else
+        {
+            userEntity.LastSeen = timestamp;
         }
 
         var messageEntity = new Data.Models.Tmi.Message
