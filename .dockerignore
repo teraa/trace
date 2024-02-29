@@ -6,6 +6,7 @@
 **/.vscode
 **/.idea
 **/*.md
+**/*.sql
 **/bin
 **/docker-compose*
 **/Dockerfile*
