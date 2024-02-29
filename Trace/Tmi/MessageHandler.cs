@@ -3,6 +3,7 @@ using MediatR;
 using Teraa.Irc;
 using Teraa.Twitch.Tmi.Notifications;
 using Trace.Data;
+using Trace.Features.Users;
 
 namespace Trace.Tmi;
 
@@ -61,6 +62,6 @@ public class MessageHandler : INotificationHandler<MessageReceived>
 
         _ctx.TmiMessages.Add(messageEntity);
         await _ctx.SaveChangesAsync(cancellationToken);
-        await _sender.Send(new Trace.Features.Users.UpdateUser.Command(userId, userLogin, timestamp), cancellationToken);
+        await _sender.Send(new UpdateUser.Command(userId, userLogin, timestamp), cancellationToken);
     }
 }
