@@ -57,4 +57,4 @@ SELECT
     first,
     last
 FROM grouped
-ORDER BY id, first, login;
+ORDER BY first;
