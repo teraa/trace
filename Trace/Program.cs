@@ -85,6 +85,7 @@ builder.Services
         var twitchOptions = builder.Configuration.GetValidatedRequiredOptions([new TwitchOptions.Validator()]);
         authOptions.ClientId = twitchOptions.ClientId;
         authOptions.ClientSecret = twitchOptions.ClientSecret;
+        authOptions.CallbackPath = twitchOptions.CallbackPath;
 
         authOptions.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
         authOptions.CorrelationCookie.Name = "Correlation.";

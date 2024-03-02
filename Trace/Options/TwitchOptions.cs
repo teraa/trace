@@ -1,3 +1,4 @@
+using AspNet.Security.OAuth.Twitch;
 using FluentValidation;
 using JetBrains.Annotations;
 
@@ -11,6 +12,7 @@ public class TwitchOptions
     public string ClientId { get; init; }
     public string ClientSecret { get; init; }
     public Uri RedirectUri { get; init; } = new("/", UriKind.Relative);
+    public PathString CallbackPath { get; init; } = TwitchAuthenticationDefaults.CallbackPath;
 
     [UsedImplicitly]
     public class Validator : AbstractValidator<TwitchOptions>
@@ -20,6 +22,7 @@ public class TwitchOptions
             RuleFor(x => x.ClientId).NotEmpty();
             RuleFor(x => x.ClientSecret).NotEmpty();
             RuleFor(x => x.RedirectUri).NotEmpty();
+            RuleFor(x => x.CallbackPath).NotEmpty();
         }
     }
 }
