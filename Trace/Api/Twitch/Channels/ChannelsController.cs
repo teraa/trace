@@ -6,7 +6,7 @@ using Index = Trace.Api.Twitch.Channels.Actions.Index;
 namespace Trace.Api.Twitch.Channels;
 
 [ApiController]
-[Route("twitch/[controller]")]
+[Route("api/twitch/[controller]")]
 [Authorize]
 public class ChannelsController : ControllerBase
 {

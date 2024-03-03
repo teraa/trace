@@ -6,7 +6,7 @@ using Index = Trace.Api.Twitch.Messages.Actions.Index;
 namespace Trace.Api.Twitch.Messages;
 
 [ApiController]
-[Route("twitch/[controller]")]
+[Route("api/twitch/[controller]")]
 [Authorize]
 public class MessagesController : ControllerBase
 {

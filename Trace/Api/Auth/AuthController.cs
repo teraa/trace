@@ -11,7 +11,7 @@ using Trace.Options;
 namespace Trace.Api.Auth;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public sealed class AuthController : ControllerBase
 {
     private readonly UserManager<AppUser> _userManager;
