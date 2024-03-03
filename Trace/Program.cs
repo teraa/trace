@@ -121,6 +121,8 @@ builder.Services
 
 var app = builder.Build();
 
+app.UseForwardedHeaders(app.Configuration);
+
 if (app.Environment.IsDevelopment())
 {
     app.UseCors(policy =>
