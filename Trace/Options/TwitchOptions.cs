@@ -1,4 +1,3 @@
-using AspNet.Security.OAuth.Twitch;
 using FluentValidation;
 using JetBrains.Annotations;
 
@@ -12,7 +11,7 @@ public class TwitchOptions
     public string ClientId { get; init; }
     public string ClientSecret { get; init; }
     public Uri RedirectUri { get; init; } = new("/", UriKind.Relative);
-    public PathString CallbackPath { get; init; } = TwitchAuthenticationDefaults.CallbackPath;
+    public PathString CallbackPath { get; init; } = "/api/signin-twitch";
 
     [UsedImplicitly]
     public class Validator : AbstractValidator<TwitchOptions>
