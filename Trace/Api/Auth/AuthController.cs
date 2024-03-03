@@ -140,4 +140,22 @@ public sealed class AuthController : ControllerBase
             })
         }));
     }
+
+    [HttpGet("[action]")]
+    public IActionResult Test()
+    {
+        return Ok(new
+        {
+            Scheme = Request.Scheme.ToString(),
+            Host = Request.Host.ToString(),
+            Path = Request.Path.ToString(),
+            PathBase = Request.PathBase.ToString(),
+            Request.Headers,
+            Connection = new
+            {
+                RemoteIp = HttpContext.Connection.RemoteIpAddress?.ToString(),
+                HttpContext.Connection.RemotePort,
+            },
+        });
+    }
 }
