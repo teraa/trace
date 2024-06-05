@@ -16,6 +16,7 @@ public sealed class ProxyOptions
     {
         public Validator()
         {
+            RuleFor(x => x.KnownNetworks).NotNull();
             RuleForEach(x => x.KnownNetworks)
                 .Must(x => IPNetwork.TryParse(x, out _))
                 .WithMessage("Value must be a valid IPNetwork");
