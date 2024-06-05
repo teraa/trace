@@ -27,9 +27,9 @@ public static class ProxyExtensions
 {
     public static IApplicationBuilder UseForwardedHeaders(this IApplicationBuilder builder, IConfiguration configuration)
     {
-        var options = configuration.GetValidatedRequiredOptions([new ProxyOptions.Validator()]);
+        var options = configuration.GetValidatedOptions([new ProxyOptions.Validator()]);
 
-        if (options.ForwardedHeaders is ForwardedHeaders.None)
+        if (options is null || options.ForwardedHeaders is ForwardedHeaders.None)
             return builder;
 
         var forwardedHeadersOptions = new ForwardedHeadersOptions
