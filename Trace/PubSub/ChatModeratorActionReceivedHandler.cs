@@ -88,6 +88,9 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
             case DenyUnbanRequest x:
                 entity.ModeratorMessage = x.ModeratorMessage;
                 break;
+            case Warn x:
+                entity.Reason = x.Reason;
+                break;
             case ITermModeratorAction x:
                 entity.TermId = x.Id;
                 entity.TermText = x.Text;
