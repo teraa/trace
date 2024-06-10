@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Trace.Data;
 using Trace.Data.Models.Tmi;
-using Trace.Options;
 
 namespace Trace.Tmi;
 

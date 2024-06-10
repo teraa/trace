@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Trace.Data;
-using Trace.Options;
 
 namespace Trace.Api.Auth;
 

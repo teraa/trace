@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace Trace.Options;
+namespace Trace.Api;
 
 #pragma warning disable CS8618
 public class TwitchOptions

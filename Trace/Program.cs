@@ -17,6 +17,7 @@ using Trace.Api.Auth;
 using Trace.Data;
 using Trace.Migrations;
 using Trace.Options;
+using Trace.PubSub;
 using Trace.Tmi;
 
 var builder = WebApplication.CreateBuilder(args);
