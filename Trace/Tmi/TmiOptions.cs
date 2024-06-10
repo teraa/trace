@@ -1,5 +1,8 @@
 ﻿using FluentValidation;
 using JetBrains.Annotations;
+using Teraa.Extensions.Configuration;
+using Teraa.Twitch.Tmi;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Trace.Tmi;
@@ -20,5 +23,20 @@ public class TmiOptions
             RuleFor(x => x.Login).NotEmpty();
             RuleFor(x => x.Token).NotEmpty();
         }
+    }
+}
+
+public static partial class ServiceCollectionExtensions
+{
+    public static IServiceCollection AddTmi(this IServiceCollection services)
+    {
+        services
+            .AddValidatedOptions<TmiOptions>()
+            .AddAsyncInitializer<SourceInitializer>()
+            .AddSingleton<SourceProvider>()
+            .AddSingleton<ISourceProvider>(static services => services.GetRequiredService<SourceProvider>())
+            .AddTmiService();
+
+        return services;
     }
 }

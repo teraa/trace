@@ -10,7 +10,6 @@ using Teraa.Extensions.Configuration;
 using Teraa.Extensions.Configuration.Vault.Options;
 using Teraa.Extensions.Serilog.Seq;
 using Teraa.Extensions.Serilog.Systemd;
-using Teraa.Twitch.Tmi;
 using Trace.Api;
 using Trace.Api.Auth;
 using Trace.Data;
@@ -39,7 +38,6 @@ builder.Host
     });
 
 builder.Services
-    .AddAsyncInitializer<SourceInitializer>()
     .AddControllers(options =>
     {
         options.ModelValidatorProviders.Clear();
@@ -89,14 +87,11 @@ builder.Services
     .AddRequestValidationBehaviour()
     .AddValidatorsFromAssemblyContaining<Program>()
     .AddMemoryCache()
-    .AddSingleton<SourceProvider>()
-    .AddSingleton<ISourceProvider>(services => services.GetRequiredService<SourceProvider>())
     .AddHttpClient()
     .AddHttpContextAccessor()
     .AddValidatedOptions<TwitchOptions>()
-    .AddValidatedOptions<TmiOptions>()
-    .AddTmiService()
     .AddDb()
+    .AddTmi()
     .AddPubSub()
     ;
 
