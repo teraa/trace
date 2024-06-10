@@ -1,12 +1,9 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Settings.Configuration;
 using Teraa.Extensions.AspNetCore;
-using Teraa.Extensions.Configuration;
 using Teraa.Extensions.Configuration.Vault.Options;
 using Teraa.Extensions.Serilog.Seq;
 using Teraa.Extensions.Serilog.Systemd;
@@ -60,18 +57,7 @@ builder.Services
         options.DefaultForbidScheme = CustomAuthenticationHandler.SchemeName;
         options.AddScheme<CustomAuthenticationHandler>(CustomAuthenticationHandler.SchemeName, null);
     })
-    .AddTwitch(authOptions =>
-    {
-        var twitchOptions = builder.Configuration.GetValidatedRequiredOptions([new TwitchOptions.Validator()]);
-        authOptions.ClientId = twitchOptions.ClientId;
-        authOptions.ClientSecret = twitchOptions.ClientSecret;
-        authOptions.CallbackPath = twitchOptions.CallbackPath;
-
-        authOptions.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
-        authOptions.CorrelationCookie.Name = "Correlation.";
-
-        // options.SaveTokens = true;
-    })
+    .AddTwitchAuth(builder.Configuration)
     .Services
     .AddAuthorization(options =>
     {
@@ -86,10 +72,7 @@ builder.Services
     })
     .AddRequestValidationBehaviour()
     .AddValidatorsFromAssemblyContaining<Program>()
-    .AddMemoryCache()
-    .AddHttpClient()
     .AddHttpContextAccessor()
-    .AddValidatedOptions<TwitchOptions>()
     .AddDb()
     .AddTmi()
     .AddPubSub()
