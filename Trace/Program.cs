@@ -35,12 +35,15 @@ builder.Host
     });
 
 builder.Services
+    .AddRequestValidationBehaviour()
+    .AddValidatorsFromAssemblyContaining<Program>()
     .AddControllers(options =>
     {
         options.ModelValidatorProviders.Clear();
         options.ModelMetadataDetailsProviders.Add(new EmptyStringMetadataProvider());
     })
     .Services
+    .AddDb()
     .AddIdentity<AppUser, IdentityRole>(options =>
     {
         options.User.AllowedUserNameCharacters += ":";
@@ -70,10 +73,7 @@ builder.Services
     {
         config.RegisterServicesFromAssemblyContaining<Program>();
     })
-    .AddRequestValidationBehaviour()
-    .AddValidatorsFromAssemblyContaining<Program>()
     .AddHttpContextAccessor()
-    .AddDb()
     .AddTmi()
     .AddPubSub()
     ;
