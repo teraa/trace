@@ -46,7 +46,7 @@ public static class AuthenticationBuilderExtensions
                 // options.SaveTokens = true;
             })
             .Services
-            .AddValidatedOptions<TwitchAuthOptions>()
+            .AddValidatedOptions<TwitchAuthOptions>(configSectionPath: "Twitch")
             ;
 
         return builder;
