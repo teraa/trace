@@ -28,7 +28,7 @@ public class TwitchAuthOptions
     }
 }
 
-public static partial class AuthenticationBuilderExtensions
+public static class AuthenticationBuilderExtensions
 {
     public static AuthenticationBuilder AddTwitchAuth(this AuthenticationBuilder builder, IConfiguration configuration)
     {

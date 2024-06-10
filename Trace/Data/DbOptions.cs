@@ -24,7 +24,7 @@ public class DbOptions
     }
 }
 
-public static partial class ServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddDb(this IServiceCollection services)
     {

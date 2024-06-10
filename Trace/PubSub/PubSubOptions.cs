@@ -22,7 +22,7 @@ public class PubSubOptions
     }
 }
 
-public static partial class ServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddPubSub(this IServiceCollection services)
     {
