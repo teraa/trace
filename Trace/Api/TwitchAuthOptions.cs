@@ -8,7 +8,7 @@ using Teraa.Extensions.Configuration;
 namespace Trace.Api;
 
 #pragma warning disable CS8618
-public class TwitchOptions
+public class TwitchAuthOptions
 {
     public string ClientId { get; init; }
     public string ClientSecret { get; init; }
@@ -16,7 +16,7 @@ public class TwitchOptions
     public PathString CallbackPath { get; init; } = "/api/signin-twitch";
 
     [UsedImplicitly]
-    public class Validator : AbstractValidator<TwitchOptions>
+    public class Validator : AbstractValidator<TwitchAuthOptions>
     {
         public Validator()
         {
@@ -35,7 +35,7 @@ public static partial class AuthenticationBuilderExtensions
         builder
             .AddTwitch(authOptions =>
             {
-                var twitchOptions = configuration.GetValidatedRequiredOptions([new TwitchOptions.Validator()]);
+                var twitchOptions = configuration.GetValidatedRequiredOptions([new TwitchAuthOptions.Validator()]);
                 authOptions.ClientId = twitchOptions.ClientId;
                 authOptions.ClientSecret = twitchOptions.ClientSecret;
                 authOptions.CallbackPath = twitchOptions.CallbackPath;
@@ -46,7 +46,7 @@ public static partial class AuthenticationBuilderExtensions
                 // options.SaveTokens = true;
             })
             .Services
-            .AddValidatedOptions<TwitchOptions>()
+            .AddValidatedOptions<TwitchAuthOptions>()
             ;
 
         return builder;

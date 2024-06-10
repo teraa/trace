@@ -16,9 +16,9 @@ public sealed class AuthController : ControllerBase
     private readonly UserManager<AppUser> _userManager;
     private readonly SignInManager<AppUser> _signInManager;
     private readonly ILogger<AuthController> _logger;
-    private readonly IOptionsMonitor<TwitchOptions> _options;
+    private readonly IOptionsMonitor<TwitchAuthOptions> _options;
 
-    public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ILogger<AuthController> logger, IOptionsMonitor<TwitchOptions> options)
+    public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ILogger<AuthController> logger, IOptionsMonitor<TwitchAuthOptions> options)
     {
         _userManager = userManager;
         _signInManager = signInManager;
