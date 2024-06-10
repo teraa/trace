@@ -15,7 +15,6 @@ using Teraa.Twitch.Tmi;
 using Trace.Api;
 using Trace.Api.Auth;
 using Trace.Data;
-using Trace.Migrations;
 using Trace.Options;
 using Trace.PubSub;
 using Trace.Tmi;
@@ -41,7 +40,6 @@ builder.Host
     });
 
 builder.Services
-    .AddAsyncInitializer<MigrationInitializer>()
     .AddAsyncInitializer<SourceInitializer>()
     .AddControllers(options =>
     {
@@ -49,22 +47,6 @@ builder.Services
         options.ModelMetadataDetailsProviders.Add(new EmptyStringMetadataProvider());
     })
     .Services
-    .AddDbContext<AppDbContext>((services, options) =>
-    {
-        using var scope = services.CreateScope();
-        var dbOptions = scope.ServiceProvider
-            .GetRequiredService<IOptionsMonitor<DbOptions>>()
-            .CurrentValue;
-
-        options.UseNpgsql(dbOptions.ConnectionString, contextOptions =>
-        {
-            contextOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-        });
-
-#if DEBUG
-        options.EnableSensitiveDataLogging();
-#endif
-    })
     .AddIdentity<AppUser, IdentityRole>(options =>
     {
         options.User.AllowedUserNameCharacters += ":";
@@ -112,12 +94,12 @@ builder.Services
     .AddSingleton<ISourceProvider>(services => services.GetRequiredService<SourceProvider>())
     .AddHttpClient()
     .AddHttpContextAccessor()
-    .AddValidatedOptions<DbOptions>()
     .AddValidatedOptions<TwitchOptions>()
     .AddValidatedOptions<TmiOptions>()
     .AddValidatedOptions<PubSubOptions>()
     .AddTmiService()
     .AddPubSubService()
+    .AddDb()
     ;
 
 var app = builder.Build();
