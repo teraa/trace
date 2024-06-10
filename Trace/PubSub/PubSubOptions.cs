@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 using JetBrains.Annotations;
+using Teraa.Extensions.Configuration;
+using Teraa.Twitch.PubSub;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
@@ -17,5 +19,17 @@ public class PubSubOptions
         {
             RuleFor(x => x.Token).NotEmpty();
         }
+    }
+}
+
+public static partial class ServiceCollectionExtensions
+{
+    public static IServiceCollection AddPubSub(this IServiceCollection services)
+    {
+        services
+            .AddValidatedOptions<PubSubOptions>()
+            .AddPubSubService();
+
+        return services;
     }
 }

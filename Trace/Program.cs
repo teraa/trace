@@ -10,7 +10,6 @@ using Teraa.Extensions.Configuration;
 using Teraa.Extensions.Configuration.Vault.Options;
 using Teraa.Extensions.Serilog.Seq;
 using Teraa.Extensions.Serilog.Systemd;
-using Teraa.Twitch.PubSub;
 using Teraa.Twitch.Tmi;
 using Trace.Api;
 using Trace.Api.Auth;
@@ -96,10 +95,9 @@ builder.Services
     .AddHttpContextAccessor()
     .AddValidatedOptions<TwitchOptions>()
     .AddValidatedOptions<TmiOptions>()
-    .AddValidatedOptions<PubSubOptions>()
     .AddTmiService()
-    .AddPubSubService()
     .AddDb()
+    .AddPubSub()
     ;
 
 var app = builder.Build();
