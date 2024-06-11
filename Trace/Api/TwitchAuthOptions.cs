@@ -35,7 +35,7 @@ public static class AuthenticationBuilderExtensions
         builder
             .AddTwitch(authOptions =>
             {
-                var twitchOptions = configuration.GetValidatedRequiredOptions([new TwitchAuthOptions.Validator()]);
+                var twitchOptions = configuration.GetValidatedRequiredOptions([new TwitchAuthOptions.Validator()], "Twitch");
                 authOptions.ClientId = twitchOptions.ClientId;
                 authOptions.ClientSecret = twitchOptions.ClientSecret;
                 authOptions.CallbackPath = twitchOptions.CallbackPath;
