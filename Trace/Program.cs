@@ -13,10 +13,6 @@ using Trace.Data;
 using Trace.PubSub;
 using Trace.Tmi;
 
-[assembly: Immediate.Handlers.Shared.Behaviors(
-    typeof(RequestValidationBehavior<,>)
-)]
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddVault();

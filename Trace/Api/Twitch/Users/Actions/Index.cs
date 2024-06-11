@@ -5,12 +5,14 @@ using JetBrains.Annotations;
 using LinqKit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Teraa.Extensions.AspNetCore;
 using Trace.Data;
 using Trace.Data.Models.Twitch;
 
 namespace Trace.Api.Twitch.Users.Actions;
 
 [Handler]
+[Behaviors(typeof(RequestValidationBehavior<,>))]
 public static partial class Index
 {
     public record Query(

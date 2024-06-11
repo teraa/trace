@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Teraa.Extensions.AspNetCore;
 using Trace.Api.Auth;
 using Trace.Data;
 using Results = Teraa.Extensions.AspNetCore.Results;
@@ -11,6 +12,7 @@ using Results = Teraa.Extensions.AspNetCore.Results;
 namespace Trace.Api.Twitch.Messages.Actions;
 
 [Handler]
+[Behaviors(typeof(RequestValidationBehavior<,>))]
 public static partial class Index
 {
     public record Query(

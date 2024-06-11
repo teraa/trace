@@ -2,11 +2,13 @@ using Immediate.Handlers.Shared;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Teraa.Extensions.AspNetCore;
 using Trace.Data;
 
 namespace Trace.Api.Twitch.Channels.Actions;
 
 [Handler]
+[Behaviors(typeof(RequestValidationBehavior<,>))]
 public static partial class Index
 {
     public record Query;
