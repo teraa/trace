@@ -14,6 +14,10 @@ using Trace.Options;
 using Trace.PubSub;
 using Trace.Tmi;
 
+[assembly: Immediate.Handlers.Shared.Behaviors(
+    typeof(RequestValidationBehavior<,>)
+)]
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddVault();
@@ -77,6 +81,9 @@ builder.Services
     .AddTmi()
     .AddPubSub()
     ;
+
+Trace.HandlerServiceCollectionExtensions.AddHandlers(builder.Services);
+Trace.HandlerServiceCollectionExtensions.AddBehaviors(builder.Services);
 
 var app = builder.Build();
 
