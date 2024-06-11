@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.HttpOverrides;
 using Teraa.Extensions.Configuration;
 
-namespace Trace.Options;
+namespace Trace.Api;
 
 #pragma warning disable CS8618
 // ReSharper disable once ClassNeverInstantiated.Global
