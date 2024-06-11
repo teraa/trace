@@ -1,8 +1,8 @@
 using System.Text.RegularExpressions;
 using FluentValidation;
+using Immediate.Handlers.Shared;
 using JetBrains.Annotations;
 using LinqKit;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Trace.Data;
@@ -10,7 +10,8 @@ using Trace.Data.Models.Twitch;
 
 namespace Trace.Api.Twitch.Users.Actions;
 
-public static class Index
+[Handler]
+public static partial class Index
 {
     public record Query(
         IReadOnlyList<string>? Ids,
@@ -18,7 +19,7 @@ public static class Index
         string? LoginPattern,
         int PatternLimit = 10,
         bool Recursive = false
-    ) : IRequest<IActionResult>;
+    );
 
     [UsedImplicitly]
     public class QueryValidator : AbstractValidator<Query>
@@ -44,80 +45,72 @@ public static class Index
         DateTimeOffset FirstSeen,
         DateTimeOffset LastSeen);
 
-    [UsedImplicitly]
-    public class Handler : IRequestHandler<Query, IActionResult>
+    private static async ValueTask<IActionResult> HandleAsync(
+        Query request,
+        AppDbContext ctx,
+        CancellationToken cancellationToken)
     {
-        private readonly AppDbContext _ctx;
+        var predicate = PredicateBuilder.New<User>();
 
-        public Handler(AppDbContext ctx)
+        if (request.Ids is { })
+            predicate = predicate.Or(x => request.Ids.Contains(x.Id));
+
+        if (request.Logins is { })
         {
-            _ctx = ctx;
+            var logins = request.Logins.Select(x => x.ToLowerInvariant());
+
+            if (request.Recursive)
+            {
+                var userIds = await ctx.TwitchUsers
+                    .Where(x => logins.Contains(x.Login))
+                    .Select(x => x.Id)
+                    .Distinct()
+                    .ToListAsync(cancellationToken);
+
+                predicate = predicate.Or(x => userIds.Contains(x.Id));
+            }
+            else
+            {
+                predicate = predicate.Or(x => logins.Contains(x.Login));
+            }
         }
 
-        public async Task<IActionResult> Handle(Query request, CancellationToken cancellationToken)
+        if (request.LoginPattern is { })
         {
-            var predicate = PredicateBuilder.New<User>();
+            ctx.Database.SetCommandTimeout(5);
 
-            if (request.Ids is { })
-                predicate = predicate.Or(x => request.Ids.Contains(x.Id));
+            var patternQuery = ctx.TwitchUsers
+                .Where(x => Regex.IsMatch(x.Login, request.LoginPattern,
+                    RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+                .OrderBy(x => x.Login.Length);
 
-            if (request.Logins is { })
+            if (request.Recursive)
             {
-                var logins = request.Logins.Select(x => x.ToLowerInvariant());
+                var userIds = await patternQuery
+                    .Select(x => x.Id)
+                    .Take(request.PatternLimit)
+                    .Distinct()
+                    .ToListAsync(cancellationToken);
 
-                if (request.Recursive)
-                {
-                    var userIds = await _ctx.TwitchUsers
-                        .Where(x => logins.Contains(x.Login))
-                        .Select(x => x.Id)
-                        .Distinct()
-                        .ToListAsync(cancellationToken);
-
-                    predicate = predicate.Or(x => userIds.Contains(x.Id));
-                }
-                else
-                {
-                    predicate = predicate.Or(x => logins.Contains(x.Login));
-                }
+                predicate = predicate.Or(x => userIds.Contains(x.Id));
             }
-
-            if (request.LoginPattern is { })
+            else
             {
-                _ctx.Database.SetCommandTimeout(5);
+                var userLogins = await patternQuery
+                    .Select(x => x.Login)
+                    .Take(request.PatternLimit)
+                    .Distinct()
+                    .ToListAsync(cancellationToken);
 
-                var patternQuery = _ctx.TwitchUsers
-                    .Where(x => Regex.IsMatch(x.Login, request.LoginPattern,
-                        RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
-                    .OrderBy(x => x.Login.Length);
-
-                if (request.Recursive)
-                {
-                    var userIds = await patternQuery
-                        .Select(x => x.Id)
-                        .Take(request.PatternLimit)
-                        .Distinct()
-                        .ToListAsync(cancellationToken);
-
-                    predicate = predicate.Or(x => userIds.Contains(x.Id));
-                }
-                else
-                {
-                    var userLogins = await patternQuery
-                        .Select(x => x.Login)
-                        .Take(request.PatternLimit)
-                        .Distinct()
-                        .ToListAsync(cancellationToken);
-
-                    predicate = predicate.Or(x => userLogins.Contains(x.Login));
-                }
+                predicate = predicate.Or(x => userLogins.Contains(x.Login));
             }
-
-            var results = await _ctx.TwitchUsers
-                .Where(predicate)
-                .Select(x => new Result(x.Id, x.Login, x.FirstSeen, x.LastSeen))
-                .ToListAsync(cancellationToken);
-
-            return new OkObjectResult(results);
         }
+
+        var results = await ctx.TwitchUsers
+            .Where(predicate)
+            .Select(x => new Result(x.Id, x.Login, x.FirstSeen, x.LastSeen))
+            .ToListAsync(cancellationToken);
+
+        return new OkObjectResult(results);
     }
 }
