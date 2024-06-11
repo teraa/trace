@@ -14,13 +14,13 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
 {
     private readonly AppDbContext _ctx;
     private readonly ILogger<ChatModeratorActionReceivedHandler> _logger;
-    private readonly ISender _sender;
+    private readonly UpdateUser.Handler _updateUserHandler;
 
-    public ChatModeratorActionReceivedHandler(AppDbContext ctx, ILogger<ChatModeratorActionReceivedHandler> logger, ISender sender)
+    public ChatModeratorActionReceivedHandler(AppDbContext ctx, ILogger<ChatModeratorActionReceivedHandler> logger, UpdateUser.Handler updateUserHandler)
     {
         _ctx = ctx;
         _logger = logger;
-        _sender = sender;
+        _updateUserHandler = updateUserHandler;
     }
 
     public async Task Handle(ChatModeratorActionReceived notification, CancellationToken cancellationToken)
@@ -109,7 +109,7 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
 
         foreach (var update in userUpdates)
         {
-            await _sender.Send(update, cancellationToken);
+            await _updateUserHandler.HandleAsync(update, cancellationToken);
         }
     }
 }

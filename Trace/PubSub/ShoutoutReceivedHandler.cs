@@ -11,12 +11,12 @@ namespace Trace.PubSub;
 public sealed class ShoutoutReceivedHandler : INotificationHandler<ShoutoutReceived>
 {
     private readonly AppDbContext _ctx;
-    private readonly ISender _sender;
+    private readonly UpdateUser.Handler _updateUserHandler;
 
-    public ShoutoutReceivedHandler(AppDbContext ctx, ISender sender)
+    public ShoutoutReceivedHandler(AppDbContext ctx, UpdateUser.Handler updateUserHandler)
     {
         _ctx = ctx;
-        _sender = sender;
+        _updateUserHandler = updateUserHandler;
     }
 
     public async Task Handle(ShoutoutReceived notification, CancellationToken cancellationToken)
@@ -35,12 +35,12 @@ public sealed class ShoutoutReceivedHandler : INotificationHandler<ShoutoutRecei
         _ctx.ModeratorActions.Add(entity);
         await _ctx.SaveChangesAsync(cancellationToken);
 
-        await _sender.Send(new UpdateUser.Command(
+        await _updateUserHandler.HandleAsync(new UpdateUser.Command(
             notification.Shoutout.SourceUserId,
             notification.Shoutout.SourceLogin,
             notification.ReceivedAt), cancellationToken);
 
-        await _sender.Send(new UpdateUser.Command(
+        await _updateUserHandler.HandleAsync(new UpdateUser.Command(
             notification.Shoutout.TargetUserId,
             notification.Shoutout.TargetLogin,
             notification.ReceivedAt), cancellationToken);
