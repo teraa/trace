@@ -24,7 +24,7 @@ public static partial class Index
         CancellationToken cancellationToken)
     {
         var channelIds = userAccessor.User.Claims
-            .Where(x => string.Equals(x.Type, AppClaimTypes.ChannelRead))
+            .Where(x => string.Equals(x.Type, AppClaimTypes.ChannelRead, StringComparison.Ordinal))
             .Select(x => x.Value)
             .ToList();
 
