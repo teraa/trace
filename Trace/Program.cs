@@ -71,10 +71,7 @@ builder.Services
     })
     .AddSingleton<IAuthorizationHandler, ChannelAuthorizationHandler>()
     .AddSingleton<IUserAccessor, UserAccessor>()
-    .AddMediatR(config =>
-    {
-        config.RegisterServicesFromAssemblyContaining<Program>();
-    })
+    .AddMediatR(config => config.RegisterServicesFromAssemblyContaining<Program>())
     .AddHttpContextAccessor()
     .AddTmi()
     .AddPubSub()
