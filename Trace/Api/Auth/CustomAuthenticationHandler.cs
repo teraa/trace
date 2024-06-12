@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using JetBrains.Annotations;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Trace.Api.Auth;
 
+[PublicAPI]
 public sealed class CustomAuthenticationHandler : IAuthenticationHandler
 {
     public const string SchemeName = nameof(CustomAuthenticationHandler);

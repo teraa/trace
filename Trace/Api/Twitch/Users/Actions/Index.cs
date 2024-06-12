@@ -80,6 +80,7 @@ public static partial class Index
             ctx.Database.SetCommandTimeout(5);
 
             var patternQuery = ctx.TwitchUsers
+                // ReSharper disable once EntityFramework.UnsupportedServerSideFunctionCall
                 .Where(x => Regex.IsMatch(x.Login, request.LoginPattern,
                     RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
                 .OrderBy(x => x.Login.Length);
