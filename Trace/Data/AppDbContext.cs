@@ -17,11 +17,11 @@ public partial class AppDbContext : IdentityDbContext<AppUser>
         optionsBuilder.UseSnakeCaseNamingConvention();
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-        modelBuilder.UseSnakeCaseIdentityNames<AppUser>();
+        base.OnModelCreating(builder);
+        builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+        builder.UseSnakeCaseIdentityNames<AppUser>();
     }
 }
 

@@ -1,3 +1,4 @@
+using System.Globalization;
 using JetBrains.Annotations;
 using MediatR;
 using Teraa.Irc;
@@ -48,7 +49,7 @@ public class MessageHandler : INotificationHandler<MessageReceived>
         string userLogin = notification.Message.Prefix.Name;
         string userId = notification.Message.Tags["user-id"];
         var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(
-            long.Parse(notification.Message.Tags["tmi-sent-ts"]));
+            long.Parse(notification.Message.Tags["tmi-sent-ts"], CultureInfo.InvariantCulture));
 
         var messageEntity = new Data.Models.Tmi.Message
         {

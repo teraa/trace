@@ -6,7 +6,7 @@ using Teraa.Extensions.Configuration;
 namespace Trace.Data;
 
 [UsedImplicitly]
-internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+internal sealed class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
     public AppDbContext CreateDbContext(string[] args)
     {
