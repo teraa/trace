@@ -61,4 +61,5 @@ M:System.String.Equals(System.String);Don't use Equals
 T:System.Convert;Don't use Convert.
 T:System.DateOnly
 // T:System.DateTimeOffset
+T:System.DateTime
 T:System.TimeOnly
