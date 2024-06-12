@@ -15,11 +15,15 @@ dotnet_diagnostic.CA1848.severity = none
 dotnet_diagnostic.CA1062.severity = none
 dotnet_diagnostic.CA1724.severity = none
 dotnet_diagnostic.CA1308.severity = none
+dotnet_diagnostic.ASP012.severity = none
+
+[**/*Controller.cs]
+dotnet_diagnostic.VSTHRD200.severity = none
 
 [**/Migrations/*.cs]
 generated_code = true
 
-[**/Data/**/*.cs]
+[**/Data/**.cs]
 dotnet_diagnostic.CA1812.severity = none
 
 [**/Data/Models/**/*.cs]
