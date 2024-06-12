@@ -9,26 +9,26 @@ trim_trailing_whitespace = true
 end_of_line = lf
 indent_size = 4
 indent_style = space
-dotnet_diagnostic.CA1034.severity = none
-dotnet_diagnostic.CA2007.severity = none
-dotnet_diagnostic.CA1848.severity = none
-dotnet_diagnostic.CA1062.severity = none
-dotnet_diagnostic.CA1724.severity = none
-dotnet_diagnostic.CA1308.severity = none
-dotnet_diagnostic.ASP012.severity = none
+dotnet_diagnostic.CA1034.severity = none # Nested types should not be visible
+dotnet_diagnostic.CA2007.severity = none # Do not directly await a Task (ConfigureAwait)
+dotnet_diagnostic.CA1848.severity = none # Use the LoggerMessage delegates
+dotnet_diagnostic.CA1062.severity = none # Validate arguments of public methods
+dotnet_diagnostic.CA1724.severity = none # Type names should not match namespaces
+dotnet_diagnostic.CA1308.severity = none # Normalize strings to uppercase
+dotnet_diagnostic.ASP012.severity = none # don't use [controller]
 
 [**/*Controller.cs]
-dotnet_diagnostic.VSTHRD200.severity = none
+dotnet_diagnostic.VSTHRD200.severity = none # Use Async suffix for async methods
 
 [**/Migrations/*.cs]
 generated_code = true
 
 [**/Data/**.cs]
-dotnet_diagnostic.CA1812.severity = none
+dotnet_diagnostic.CA1812.severity = none # Avoid uninstantiated internal classes
 
 [**/Data/Models/**/*.cs]
-dotnet_diagnostic.CA2227.severity = none
-dotnet_diagnostic.CA1002.severity = none
+dotnet_diagnostic.CA2227.severity = none # Collection properties should be read only
+dotnet_diagnostic.CA1002.severity = none # Do not expose generic lists
 
 [*.sln]
 end_of_line = crlf
