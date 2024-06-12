@@ -12,7 +12,6 @@ using Results = Teraa.Extensions.AspNetCore.Results;
 namespace Trace.Api.Twitch.Messages.Actions;
 
 [Handler]
-[Behaviors(typeof(RequestValidationBehavior<,>))]
 public static partial class Index
 {
     public record Query(

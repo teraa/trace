@@ -12,7 +12,6 @@ using Trace.Data.Models.Twitch;
 namespace Trace.Api.Twitch.Users.Actions;
 
 [Handler]
-[Behaviors(typeof(RequestValidationBehavior<,>))]
 public static partial class Index
 {
     public record Query(

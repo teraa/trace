@@ -8,7 +8,6 @@ using Trace.Data;
 namespace Trace.Api.Twitch.Channels.Actions;
 
 [Handler]
-[Behaviors(typeof(RequestValidationBehavior<,>))]
 public static partial class Index
 {
     public record Query;

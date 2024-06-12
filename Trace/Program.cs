@@ -1,4 +1,5 @@
 using FluentValidation;
+using Immediate.Handlers.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Serilog;
@@ -12,6 +13,8 @@ using Trace.Api.Auth;
 using Trace.Data;
 using Trace.PubSub;
 using Trace.Tmi;
+
+[assembly: Behaviors(typeof(RequestValidationBehavior<,>))]
 
 var builder = WebApplication.CreateBuilder(args);
 
