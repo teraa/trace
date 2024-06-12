@@ -9,6 +9,22 @@ trim_trailing_whitespace = true
 end_of_line = lf
 indent_size = 4
 indent_style = space
+dotnet_diagnostic.CA1034.severity = none
+dotnet_diagnostic.CA2007.severity = none
+dotnet_diagnostic.CA1848.severity = none
+dotnet_diagnostic.CA1062.severity = none
+dotnet_diagnostic.CA1724.severity = none
+dotnet_diagnostic.CA1308.severity = none
+
+[**/Migrations/*.cs]
+generated_code = true
+
+[**/Data/**/*.cs]
+dotnet_diagnostic.CA1812.severity = none
+
+[**/Data/Models/**/*.cs]
+dotnet_diagnostic.CA2227.severity = none
+dotnet_diagnostic.CA1002.severity = none
 
 [*.sln]
 end_of_line = crlf
