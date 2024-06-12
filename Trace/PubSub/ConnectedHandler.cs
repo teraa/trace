@@ -37,6 +37,6 @@ public class ConnectedHandler : INotificationHandler<Connected>
         _logger.LogInformation("Joining: {Topics}", topics);
 
         foreach (string topic in topics)
-            _pubSub.EnqueueMessage(Payload.CreateListen(new List<string> {topic}, _options.CurrentValue.Token, topic));
+            _pubSub.EnqueueMessage(Payload.CreateListen([topic], _options.CurrentValue.Token, topic));
     }
 }
