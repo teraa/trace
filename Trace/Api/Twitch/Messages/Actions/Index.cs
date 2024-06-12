@@ -4,7 +4,6 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Teraa.Extensions.AspNetCore;
 using Trace.Api.Auth;
 using Trace.Data;
 using Results = Teraa.Extensions.AspNetCore.Results;

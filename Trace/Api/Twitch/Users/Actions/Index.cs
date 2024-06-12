@@ -5,7 +5,6 @@ using JetBrains.Annotations;
 using LinqKit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Teraa.Extensions.AspNetCore;
 using Trace.Data;
 using Trace.Data.Models.Twitch;
 
