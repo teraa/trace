@@ -27,7 +27,7 @@ public static partial class UpdateUsers
         ILogger<Command> logger,
         CancellationToken cancellationToken)
     {
-        var users = new Dictionary<string, Command.User>(request.Users.Count);
+        var users = new Dictionary<string, string>(request.Users.Count);
 
         foreach (var user in request.Users)
         {
@@ -39,7 +39,7 @@ public static partial class UpdateUsers
                 continue;
             }
 
-            if (!users.TryAdd(user.Id, user))
+            if (!users.TryAdd(user.Id, user.Login))
             {
                 logger.LogDebug("Skipped duplicate user in request: {UserName} ({UserId})", user.Login, user.Id);
             }
@@ -51,10 +51,10 @@ public static partial class UpdateUsers
             .Select(x => x.OrderByDescending(y => y.LastSeen).First())
             .ToDictionaryAsync(x => x.Id, cancellationToken);
 
-        foreach (var (_, user) in users)
+        foreach (var (userId, userLogin) in users)
         {
-            if (entities.TryGetValue(user.Id, out var entity)
-                && string.Equals(entity.Login, user.Login, StringComparison.Ordinal))
+            if (entities.TryGetValue(userId, out var entity)
+                && string.Equals(entity.Login, userLogin, StringComparison.Ordinal))
             {
                 entity.LastSeen = request.Timestamp;
             }
@@ -62,8 +62,8 @@ public static partial class UpdateUsers
             {
                 entity = new Data.Models.Twitch.User
                 {
-                    Id = user.Id,
-                    Login = user.Login,
+                    Id = userId,
+                    Login = userLogin,
                     FirstSeen = request.Timestamp,
                     LastSeen = request.Timestamp,
                 };
