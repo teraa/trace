@@ -42,11 +42,11 @@ public sealed class TreatmentUpdateReceivedHandler : INotificationHandler<LowTru
 
         await _updateUserHandler.HandleAsync(new UpdateUser.Command(
                 [
-                    new UpdateUser.User(
+                    new UpdateUser.Command.User(
                         notification.TreatmentUpdate.UpdatedBy.Id,
                         notification.TreatmentUpdate.UpdatedBy.Login
                     ),
-                    new UpdateUser.User(
+                    new UpdateUser.Command.User(
                         notification.TreatmentUpdate.TargetUserId,
                         notification.TreatmentUpdate.TargetUser
                     ),

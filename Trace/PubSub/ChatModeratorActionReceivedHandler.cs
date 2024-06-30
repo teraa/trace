@@ -36,13 +36,13 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
             InitiatorId = notification.Action.InitiatorId,
         };
 
-        var userUpdates = new List<UpdateUser.User>(2);
+        var userUpdates = new List<UpdateUser.Command.User>(2);
 
         if (notification.Action is IInitiatorModeratorAction initiatorAction)
         {
             entity.InitiatorName = initiatorAction.Initiator.Login;
 
-            userUpdates.Add(new UpdateUser.User(
+            userUpdates.Add(new UpdateUser.Command.User(
                 initiatorAction.Initiator.Id,
                 initiatorAction.Initiator.Login
             ));
@@ -53,7 +53,7 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
             entity.TargetId = targetedAction.Target.Id;
             entity.TargetName = targetedAction.Target.Login;
 
-            userUpdates.Add(new UpdateUser.User(
+            userUpdates.Add(new UpdateUser.Command.User(
                 targetedAction.Target.Id,
                 targetedAction.Target.Login
             ));

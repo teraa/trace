@@ -37,11 +37,11 @@ public sealed class ShoutoutReceivedHandler : INotificationHandler<ShoutoutRecei
 
         await _updateUserHandler.HandleAsync(new UpdateUser.Command(
                 [
-                    new UpdateUser.User(
+                    new UpdateUser.Command.User(
                         notification.Shoutout.SourceUserId,
                         notification.Shoutout.SourceLogin
                     ),
-                    new UpdateUser.User(
+                    new UpdateUser.Command.User(
                         notification.Shoutout.TargetUserId,
                         notification.Shoutout.TargetLogin
                     ),

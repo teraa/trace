@@ -8,15 +8,16 @@ namespace Trace.Features.Users;
 [Handler]
 public static partial class UpdateUser
 {
-    public sealed record User(
-        string Id,
-        string Login
-    );
-
     public sealed record Command(
-        IReadOnlyList<User> Users,
+        IReadOnlyList<Command.User> Users,
         DateTimeOffset Timestamp
-    );
+    )
+    {
+        public sealed record User(
+            string Id,
+            string Login
+        );
+    }
 
     private static readonly Regex s_loginRegex = new("^[a-z0-9_]+$", RegexOptions.Compiled);
 
@@ -26,7 +27,7 @@ public static partial class UpdateUser
         ILogger<Command> logger,
         CancellationToken cancellationToken)
     {
-        var users = new Dictionary<string, User>(request.Users.Count);
+        var users = new Dictionary<string, Command.User>(request.Users.Count);
 
         foreach (var user in request.Users)
         {
