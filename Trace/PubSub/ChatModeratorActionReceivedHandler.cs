@@ -16,7 +16,10 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
     private readonly ILogger<ChatModeratorActionReceivedHandler> _logger;
     private readonly UpdateUser.Handler _updateUserHandler;
 
-    public ChatModeratorActionReceivedHandler(AppDbContext ctx, ILogger<ChatModeratorActionReceivedHandler> logger, UpdateUser.Handler updateUserHandler)
+    public ChatModeratorActionReceivedHandler(
+        AppDbContext ctx,
+        ILogger<ChatModeratorActionReceivedHandler> logger,
+        UpdateUser.Handler updateUserHandler)
     {
         _ctx = ctx;
         _logger = logger;

@@ -37,7 +37,7 @@ public class MessageHandler : INotificationHandler<MessageReceived>
                 Arg: not null,
                 Tags: not null,
                 Prefix: not null,
-                Content: not null
+                Content: not null,
             })
         {
             _logger.LogWarning("Invalid message received: {Message}", notification.Message);
