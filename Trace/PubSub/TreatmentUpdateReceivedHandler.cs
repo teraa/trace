@@ -11,9 +11,9 @@ namespace Trace.PubSub;
 public sealed class TreatmentUpdateReceivedHandler : INotificationHandler<LowTrustUserTreatmentUpdateReceived>
 {
     private readonly AppDbContext _ctx;
-    private readonly UpdateUser.Handler _updateUserHandler;
+    private readonly UpdateUsers.Handler _updateUserHandler;
 
-    public TreatmentUpdateReceivedHandler(AppDbContext ctx, UpdateUser.Handler updateUserHandler)
+    public TreatmentUpdateReceivedHandler(AppDbContext ctx, UpdateUsers.Handler updateUserHandler)
     {
         _ctx = ctx;
         _updateUserHandler = updateUserHandler;
@@ -40,13 +40,13 @@ public sealed class TreatmentUpdateReceivedHandler : INotificationHandler<LowTru
         _ctx.ModeratorActions.Add(entity);
         await _ctx.SaveChangesAsync(cancellationToken);
 
-        await _updateUserHandler.HandleAsync(new UpdateUser.Command(
+        await _updateUserHandler.HandleAsync(new UpdateUsers.Command(
                 [
-                    new UpdateUser.Command.User(
+                    new UpdateUsers.Command.User(
                         notification.TreatmentUpdate.UpdatedBy.Id,
                         notification.TreatmentUpdate.UpdatedBy.Login
                     ),
-                    new UpdateUser.Command.User(
+                    new UpdateUsers.Command.User(
                         notification.TreatmentUpdate.TargetUserId,
                         notification.TreatmentUpdate.TargetUser
                     ),

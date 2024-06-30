@@ -14,12 +14,12 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
 {
     private readonly AppDbContext _ctx;
     private readonly ILogger<ChatModeratorActionReceivedHandler> _logger;
-    private readonly UpdateUser.Handler _updateUserHandler;
+    private readonly UpdateUsers.Handler _updateUserHandler;
 
     public ChatModeratorActionReceivedHandler(
         AppDbContext ctx,
         ILogger<ChatModeratorActionReceivedHandler> logger,
-        UpdateUser.Handler updateUserHandler)
+        UpdateUsers.Handler updateUserHandler)
     {
         _ctx = ctx;
         _logger = logger;
@@ -36,13 +36,13 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
             InitiatorId = notification.Action.InitiatorId,
         };
 
-        var userUpdates = new List<UpdateUser.Command.User>(2);
+        var userUpdates = new List<UpdateUsers.Command.User>(2);
 
         if (notification.Action is IInitiatorModeratorAction initiatorAction)
         {
             entity.InitiatorName = initiatorAction.Initiator.Login;
 
-            userUpdates.Add(new UpdateUser.Command.User(
+            userUpdates.Add(new UpdateUsers.Command.User(
                 initiatorAction.Initiator.Id,
                 initiatorAction.Initiator.Login
             ));
@@ -53,7 +53,7 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
             entity.TargetId = targetedAction.Target.Id;
             entity.TargetName = targetedAction.Target.Login;
 
-            userUpdates.Add(new UpdateUser.Command.User(
+            userUpdates.Add(new UpdateUsers.Command.User(
                 targetedAction.Target.Id,
                 targetedAction.Target.Login
             ));
@@ -111,7 +111,7 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
         await _ctx.SaveChangesAsync(cancellationToken);
 
         await _updateUserHandler.HandleAsync(
-            new UpdateUser.Command(userUpdates, notification.ReceivedAt),
+            new UpdateUsers.Command(userUpdates, notification.ReceivedAt),
             cancellationToken
         );
     }

@@ -14,13 +14,13 @@ public class MessageHandler : INotificationHandler<MessageReceived>
     private readonly AppDbContext _ctx;
     private readonly ISourceProvider _sourceProvider;
     private readonly ILogger<MessageHandler> _logger;
-    private readonly UpdateUser.Handler _updateUserHandler;
+    private readonly UpdateUsers.Handler _updateUserHandler;
 
     public MessageHandler(
         AppDbContext ctx,
         ISourceProvider sourceProvider,
         ILogger<MessageHandler> logger,
-        UpdateUser.Handler updateUserHandler)
+        UpdateUsers.Handler updateUserHandler)
     {
         _ctx = ctx;
         _sourceProvider = sourceProvider;
@@ -63,8 +63,8 @@ public class MessageHandler : INotificationHandler<MessageReceived>
 
         _ctx.TmiMessages.Add(messageEntity);
         await _ctx.SaveChangesAsync(cancellationToken);
-        await _updateUserHandler.HandleAsync(new UpdateUser.Command(
-                [new UpdateUser.Command.User(userId, userLogin)],
+        await _updateUserHandler.HandleAsync(new UpdateUsers.Command(
+                [new UpdateUsers.Command.User(userId, userLogin)],
                 timestamp),
             cancellationToken);
     }

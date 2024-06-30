@@ -6,7 +6,7 @@ using Trace.Data;
 namespace Trace.Features.Users;
 
 [Handler]
-public static partial class UpdateUser
+public static partial class UpdateUsers
 {
     public sealed record Command(
         IReadOnlyList<Command.User> Users,
