@@ -63,6 +63,9 @@ public class MessageHandler : INotificationHandler<MessageReceived>
 
         _ctx.TmiMessages.Add(messageEntity);
         await _ctx.SaveChangesAsync(cancellationToken);
-        await _updateUserHandler.HandleAsync(new UpdateUser.Command(userId, userLogin, timestamp), cancellationToken);
+        await _updateUserHandler.HandleAsync(new UpdateUser.Command(
+                [new UpdateUser.User(userId, userLogin)],
+                timestamp),
+            cancellationToken);
     }
 }

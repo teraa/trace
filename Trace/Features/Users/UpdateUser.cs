@@ -2,16 +2,19 @@
 using Immediate.Handlers.Shared;
 using Microsoft.EntityFrameworkCore;
 using Trace.Data;
-using Trace.Data.Models.Twitch;
 
 namespace Trace.Features.Users;
 
 [Handler]
 public static partial class UpdateUser
 {
-    public sealed record Command(
+    public sealed record User(
         string Id,
-        string Login,
+        string Login
+    );
+
+    public sealed record Command(
+        IReadOnlyList<User> Users,
         DateTimeOffset Timestamp
     );
 
@@ -23,33 +26,49 @@ public static partial class UpdateUser
         ILogger<Command> logger,
         CancellationToken cancellationToken)
     {
-        if (!s_loginRegex.IsMatch(request.Login))
-        {
-            logger.LogWarning("Skipped updating user with non-login value as a name: {UserName} ({UserId})",
-                request.Login, request.Id);
-            return;
-        }
+        var users = new Dictionary<string, User>(request.Users.Count);
 
-        var entity = await ctx.TwitchUsers
-            .Where(x => x.Id == request.Id)
-            .OrderByDescending(x => x.LastSeen)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        if (entity is null || !string.Equals(entity.Login, request.Login, StringComparison.Ordinal))
+        foreach (var user in request.Users)
         {
-            entity = new User
+            if (!s_loginRegex.IsMatch(user.Login))
             {
-                Id = request.Id,
-                Login = request.Login,
-                FirstSeen = request.Timestamp,
-                LastSeen = request.Timestamp,
-            };
+                logger.LogWarning("Skipped updating user with non-login value as a name: {UserName} ({UserId})",
+                    user.Login, user.Id);
 
-            ctx.TwitchUsers.Add(entity);
+                continue;
+            }
+
+            if (!users.TryAdd(user.Id, user))
+            {
+                logger.LogDebug("Skipped duplicate user in request: {UserName} ({UserId})", user.Login, user.Id);
+            }
         }
-        else
+
+        var entities = await ctx.TwitchUsers
+            .Where(x => users.Keys.Contains(x.Id))
+            .GroupBy(x => x.Id)
+            .Select(x => x.MaxBy(y => y.LastSeen)!)
+            .ToDictionaryAsync(x => x.Id, cancellationToken);
+
+        foreach (var (_, user) in users)
         {
-            entity.LastSeen = request.Timestamp;
+            if (entities.TryGetValue(user.Id, out var entity)
+                && string.Equals(entity.Login, user.Login, StringComparison.Ordinal))
+            {
+                entity.LastSeen = request.Timestamp;
+            }
+            else
+            {
+                entity = new Data.Models.Twitch.User
+                {
+                    Id = user.Id,
+                    Login = user.Login,
+                    FirstSeen = request.Timestamp,
+                    LastSeen = request.Timestamp,
+                };
+
+                ctx.TwitchUsers.Add(entity);
+            }
         }
 
         await ctx.SaveChangesAsync(cancellationToken);

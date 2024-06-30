@@ -36,13 +36,17 @@ public sealed class ShoutoutReceivedHandler : INotificationHandler<ShoutoutRecei
         await _ctx.SaveChangesAsync(cancellationToken);
 
         await _updateUserHandler.HandleAsync(new UpdateUser.Command(
-            notification.Shoutout.SourceUserId,
-            notification.Shoutout.SourceLogin,
-            notification.ReceivedAt), cancellationToken);
-
-        await _updateUserHandler.HandleAsync(new UpdateUser.Command(
-            notification.Shoutout.TargetUserId,
-            notification.Shoutout.TargetLogin,
-            notification.ReceivedAt), cancellationToken);
+                [
+                    new UpdateUser.User(
+                        notification.Shoutout.SourceUserId,
+                        notification.Shoutout.SourceLogin
+                    ),
+                    new UpdateUser.User(
+                        notification.Shoutout.TargetUserId,
+                        notification.Shoutout.TargetLogin
+                    ),
+                ],
+                notification.ReceivedAt),
+            cancellationToken);
     }
 }

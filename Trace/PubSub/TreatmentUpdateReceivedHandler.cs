@@ -41,13 +41,17 @@ public sealed class TreatmentUpdateReceivedHandler : INotificationHandler<LowTru
         await _ctx.SaveChangesAsync(cancellationToken);
 
         await _updateUserHandler.HandleAsync(new UpdateUser.Command(
-            notification.TreatmentUpdate.UpdatedBy.Id,
-            notification.TreatmentUpdate.UpdatedBy.Login,
-            notification.ReceivedAt), cancellationToken);
-
-        await _updateUserHandler.HandleAsync(new UpdateUser.Command(
-            notification.TreatmentUpdate.TargetUserId,
-            notification.TreatmentUpdate.TargetUser,
-            notification.ReceivedAt), cancellationToken);
+                [
+                    new UpdateUser.User(
+                        notification.TreatmentUpdate.UpdatedBy.Id,
+                        notification.TreatmentUpdate.UpdatedBy.Login
+                    ),
+                    new UpdateUser.User(
+                        notification.TreatmentUpdate.TargetUserId,
+                        notification.TreatmentUpdate.TargetUser
+                    ),
+                ],
+                notification.ReceivedAt),
+            cancellationToken);
     }
 }

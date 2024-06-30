@@ -36,16 +36,16 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
             InitiatorId = notification.Action.InitiatorId,
         };
 
-        var userUpdates = new List<UpdateUser.Command>(2);
+        var userUpdates = new List<UpdateUser.User>(2);
 
         if (notification.Action is IInitiatorModeratorAction initiatorAction)
         {
             entity.InitiatorName = initiatorAction.Initiator.Login;
 
-            userUpdates.Add(new UpdateUser.Command(
+            userUpdates.Add(new UpdateUser.User(
                 initiatorAction.Initiator.Id,
-                initiatorAction.Initiator.Login,
-                notification.ReceivedAt));
+                initiatorAction.Initiator.Login
+            ));
         }
 
         if (notification.Action is ITargetedModeratorAction targetedAction)
@@ -53,10 +53,10 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
             entity.TargetId = targetedAction.Target.Id;
             entity.TargetName = targetedAction.Target.Login;
 
-            userUpdates.Add(new UpdateUser.Command(
+            userUpdates.Add(new UpdateUser.User(
                 targetedAction.Target.Id,
-                targetedAction.Target.Login,
-                notification.ReceivedAt));
+                targetedAction.Target.Login
+            ));
         }
 
         switch (notification.Action)
@@ -110,9 +110,9 @@ public class ChatModeratorActionReceivedHandler : INotificationHandler<ChatModer
         _ctx.ModeratorActions.Add(entity);
         await _ctx.SaveChangesAsync(cancellationToken);
 
-        foreach (var update in userUpdates)
-        {
-            await _updateUserHandler.HandleAsync(update, cancellationToken);
-        }
+        await _updateUserHandler.HandleAsync(
+            new UpdateUser.Command(userUpdates, notification.ReceivedAt),
+            cancellationToken
+        );
     }
 }
