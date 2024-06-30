@@ -48,7 +48,7 @@ public static partial class UpdateUsers
         var entities = await ctx.TwitchUsers
             .Where(x => users.Keys.Contains(x.Id))
             .GroupBy(x => x.Id)
-            .Select(x => x.MaxBy(y => y.LastSeen)!)
+            .Select(x => x.OrderByDescending(y => y.LastSeen).First())
             .ToDictionaryAsync(x => x.Id, cancellationToken);
 
         foreach (var (_, user) in users)
