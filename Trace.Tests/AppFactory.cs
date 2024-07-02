@@ -46,6 +46,8 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
                 .RemoveAll<IValidator<TmiOptions>>()
                 .RemoveAll<IValidator<PubSubOptions>>()
                 .RemoveAll<IValidator<TwitchAuthOptions>>();
+
+            services.RemoveService<SourceInitializer>();
         });
     }
 
@@ -107,6 +109,7 @@ file static class Extensions
     {
         services.RemoveAll(x =>
             x.ServiceType == typeof(TService) ||
+            x.ImplementationType == typeof(TService) ||
             (x.ImplementationFactory is not null &&
              x.ImplementationFactory.Method.ReturnType == typeof(TService)));
 
