@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using Respawn;
@@ -31,17 +30,12 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
         builder.ConfigureTestServices(services =>
         {
-            services.RemoveAll<TmiService>();
-            services.RemoveAll<PubSubService>();
-
-            services.RemoveAll(x =>
-                x.ServiceType.IsGenericType &&
-                x.ServiceType.GetGenericTypeDefinition() == typeof(INotificationHandler<>));
-
-            services.RemoveAll(x =>
-                x.ImplementationFactory is not null &&
-                (x.ImplementationFactory.Method.ReturnType == typeof(TmiService) ||
-                 x.ImplementationFactory.Method.ReturnType == typeof(PubSubService)));
+            services
+                .RemoveService<TmiService>()
+                .RemoveService<PubSubService>()
+                .RemoveAll(x =>
+                    x.ServiceType.IsGenericType &&
+                    x.ServiceType.GetGenericTypeDefinition() == typeof(INotificationHandler<>));
         });
     }
 
@@ -85,7 +79,9 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
 file static class Extensions
 {
-    public static void RemoveAll(this IServiceCollection services, Func<ServiceDescriptor, bool> predicate)
+    public static IServiceCollection RemoveAll(
+        this IServiceCollection services,
+        Func<ServiceDescriptor, bool> predicate)
     {
         var descriptors = services.Where(predicate).ToList();
 
@@ -93,5 +89,17 @@ file static class Extensions
         {
             services.Remove(descriptor);
         }
+
+        return services;
+    }
+
+    public static IServiceCollection RemoveService<TService>(this IServiceCollection services)
+    {
+        services.RemoveAll(x =>
+            x.ServiceType == typeof(TService) ||
+            (x.ImplementationFactory is not null &&
+             x.ImplementationFactory.Method.ReturnType == typeof(TService)));
+
+        return services;
     }
 }
