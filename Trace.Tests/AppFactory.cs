@@ -1,16 +1,21 @@
 ﻿using System.Text.RegularExpressions;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using Respawn;
 using Respawn.Graph;
 using Teraa.Twitch.PubSub;
 using Teraa.Twitch.Tmi;
+using Trace.Api;
 using Trace.Data;
+using Trace.PubSub;
+using Trace.Tmi;
 
 namespace Trace.Tests;
 
@@ -36,6 +41,11 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
                 .RemoveAll(x =>
                     x.ServiceType.IsGenericType &&
                     x.ServiceType.GetGenericTypeDefinition() == typeof(INotificationHandler<>));
+
+            services
+                .RemoveAll<IValidator<TmiOptions>>()
+                .RemoveAll<IValidator<PubSubOptions>>()
+                .RemoveAll<IValidator<TwitchAuthOptions>>();
         });
     }
 
