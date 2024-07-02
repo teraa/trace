@@ -12,12 +12,13 @@ namespace Trace.PubSub;
 [UsedImplicitly]
 public class ConnectedHandler : INotificationHandler<Connected>
 {
-    private readonly PubSubService _pubSub;
+    private readonly IPubSubClient _pubSub;
     private readonly AppDbContext _ctx;
     private readonly ILogger<ConnectedHandler> _logger;
     private readonly IOptionsMonitor<PubSubOptions> _options;
 
-    public ConnectedHandler(PubSubService pubSub,
+    public ConnectedHandler(
+        IPubSubClient pubSub,
         AppDbContext ctx,
         ILogger<ConnectedHandler> logger,
         IOptionsMonitor<PubSubOptions> options)

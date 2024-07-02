@@ -13,9 +13,12 @@ public class WelcomeHandler : INotificationHandler<MessageReceived>
 {
     private readonly AppDbContext _ctx;
     private readonly ILogger<WelcomeHandler> _logger;
-    private readonly TmiService _tmi;
+    private readonly ITmiClient _tmi;
 
-    public WelcomeHandler(AppDbContext ctx, ILogger<WelcomeHandler> logger, TmiService tmi)
+    public WelcomeHandler(
+        AppDbContext ctx,
+        ILogger<WelcomeHandler> logger,
+        ITmiClient tmi)
     {
         _ctx = ctx;
         _logger = logger;

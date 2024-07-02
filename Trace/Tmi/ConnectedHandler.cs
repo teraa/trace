@@ -11,11 +11,11 @@ namespace Trace.Tmi;
 [UsedImplicitly]
 public class ConnectedHandler : INotificationHandler<Connected>
 {
-    private readonly TmiService _tmi;
+    private readonly ITmiClient _tmi;
     private readonly IOptionsMonitor<TmiOptions> _options;
 
     public ConnectedHandler(
-        TmiService tmi,
+        ITmiClient tmi,
         IOptionsMonitor<TmiOptions> options)
     {
         _tmi = tmi;
