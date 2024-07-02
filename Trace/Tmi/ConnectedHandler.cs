@@ -16,8 +16,6 @@ public class ConnectedHandler : INotificationHandler<Connected>
 
     public ConnectedHandler(
         TmiService tmi,
-        AppDbContext ctx,
-        ILogger<ConnectedHandler> logger,
         IOptionsMonitor<TmiOptions> options)
     {
         _tmi = tmi;
