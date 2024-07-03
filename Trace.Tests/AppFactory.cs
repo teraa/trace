@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Security.Claims;
+using System.Text.RegularExpressions;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
@@ -25,6 +26,7 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
     private static readonly Regex s_allowedConnectionString =
         new(@"\bDatabase=\w+_test\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+    private readonly UserAccessor _userAccessor = new();
     private Respawner? _respawner;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -48,6 +50,10 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
                 .RemoveAll<IValidator<TwitchAuthOptions>>();
 
             services.RemoveService<SourceInitializer>();
+
+            services
+                .RemoveAll<IUserAccessor>()
+                .AddSingleton<IUserAccessor>(_userAccessor);
         });
     }
 
@@ -78,6 +84,11 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
         await _respawner.ResetAsync(connection);
     }
 
+    public void SetUser(ClaimsPrincipal user) => _userAccessor.User = user;
+
+    public void SetUser(IEnumerable<Claim> claims) =>
+        _userAccessor.User = new ClaimsPrincipal(new ClaimsIdentity(claims));
+
     public async Task InitializeAsync()
     {
         await ResetDatabaseAsync();
@@ -86,6 +97,17 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
     public new Task DisposeAsync()
     {
         return Task.CompletedTask;
+    }
+}
+
+public class UserAccessor : IUserAccessor
+{
+    private ClaimsPrincipal? _user;
+
+    public ClaimsPrincipal User
+    {
+        get => _user ?? throw new InvalidOperationException("User not set");
+        set => _user = value;
     }
 }
 
