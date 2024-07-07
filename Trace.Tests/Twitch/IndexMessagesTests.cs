@@ -120,4 +120,48 @@ public sealed class IndexMessagesTests : IAsyncLifetime, IDisposable
             .Should().NotBeEmpty()
             .And.BeEquivalentTo(validMessageIds);
     }
+
+    [Fact]
+    public async Task QueryBefore_RespectsTimestampNotId()
+    {
+        SetChannelRead("channel.id");
+        var start = DateTimeOffset.MinValue;
+        var second = new TimeSpan(0, 0, 1);
+        var template = new Message
+        {
+            AuthorId = "author.id",
+            AuthorLogin = "author.login",
+            ChannelId = "channel.id",
+            Content = "Lorem ipsum",
+            Source = new Source
+            {
+                Name = "source",
+            },
+            Timestamp = start,
+        };
+
+        var messages = new List<Message>
+        {
+            template with {Id = 1, Timestamp = start + second * 1}, // before
+            template with {Id = 5, Timestamp = start + second * 2}, // before
+            template with {Id = 3, Timestamp = start + second * 3}, // before
+            template with {Id = 2, Timestamp = start + second * 4}, // pivot
+            template with {Id = 4, Timestamp = start + second * 5}, // after
+        };
+
+        _ctx.TmiMessages.AddRange(messages);
+
+        await _ctx.SaveChangesAsync();
+
+        var query = new Index.Query(template.ChannelId, Before: 2);
+
+
+        var response = await _handler.HandleAsync(query);
+
+
+        var results = response.Should().BeOkObjectResult<List<Index.Result>>().Subject;
+
+        results.Select(x => x.Id)
+            .Should().Equal([3, 5, 1]);
+    }
 }
