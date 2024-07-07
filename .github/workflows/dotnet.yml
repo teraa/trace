@@ -57,7 +57,7 @@ jobs:
       - name: Test
         run: dotnet test --no-restore
         env:
-          Db__ConnectionString: "Host=localhost;Port=5432;Database=trace;Username=postgres;Password=postgres;Include Error Detail=true;Command Timeout=60"
+          Db__ConnectionString: "Host=localhost;Port=5432;Database=trace_test;Username=postgres;Password=postgres;Include Error Detail=true;Command Timeout=60"
 
       - name: SSH Config
         working-directory: .github/workflows
