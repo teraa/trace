@@ -10,7 +10,8 @@ using Index = Trace.Api.Twitch.Channels.Actions.Index;
 
 namespace Trace.Tests.Twitch;
 
-public class IndexChannelsTests : IClassFixture<AppFactory>
+[Collection("1")]
+public class IndexChannelsTests
 {
     private readonly AppFactory _appFactory;
 

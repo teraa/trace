@@ -20,6 +20,9 @@ using Trace.Tmi;
 
 namespace Trace.Tests;
 
+[CollectionDefinition("1")]
+public class AppFactoryFixture : ICollectionFixture<AppFactory>;
+
 // ReSharper disable once ClassNeverInstantiated.Global
 public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
@@ -89,14 +92,15 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
     public void SetUser(IEnumerable<Claim> claims) =>
         _userAccessor.User = new ClaimsPrincipal(new ClaimsIdentity(claims));
 
-    public async Task InitializeAsync()
-    {
-        await ResetDatabaseAsync();
-    }
-
-    public new Task DisposeAsync()
+    public Task InitializeAsync()
     {
         return Task.CompletedTask;
+    }
+
+    public new async Task DisposeAsync()
+    {
+        // In case something else forgot to reset DB, this will clean after all tests are done.
+        await ResetDatabaseAsync();
     }
 }
 

@@ -6,7 +6,8 @@ using Trace.Data.Models.Twitch;
 
 namespace Trace.Tests;
 
-public class Test1 : IClassFixture<AppFactory>
+[Collection("1")]
+public class Test1
 {
     private readonly AppFactory _appFactory;
 

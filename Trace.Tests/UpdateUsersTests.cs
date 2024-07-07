@@ -9,7 +9,8 @@ using User = Trace.Features.Users.UpdateUsers.Command.User;
 
 namespace Trace.Tests;
 
-public sealed class UpdateUsersTests : IClassFixture<AppFactory>
+[Collection("1")]
+public sealed class UpdateUsersTests
 {
     private readonly AppFactory _appFactory;
 
