@@ -16,9 +16,9 @@ public static partial class Index
     public record Query(
         string ChannelId,
         int Limit,
-        long? Before,
-        string? AuthorId,
-        DateTimeOffset? BeforeTimestamp
+        long? Before = null,
+        string? AuthorId = null,
+        DateTimeOffset? BeforeTimestamp = null
     );
 
     [UsedImplicitly]
