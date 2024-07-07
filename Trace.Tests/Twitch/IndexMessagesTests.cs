@@ -165,6 +165,41 @@ public sealed class IndexMessagesTests : IAsyncLifetime, IDisposable
     }
 
     [Fact]
+    public async Task QueryWithInvalidBefore_ReturnsBadRequest()
+    {
+        const string channelId = "channel.id";
+        SetChannelRead(channelId);
+        var template = new Message
+        {
+            AuthorId = "author.id",
+            AuthorLogin = "author.login",
+            ChannelId = channelId,
+            Content = "Lorem ipsum",
+            Source = new Source{Name = "source"},
+            Timestamp = DateTimeOffset.MinValue,
+        };
+
+        var messages = new List<Message>
+        {
+            template with {Id = 1},
+            template with {Id = 2, ChannelId = "other"},
+        };
+
+        _ctx.TmiMessages.AddRange(messages);
+
+        await _ctx.SaveChangesAsync();
+
+        var query = new Index.Query(template.ChannelId, Before: 2);
+
+
+        // Act
+        var response = await _handler.HandleAsync(query);
+
+
+        response.Should().BeOfType<BadRequestObjectResult>();
+    }
+
+    [Fact]
     public async Task QueryWithAuthorId_ReturnsOnlyMessagesByAuthorId()
     {
         const string channelId = "channel.id";
