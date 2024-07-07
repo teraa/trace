@@ -49,8 +49,9 @@ public sealed class IndexMessagesTests : IAsyncLifetime, IDisposable
         _appFactory.SetUser([new Claim(AppClaimTypes.ChannelRead, channelId)]);
     }
 
+
     [Fact]
-    public async Task Index_ReturnsForbidden_WhenUnauthorized()
+    public async Task Forbidden_WhenUnauthorized()
     {
         var channelIds = new[] {"10", "20"};
         SetChannelRead(channelIds[0]);
@@ -65,7 +66,7 @@ public sealed class IndexMessagesTests : IAsyncLifetime, IDisposable
     }
 
     [Fact]
-    public async Task Index_ReturnsCorrectChannelMessages()
+    public async Task Returns_CorrectChannelMessages()
     {
         var channelIds = new[] {"10", "20", "30"};
         _appFactory.SetUser([new Claim(AppClaimTypes.ChannelRead, channelIds[0])]);
@@ -84,7 +85,7 @@ public sealed class IndexMessagesTests : IAsyncLifetime, IDisposable
             .RuleFor(x => x.AuthorId, x => x.Random.Number(1_000, 10_000).ToString(CultureInfo.InvariantCulture))
             .RuleFor(x => x.AuthorLogin, x => x.Internet.UserName().ToLowerInvariant())
             .RuleFor(x => x.Content, x => x.Lorem.Sentence())
-            .RuleFor(x => x.Source, x => source)
+            .RuleFor(x => x.Source, _ => source)
             .Generate(100);
 
         messages
