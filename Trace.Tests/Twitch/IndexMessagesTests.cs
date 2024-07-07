@@ -53,10 +53,9 @@ public sealed class IndexMessagesTests : IAsyncLifetime, IDisposable
     [Fact]
     public async Task Forbidden_WhenUnauthorized()
     {
-        var channelIds = new[] {"10", "20"};
-        SetChannelRead(channelIds[0]);
+        SetChannelRead("foo");
         var request = new Index.Query(
-            ChannelId: channelIds[1],
+            ChannelId: "bar",
             Limit: 1
         );
 
@@ -103,6 +102,7 @@ public sealed class IndexMessagesTests : IAsyncLifetime, IDisposable
         await _ctx.SaveChangesAsync();
 
 
+        // Act
         var actionResult = await _handler.HandleAsync(request);
 
 
@@ -124,19 +124,17 @@ public sealed class IndexMessagesTests : IAsyncLifetime, IDisposable
     [Fact]
     public async Task QueryWithBefore_RespectsTimestampNotId()
     {
-        SetChannelRead("channel.id");
+        const string channelId = "channel.id";
+        SetChannelRead(channelId);
         var start = DateTimeOffset.MinValue;
         var second = new TimeSpan(0, 0, 1);
         var template = new Message
         {
             AuthorId = "author.id",
             AuthorLogin = "author.login",
-            ChannelId = "channel.id",
+            ChannelId = channelId,
             Content = "Lorem ipsum",
-            Source = new Source
-            {
-                Name = "source",
-            },
+            Source = new Source {Name = "source"},
             Timestamp = start,
         };
 
@@ -156,6 +154,7 @@ public sealed class IndexMessagesTests : IAsyncLifetime, IDisposable
         var query = new Index.Query(template.ChannelId, Before: 2);
 
 
+        // Act
         var response = await _handler.HandleAsync(query);
 
 
@@ -168,20 +167,16 @@ public sealed class IndexMessagesTests : IAsyncLifetime, IDisposable
     [Fact]
     public async Task QueryWithAuthorId_ReturnsOnlyMessagesByAuthorId()
     {
-        SetChannelRead("channel.id");
-        var start = DateTimeOffset.MinValue;
-        var second = new TimeSpan(0, 0, 1);
+        const string channelId = "channel.id";
+        SetChannelRead(channelId);
         var template = new Message
         {
             AuthorId = "author.id",
             AuthorLogin = "author.login",
-            ChannelId = "channel.id",
+            ChannelId = channelId,
             Content = "Lorem ipsum",
-            Source = new Source
-            {
-                Name = "source",
-            },
-            Timestamp = start,
+            Source = new Source {Name = "source"},
+            Timestamp = DateTimeOffset.MinValue,
         };
 
         var messages = new List<Message>
@@ -201,6 +196,7 @@ public sealed class IndexMessagesTests : IAsyncLifetime, IDisposable
         var query = new Index.Query(template.ChannelId, AuthorId: authorId);
 
 
+        // Act
         var response = await _handler.HandleAsync(query);
 
 
