@@ -10,6 +10,19 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: docker.io/postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -40,6 +53,11 @@ jobs:
           -p:GenerateDocumentationFile=false
           -p:PublishSingleFile=true
           -p:DebugType=None
+
+      - name: Test
+        run: dotnet test --no-restore
+        env:
+          Db__ConnectionString: "Host=trace_test;Port=5432;Database=trace;Username=postgres;Password=postgres;Include Error Detail=true;Command Timeout=60"
 
       - name: SSH Config
         working-directory: .github/workflows
