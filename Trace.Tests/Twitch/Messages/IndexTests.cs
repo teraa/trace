@@ -9,10 +9,10 @@ using Trace.Data;
 using Trace.Data.Models.Tmi;
 using Index = Trace.Api.Twitch.Messages.Actions.Index;
 
-namespace Trace.Tests.Twitch;
+namespace Trace.Tests.Twitch.Messages;
 
 [Collection("1")]
-public sealed class IndexMessagesTests : IAsyncLifetime, IDisposable
+public sealed class IndexTests : IAsyncLifetime, IDisposable
 {
     private readonly AppFactory _appFactory;
     private readonly IServiceScope _scope;
@@ -21,7 +21,7 @@ public sealed class IndexMessagesTests : IAsyncLifetime, IDisposable
     private readonly AppDbContext _ctx;
 #pragma warning restore CA2213
 
-    public IndexMessagesTests(AppFactory appFactory)
+    public IndexTests(AppFactory appFactory)
     {
         _appFactory = appFactory;
         _scope = _appFactory.Services.CreateScope();

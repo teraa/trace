@@ -1,21 +1,19 @@
 ﻿using System.Security.Claims;
 using FluentAssertions;
-using FluentAssertions.Primitives;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Trace.Api;
 using Trace.Data;
 using Trace.Data.Models.Twitch;
 using Index = Trace.Api.Twitch.Channels.Actions.Index;
 
-namespace Trace.Tests.Twitch;
+namespace Trace.Tests.Twitch.Channels;
 
 [Collection("1")]
-public class IndexChannelsTests
+public class IndexTests
 {
     private readonly AppFactory _appFactory;
 
-    public IndexChannelsTests(AppFactory appFactory)
+    public IndexTests(AppFactory appFactory)
     {
         _appFactory = appFactory;
     }
