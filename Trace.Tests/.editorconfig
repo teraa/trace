@@ -1,3 +1,4 @@
 [*.cs]
 dotnet_diagnostic.VSTHRD200.severity = none # Use Async suffix for async methods
 dotnet_diagnostic.CA1707.severity = none # Identifiers should not contain underscores
+dotnet_diagnostic.VSTHRD103.severity = none # Call async methods when in an async method.
