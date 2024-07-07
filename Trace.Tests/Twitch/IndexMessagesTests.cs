@@ -164,4 +164,52 @@ public sealed class IndexMessagesTests : IAsyncLifetime, IDisposable
         results.Select(x => x.Id)
             .Should().Equal([3, 5, 1]);
     }
+
+    [Fact]
+    public async Task QueryWithAuthorId_ReturnsOnlyMessagesByAuthorId()
+    {
+        SetChannelRead("channel.id");
+        var start = DateTimeOffset.MinValue;
+        var second = new TimeSpan(0, 0, 1);
+        var template = new Message
+        {
+            AuthorId = "author.id",
+            AuthorLogin = "author.login",
+            ChannelId = "channel.id",
+            Content = "Lorem ipsum",
+            Source = new Source
+            {
+                Name = "source",
+            },
+            Timestamp = start,
+        };
+
+        var messages = new List<Message>
+        {
+            template with {Id = 1, AuthorId = "1"}, // target
+            template with {Id = 2, AuthorId = "2"},
+            template with {Id = 3, AuthorId = "3"},
+            template with {Id = 4, AuthorId = "1"}, // target
+            template with {Id = 5, AuthorId = "5"},
+        };
+
+        _ctx.TmiMessages.AddRange(messages);
+
+        await _ctx.SaveChangesAsync();
+
+        const string authorId = "1";
+        var query = new Index.Query(template.ChannelId, AuthorId: authorId);
+
+
+        var response = await _handler.HandleAsync(query);
+
+
+        var results = response.Should().BeOkObjectResult<List<Index.Result>>().Subject;
+
+        results.Select(x => x.AuthorId)
+            .Should().AllBe(authorId);
+
+        results.Select(x => x.Id)
+            .Should().BeEquivalentTo([1, 4]);
+    }
 }
