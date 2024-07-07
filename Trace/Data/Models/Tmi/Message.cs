@@ -7,7 +7,7 @@ using Trace.Data.Models.Tmi;
 namespace Trace.Data.Models.Tmi
 {
     [PublicAPI]
-    public class Message
+    public record Message
     {
         public long Id { get; set; }
         public DateTimeOffset Timestamp { get; set; }
