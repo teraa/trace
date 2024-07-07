@@ -52,12 +52,3 @@ public class IndexChannelsTests
         results[0].Should().BeEquivalentTo(new Index.Result("foo_id", "foo_login"));
     }
 }
-
-file static class Extensions
-{
-    public static AndWhichConstraint<ObjectAssertions, TResult> BeOkObjectResult<TResult>(
-        this ObjectAssertions assertions)
-    {
-        return assertions.BeOfType<OkObjectResult>().Subject.Value.Should().BeOfType<TResult>();
-    }
-}
