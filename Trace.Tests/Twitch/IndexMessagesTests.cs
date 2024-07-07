@@ -122,7 +122,7 @@ public sealed class IndexMessagesTests : IAsyncLifetime, IDisposable
     }
 
     [Fact]
-    public async Task QueryBefore_RespectsTimestampNotId()
+    public async Task QueryWithBefore_RespectsTimestampNotId()
     {
         SetChannelRead("channel.id");
         var start = DateTimeOffset.MinValue;
