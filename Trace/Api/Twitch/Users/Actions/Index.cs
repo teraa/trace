@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Trace.Data;
 using Trace.Data.Models.Twitch;
+using Results = Teraa.Extensions.AspNetCore.Results;
 
 namespace Trace.Api.Twitch.Users.Actions;
 
@@ -87,21 +88,37 @@ public static partial class Index
 
             if (request.Recursive)
             {
-                var userIds = await patternQuery
-                    .Select(x => x.Id)
-                    .Take(request.PatternLimit)
-                    .Distinct()
-                    .ToListAsync(cancellationToken);
+                List<string> userIds;
+                try
+                {
+                    userIds = await patternQuery
+                        .Select(x => x.Id)
+                        .Take(request.PatternLimit)
+                        .Distinct()
+                        .ToListAsync(cancellationToken);
+                }
+                catch (Npgsql.PostgresException ex) when (ex.SqlState == "2201B")
+                {
+                    return Results.BadRequestDetails("Invalid pattern.");
+                }
 
                 predicate = predicate.Or(x => userIds.Contains(x.Id));
             }
             else
             {
-                var userLogins = await patternQuery
-                    .Select(x => x.Login)
-                    .Take(request.PatternLimit)
-                    .Distinct()
-                    .ToListAsync(cancellationToken);
+                List<string> userLogins;
+                try
+                {
+                    userLogins = await patternQuery
+                        .Select(x => x.Login)
+                        .Take(request.PatternLimit)
+                        .Distinct()
+                        .ToListAsync(cancellationToken);
+                }
+                catch (Npgsql.PostgresException ex) when (ex.SqlState == "2201B")
+                {
+                    return Results.BadRequestDetails("Invalid pattern.");
+                }
 
                 predicate = predicate.Or(x => userLogins.Contains(x.Login));
             }
