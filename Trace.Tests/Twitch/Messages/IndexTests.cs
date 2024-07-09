@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using System.Security.Claims;
-using Bogus;
+﻿using System.Security.Claims;
 using FluentAssertions;
 using FluentAssertions.Primitives;
 using Microsoft.AspNetCore.Mvc;
@@ -68,56 +66,41 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
     [Fact]
     public async Task Returns_CorrectChannelMessages()
     {
-        var channelIds = new[] {"10", "20", "30"};
-        SetChannelRead(channelIds[0]);
-
-        var source = new Source
+        const string channelId = "channel.id";
+        SetChannelRead(channelId);
+        var template = new Message
         {
-            Name = "Trace",
+            AuthorId = "author.id",
+            AuthorLogin = "author.login",
+            ChannelId = channelId,
+            Content = "Lorem ipsum",
+            Source = new Source {Name = "source"},
+            Timestamp = DateTimeOffset.MinValue,
         };
 
-        _ctx.TmiSources.Add(source);
-
-        Randomizer.Seed = new Random(1337);
-        var messages = new Faker<Message>()
-            .RuleFor(x => x.Timestamp, x => x.Date.RecentOffset().ToUniversalTime())
-            .RuleFor(x => x.ChannelId, x => x.PickRandom(channelIds))
-            .RuleFor(x => x.AuthorId, x => x.Random.Number(1_000, 10_000).ToString(CultureInfo.InvariantCulture))
-            .RuleFor(x => x.AuthorLogin, x => x.Internet.UserName().ToLowerInvariant())
-            .RuleFor(x => x.Content, x => x.Lorem.Sentence())
-            .RuleFor(x => x.Source, _ => source)
-            .Generate(100);
-
-        messages
-            .Select(x => x.ChannelId)
-            .Distinct()
-            .Should().HaveCount(channelIds.Length);
+        var messages = new List<Message>
+        {
+            template with {Id = 1},
+            template with {Id = 2, ChannelId = "foo"},
+            template with {Id = 3, ChannelId = "bar"},
+            template with {Id = 4},
+            template with {Id = 5, ChannelId = "foo"},
+            template with {Id = 6, ChannelId = "bar"},
+        };
 
         _ctx.TmiMessages.AddRange(messages);
-
-        var request = new Index.Query(
-            ChannelId: channelIds[0],
-            Limit: 100
-        );
-
         await _ctx.SaveChangesAsync();
+
+        var query = new Index.Query(channelId);
 
 
         // Act
-        var response = await _handler.HandleAsync(request);
+        var response = await _handler.HandleAsync(query);
 
 
-        var results = response.Should().BeResults().Subject;
-
-        var validMessageIds = messages
-            .OrderByDescending(x => x.Timestamp)
-            .Where(x => x.ChannelId == channelIds[0])
-            .Select(x => x.Id)
-            .ToList();
-
-        results.Select(x => x.Id)
-            .Should().NotBeEmpty()
-            .And.BeEquivalentTo(validMessageIds);
+        response.Should().BeResults()
+            .Subject.Select(x => x.Id)
+            .Should().BeEquivalentTo([1, 4]);
     }
 
     [Fact]
