@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using Bogus;
 using FluentAssertions;
+using FluentAssertions.Primitives;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Trace.Api;
@@ -103,12 +104,10 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
 
 
         // Act
-        var actionResult = await _handler.HandleAsync(request);
+        var response = await _handler.HandleAsync(request);
 
 
-        var results = actionResult
-            .Should().BeOfType<OkObjectResult>().Subject.Value
-            .Should().BeOfType<List<Index.Result>>().Subject;
+        var results = response.Should().BeResults().Subject;
 
         var validMessageIds = messages
             .OrderByDescending(x => x.Timestamp)
@@ -158,7 +157,7 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
         var response = await _handler.HandleAsync(query);
 
 
-        var results = response.Should().BeOkObjectResult<List<Index.Result>>().Subject;
+        var results = response.Should().BeResults().Subject;
 
         results.Select(x => x.Id)
             .Should().Equal([3, 5, 1]);
@@ -235,12 +234,21 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
         var response = await _handler.HandleAsync(query);
 
 
-        var results = response.Should().BeOkObjectResult<List<Index.Result>>().Subject;
+        var results = response.Should().BeResults().Subject;
 
         results.Select(x => x.AuthorId)
             .Should().AllBe(authorId);
 
         results.Select(x => x.Id)
             .Should().BeEquivalentTo([1, 4]);
+    }
+}
+
+file static class Extensions
+{
+    public static AndWhichConstraint<ObjectAssertions, List<Index.Result>> BeResults(
+        this ObjectAssertions assertions)
+    {
+        return assertions.BeOfType<OkObjectResult>().Subject.Value.Should().BeOfType<List<Index.Result>>();
     }
 }
