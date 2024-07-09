@@ -185,6 +185,32 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
                 users.Where((_, i) => i != 1)
                     .Select(x => new Index.Result(x.Id, x.Login, x.FirstSeen, x.LastSeen)));
     }
+
+    [Fact]
+    public async Task QueryWithInvalidPattern_ReturnsBadRequest()
+    {
+        var query = new Index.Query(LoginPattern: "[z-a]");
+
+
+        // Act
+        var response = await _handler.HandleAsync(query);
+
+
+        response.Should().BeOfType<BadRequestObjectResult>();
+    }
+
+    [Fact]
+    public async Task QueryWithRecursiveInvalidPattern_ReturnsBadRequest()
+    {
+        var query = new Index.Query(LoginPattern: "[z-a]", Recursive: true);
+
+
+        // Act
+        var response = await _handler.HandleAsync(query);
+
+
+        response.Should().BeOfType<BadRequestObjectResult>();
+    }
 }
 
 file static class Extensions
