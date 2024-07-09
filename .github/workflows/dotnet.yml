@@ -55,7 +55,7 @@ jobs:
           -p:DebugType=None
 
       - name: Test
-        run: dotnet test --no-restore
+        run: dotnet test --no-restore -c Release -r linux-x64
         env:
           Db__ConnectionString: "Host=localhost;Port=5432;Database=trace_test;Username=postgres;Password=postgres;Include Error Detail=true;Command Timeout=60"
 
