@@ -10,13 +10,23 @@ using User = Trace.Features.Users.UpdateUsers.Command.User;
 namespace Trace.Tests;
 
 [Collection("1")]
-public sealed class UpdateUsersTests
+public sealed class UpdateUsersTests: IAsyncLifetime
 {
     private readonly AppFactory _appFactory;
 
     public UpdateUsersTests(AppFactory appFactory)
     {
         _appFactory = appFactory;
+    }
+
+    public Task InitializeAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    public async Task DisposeAsync()
+    {
+        await _appFactory.ResetDatabaseAsync();
     }
 
     [Fact]
