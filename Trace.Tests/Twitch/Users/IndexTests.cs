@@ -157,6 +157,34 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
                 users.Where((_, i) => i != 1)
                     .Select(x => new Index.Result(x.Id, x.Login, x.FirstSeen, x.LastSeen)));
     }
+
+    [Fact]
+    public async Task QueryWithRecursiveLoginPattern_ReturnsCorrectUsers()
+    {
+        var users = new List<User>
+        {
+            Template with {Id = "1", Login = "foo"},
+            Template with {Id = "2", Login = "bar"}, // except
+            Template with {Id = "3", Login = "foo"},
+            Template with {Id = "3", Login = "qux"},
+        };
+
+        _ctx.TwitchUsers.AddRange(users);
+        await _ctx.SaveChangesAsync();
+
+        var query = new Index.Query(LoginPattern: "^f", Recursive: true);
+
+
+        // Act
+        var response = await _handler.HandleAsync(query);
+
+
+        response.Should().BeResults()
+            .Subject.Should().HaveCount(3)
+            .And.BeEquivalentTo(
+                users.Where((_, i) => i != 1)
+                    .Select(x => new Index.Result(x.Id, x.Login, x.FirstSeen, x.LastSeen)));
+    }
 }
 
 file static class Extensions
