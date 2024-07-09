@@ -242,6 +242,47 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
         results.Select(x => x.Id)
             .Should().BeEquivalentTo([1, 4]);
     }
+
+    [Fact]
+    public async Task QueryWithBeforeTimestamp_ReturnsOnlyMessagesBeforeTimestamp()
+    {
+        const string channelId = "channel.id";
+        SetChannelRead(channelId);
+
+        var timestamp = DateTimeOffset.MinValue;
+        var second = TimeSpan.FromSeconds(1);
+
+        var template = new Message
+        {
+            AuthorId = "author.id",
+            AuthorLogin = "author.login",
+            ChannelId = channelId,
+            Content = "Lorem ipsum",
+            Source = new Source {Name = "source"},
+            Timestamp = timestamp,
+        };
+
+        var messages = new List<Message>
+        {
+            template with {Id = 1, Timestamp = timestamp + second * 0},
+            template with {Id = 2, Timestamp = timestamp + second * 1},
+            template with {Id = 3, Timestamp = timestamp + second * 2},
+        };
+
+        _ctx.TmiMessages.AddRange(messages);
+        await _ctx.SaveChangesAsync();
+
+        var query = new Index.Query(channelId, BeforeTimestamp: messages[1].Timestamp);
+
+
+        // Act
+        var response = await _handler.HandleAsync(query);
+
+
+        response.Should().BeResults()
+            .Subject.Select(x => x.Id)
+            .Should().BeEquivalentTo([1, 2]);
+    }
 }
 
 file static class Extensions
