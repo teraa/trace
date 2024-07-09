@@ -26,6 +26,12 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
         _ctx = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
     }
 
+    private User Template { get; } = new()
+    {
+        FirstSeen = DateTimeOffset.MinValue,
+        LastSeen = DateTimeOffset.MinValue,
+    };
+
     public Task InitializeAsync()
     {
         return Task.CompletedTask;
@@ -42,25 +48,75 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
     }
 
     [Fact]
-    public async Task QueryWithId_ReturnsCorrectUser()
+    public async Task QueryWithIds_ReturnsCorrectUsers()
     {
-        var template = new User
-        {
-            FirstSeen = DateTimeOffset.MinValue,
-            LastSeen = DateTimeOffset.MinValue,
-        };
-
         var users = new List<User>
         {
-            template with {Id = "1", Login = "foo"},
-            template with {Id = "2", Login = "bar"},
-            template with {Id = "1", Login = "baz"},
+            Template with {Id = "1", Login = "foo"},
+            Template with {Id = "2", Login = "bar"}, // except
+            Template with {Id = "1", Login = "baz"},
+            Template with {Id = "3", Login = "qux"},
         };
 
         _ctx.TwitchUsers.AddRange(users);
         await _ctx.SaveChangesAsync();
 
-        var query = new Index.Query(Ids: ["1"]);
+        var query = new Index.Query(Ids: ["1", "3"]);
+
+
+        // Act
+        var response = await _handler.HandleAsync(query);
+
+
+        response.Should().BeResults()
+            .Subject.Should().HaveCount(3)
+            .And.BeEquivalentTo(
+                users.Where((_, i) => i != 1)
+                    .Select(x => new Index.Result(x.Id, x.Login, x.FirstSeen, x.LastSeen)));
+    }
+
+    [Fact]
+    public async Task QueryWithLogins_ReturnsCorrectUsers()
+    {
+        var users = new List<User>
+        {
+            Template with {Id = "1", Login = "foo"},
+            Template with {Id = "2", Login = "bar"}, // except
+            Template with {Id = "3", Login = "foo"},
+            Template with {Id = "4", Login = "qux"},
+        };
+
+        _ctx.TwitchUsers.AddRange(users);
+        await _ctx.SaveChangesAsync();
+
+        var query = new Index.Query(Logins: ["foo", "qux"]);
+
+
+        // Act
+        var response = await _handler.HandleAsync(query);
+
+
+        response.Should().BeResults()
+            .Subject.Should().HaveCount(3)
+            .And.BeEquivalentTo(
+                users.Where((_, i) => i != 1)
+                    .Select(x => new Index.Result(x.Id, x.Login, x.FirstSeen, x.LastSeen)));
+    }
+
+    [Fact]
+    public async Task QueryWithLoginPattern_ReturnsCorrectUsers()
+    {
+        var users = new List<User>
+        {
+            Template with {Id = "1", Login = "foo"}, // except
+            Template with {Id = "2", Login = "bar"},
+            Template with {Id = "3", Login = "baz"},
+        };
+
+        _ctx.TwitchUsers.AddRange(users);
+        await _ctx.SaveChangesAsync();
+
+        var query = new Index.Query(LoginPattern: "^BA");
 
 
         // Act
@@ -70,7 +126,35 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
         response.Should().BeResults()
             .Subject.Should().HaveCount(2)
             .And.BeEquivalentTo(
-                users.Where(x => x.Id == "1")
+                users.Skip(1)
+                    .Select(x => new Index.Result(x.Id, x.Login, x.FirstSeen, x.LastSeen)));
+    }
+
+    [Fact]
+    public async Task QueryWithRecursiveLogins_ReturnsCorrectUsers()
+    {
+        var users = new List<User>
+        {
+            Template with {Id = "1", Login = "foo"},
+            Template with {Id = "2", Login = "bar"}, // except
+            Template with {Id = "3", Login = "foo"},
+            Template with {Id = "3", Login = "qux"},
+        };
+
+        _ctx.TwitchUsers.AddRange(users);
+        await _ctx.SaveChangesAsync();
+
+        var query = new Index.Query(Logins: ["foo"], Recursive: true);
+
+
+        // Act
+        var response = await _handler.HandleAsync(query);
+
+
+        response.Should().BeResults()
+            .Subject.Should().HaveCount(3)
+            .And.BeEquivalentTo(
+                users.Where((_, i) => i != 1)
                     .Select(x => new Index.Result(x.Id, x.Login, x.FirstSeen, x.LastSeen)));
     }
 }
