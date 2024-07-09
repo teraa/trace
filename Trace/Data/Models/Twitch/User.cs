@@ -7,7 +7,7 @@ using Trace.Data.Models.Twitch;
 namespace Trace.Data.Models.Twitch
 {
     [PublicAPI]
-    public class User
+    public record User
     {
         public long EntryId { get; set; }
         public string Id { get; set; }
