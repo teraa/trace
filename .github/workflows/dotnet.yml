@@ -47,7 +47,7 @@ jobs:
         run: dotnet restore -r linux-x64
 
       - name: Test
-        run: dotnet test --no-restore -c Release -r linux-x64
+        run: dotnet test --no-restore -c Release -r linux-x64 -v minimal
         env:
           Db__ConnectionString: "Host=localhost;Port=5432;Database=trace_test;Username=postgres;Password=postgres;Include Error Detail=true;Command Timeout=60"
 
