@@ -69,7 +69,7 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
     public async Task Returns_CorrectChannelMessages()
     {
         var channelIds = new[] {"10", "20", "30"};
-        _appFactory.SetUser([new Claim(AppClaimTypes.ChannelRead, channelIds[0])]);
+        SetChannelRead(channelIds[0]);
 
         var source = new Source
         {
@@ -174,7 +174,7 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
             AuthorLogin = "author.login",
             ChannelId = channelId,
             Content = "Lorem ipsum",
-            Source = new Source{Name = "source"},
+            Source = new Source {Name = "source"},
             Timestamp = DateTimeOffset.MinValue,
         };
 
