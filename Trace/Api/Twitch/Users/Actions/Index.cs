@@ -14,9 +14,9 @@ namespace Trace.Api.Twitch.Users.Actions;
 public static partial class Index
 {
     public record Query(
-        IReadOnlyList<string>? Ids,
-        IReadOnlyList<string>? Logins,
-        string? LoginPattern,
+        IReadOnlyList<string>? Ids = null,
+        IReadOnlyList<string>? Logins = null,
+        string? LoginPattern = null,
         int PatternLimit = 10,
         bool Recursive = false
     );
