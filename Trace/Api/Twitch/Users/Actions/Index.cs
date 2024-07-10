@@ -33,7 +33,7 @@ public static partial class Index
             RuleFor(x => x.PatternLimit).InclusiveBetween(1, 1000);
 
             RuleFor(x => x)
-                .Must(x => x is {Ids: { }} or {Logins: { }} or {LoginPattern: { }})
+                .Must(x => x is {Ids: not null} or {Logins: not null} or {LoginPattern: not null})
                 .WithMessage(
                     $"Must include at least one of {nameof(Query.Ids)}, {nameof(Query.Logins)}, or {nameof(Query.LoginPattern)}");
         }
@@ -53,10 +53,10 @@ public static partial class Index
     {
         var predicate = PredicateBuilder.New<User>();
 
-        if (request.Ids is { })
+        if (request.Ids is not null)
             predicate = predicate.Or(x => request.Ids.Contains(x.Id));
 
-        if (request.Logins is { })
+        if (request.Logins is not null)
         {
             var logins = request.Logins.Select(x => x.ToLowerInvariant());
 
@@ -76,7 +76,7 @@ public static partial class Index
             }
         }
 
-        if (request.LoginPattern is { })
+        if (request.LoginPattern is not null)
         {
             ctx.Database.SetCommandTimeout(5);
 

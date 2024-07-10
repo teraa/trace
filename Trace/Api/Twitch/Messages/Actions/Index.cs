@@ -58,10 +58,10 @@ public static partial class Index
             .ThenBy(x => x.Id)
             .AsQueryable();
 
-        if (request.AuthorId is { })
+        if (request.AuthorId is not null)
             query = query.Where(x => x.AuthorId == request.AuthorId);
 
-        if (request.Before is { })
+        if (request.Before is not null)
         {
             var beforeTimestamp = await query
                 .Where(x => x.Id == request.Before)
@@ -81,7 +81,7 @@ public static partial class Index
                 .Skip(offset);
         }
 
-        if (request.BeforeTimestamp is { })
+        if (request.BeforeTimestamp is not null)
         {
             var beforeTimestamp = request.BeforeTimestamp.Value.ToUniversalTime();
             query = query.Where(x => x.Timestamp <= beforeTimestamp);
