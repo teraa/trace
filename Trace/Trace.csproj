@@ -33,12 +33,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Extensions\AspNetCore\Shared.AspNetCore.csproj" />
-    <ProjectReference Include="..\Extensions\Configuration.Vault\Shared.Configuration.Vault.csproj" />
-    <ProjectReference Include="..\Extensions\Configuration\Shared.Configuration.csproj" />
-    <ProjectReference Include="..\Extensions\AspNetCore.Identity\Shared.AspNetCore.Identity.csproj" />
-    <ProjectReference Include="..\Extensions\Serilog.Seq\Shared.Serilog.Seq.csproj" />
-    <ProjectReference Include="..\Extensions\Serilog.Systemd\Shared.Serilog.Systemd.csproj" />
+    <ProjectReference Include="..\Shared\AspNetCore\Shared.AspNetCore.csproj" />
+    <ProjectReference Include="..\Shared\Configuration.Vault\Shared.Configuration.Vault.csproj" />
+    <ProjectReference Include="..\Shared\Configuration\Shared.Configuration.csproj" />
+    <ProjectReference Include="..\Shared\AspNetCore.Identity\Shared.AspNetCore.Identity.csproj" />
+    <ProjectReference Include="..\Shared\Serilog.Seq\Shared.Serilog.Seq.csproj" />
+    <ProjectReference Include="..\Shared\Serilog.Systemd\Shared.Serilog.Systemd.csproj" />
   </ItemGroup>
 
   <ItemGroup>
