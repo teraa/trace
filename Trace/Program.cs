@@ -8,6 +8,7 @@ using Teraa.Shared.AspNetCore.Controllers;
 using Teraa.Shared.Configuration.Vault;
 using Teraa.Shared.Serilog.Seq;
 using Teraa.Shared.Serilog.Systemd;
+using Trace;
 using Trace.Api;
 using Trace.Api.Auth;
 using Trace.Data;
@@ -76,10 +77,9 @@ builder.Services
     .AddHttpContextAccessor()
     .AddTmi()
     .AddPubSub()
+    .AddTraceHandlers()
+    .AddTraceBehaviors()
     ;
-
-Trace.HandlerServiceCollectionExtensions.AddHandlers(builder.Services);
-Trace.HandlerServiceCollectionExtensions.AddBehaviors(builder.Services);
 
 var app = builder.Build();
 
