@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Trace.Api.Auth;
 using Trace.Data;
-using Results = Teraa.Extensions.AspNetCore.Results;
+using Results = Teraa.Shared.AspNetCore.Results;
 
 namespace Trace.Api.Twitch.Messages.Actions;
 

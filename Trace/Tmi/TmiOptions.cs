@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using JetBrains.Annotations;
-using Teraa.Extensions.Configuration;
+using Teraa.Shared.Configuration;
 using Teraa.Twitch.Tmi;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global

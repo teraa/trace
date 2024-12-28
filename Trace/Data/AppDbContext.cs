@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Teraa.Extensions.Identity;
+using Teraa.Shared.AspNetCore.Identity;
 
 #pragma warning disable CS8618
 namespace Trace.Data;

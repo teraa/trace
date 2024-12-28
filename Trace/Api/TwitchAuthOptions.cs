@@ -1,7 +1,7 @@
 using FluentValidation;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
-using Teraa.Extensions.Configuration;
+using Teraa.Shared.Configuration;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 

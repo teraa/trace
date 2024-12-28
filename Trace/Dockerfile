@@ -13,13 +13,12 @@ RUN dotnet nuget add source \
 --name github "https://nuget.pkg.github.com/teraa/index.json"
 
 COPY ["Trace/Trace.csproj", "Trace/"]
-COPY ["Extensions/AspNetCore/Extensions.AspNetCore.csproj", "Extensions/AspNetCore/"]
-COPY ["Extensions/Configuration.Vault.Options/Extensions.Configuration.Vault.Options.csproj", "Extensions/Configuration.Vault.Options/"]
-COPY ["Extensions/Configuration.Vault/Extensions.Configuration.Vault.csproj", "Extensions/Configuration.Vault/"]
-COPY ["Extensions/Configuration/Extensions.Configuration.csproj", "Extensions/Configuration/"]
-COPY ["Extensions/Identity/Extensions.Identity.csproj", "Extensions/Identity/"]
-COPY ["Extensions/Serilog.Seq/Extensions.Serilog.Seq.csproj", "Extensions/Serilog.Seq/"]
-COPY ["Extensions/Serilog.Systemd/Extensions.Serilog.Systemd.csproj", "Extensions/Serilog.Systemd/"]
+COPY ["Extensions/AspNetCore/Shared.AspNetCore.csproj", "Extensions/AspNetCore/"]
+COPY ["Extensions/Configuration.Vault/Shared.Configuration.Vault.csproj", "Extensions/Configuration.Vault/"]
+COPY ["Extensions/Configuration/Shared.Configuration.csproj", "Extensions/Configuration/"]
+COPY ["Extensions/AspNetCore.Identity/Shared.AspNetCore.Identity.csproj", "Extensions/AspNetCore.Identity/"]
+COPY ["Extensions/Serilog.Seq/Shared.Serilog.Seq.csproj", "Extensions/Serilog.Seq/"]
+COPY ["Extensions/Serilog.Systemd/Shared.Serilog.Systemd.csproj", "Extensions/Serilog.Systemd/"]
 RUN dotnet restore "Trace/Trace.csproj"
 
 COPY . .

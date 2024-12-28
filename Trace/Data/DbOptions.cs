@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Teraa.Extensions.Configuration;
+using Teraa.Shared.Configuration;
 using Trace.Migrations;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global

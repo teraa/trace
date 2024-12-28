@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.HttpOverrides;
-using Teraa.Extensions.Configuration;
+using Teraa.Shared.Configuration;
 
 namespace Trace.Api;
 

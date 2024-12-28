@@ -7,19 +7,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trace", "Trace\Trace.csproj
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{4D51C0C7-2D0C-4A48-9F3E-607F5E13988F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Configuration", "Extensions\Configuration\Extensions.Configuration.csproj", "{2D93D1EA-C5DF-4DB7-8B0E-D405E6389B80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Configuration", "Extensions\Configuration\Shared.Configuration.csproj", "{2D93D1EA-C5DF-4DB7-8B0E-D405E6389B80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore", "Extensions\AspNetCore\Extensions.AspNetCore.csproj", "{CDA6DD1E-5D0D-43A9-B570-49695E6BB154}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore", "Extensions\AspNetCore\Shared.AspNetCore.csproj", "{CDA6DD1E-5D0D-43A9-B570-49695E6BB154}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions.Serilog.Seq", "Extensions\Serilog.Seq\Extensions.Serilog.Seq.csproj", "{435E470B-3C26-4DBF-A232-F1F88FF3FA52}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Serilog.Seq", "Extensions\Serilog.Seq\Shared.Serilog.Seq.csproj", "{435E470B-3C26-4DBF-A232-F1F88FF3FA52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions.Serilog.Systemd", "Extensions\Serilog.Systemd\Extensions.Serilog.Systemd.csproj", "{1F67BD34-B720-4F1B-ACC0-58DA872808C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Serilog.Systemd", "Extensions\Serilog.Systemd\Shared.Serilog.Systemd.csproj", "{1F67BD34-B720-4F1B-ACC0-58DA872808C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions.Configuration.Vault", "Extensions\Configuration.Vault\Extensions.Configuration.Vault.csproj", "{11375881-7E74-4FD9-B314-69C32296213F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Configuration.Vault", "Extensions\Configuration.Vault\Shared.Configuration.Vault.csproj", "{11375881-7E74-4FD9-B314-69C32296213F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions.Configuration.Vault.Options", "Extensions\Configuration.Vault.Options\Extensions.Configuration.Vault.Options.csproj", "{17D50EE3-4004-4710-AD01-12DDD12DCB3B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions.Identity", "Extensions\Identity\Extensions.Identity.csproj", "{EDA35122-AF04-4363-963B-26F8DE52C934}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.AspNetCore.Identity", "Extensions\AspNetCore.Identity\Shared.AspNetCore.Identity.csproj", "{EDA35122-AF04-4363-963B-26F8DE52C934}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trace.Tests", "Trace.Tests\Trace.Tests.csproj", "{33CDF780-6051-446B-9E6E-04D4B844CBDB}"
 EndProject
@@ -108,18 +106,6 @@ Global
 		{11375881-7E74-4FD9-B314-69C32296213F}.Release|x64.Build.0 = Release|Any CPU
 		{11375881-7E74-4FD9-B314-69C32296213F}.Release|x86.ActiveCfg = Release|Any CPU
 		{11375881-7E74-4FD9-B314-69C32296213F}.Release|x86.Build.0 = Release|Any CPU
-		{17D50EE3-4004-4710-AD01-12DDD12DCB3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{17D50EE3-4004-4710-AD01-12DDD12DCB3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{17D50EE3-4004-4710-AD01-12DDD12DCB3B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{17D50EE3-4004-4710-AD01-12DDD12DCB3B}.Debug|x64.Build.0 = Debug|Any CPU
-		{17D50EE3-4004-4710-AD01-12DDD12DCB3B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{17D50EE3-4004-4710-AD01-12DDD12DCB3B}.Debug|x86.Build.0 = Debug|Any CPU
-		{17D50EE3-4004-4710-AD01-12DDD12DCB3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{17D50EE3-4004-4710-AD01-12DDD12DCB3B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{17D50EE3-4004-4710-AD01-12DDD12DCB3B}.Release|x64.ActiveCfg = Release|Any CPU
-		{17D50EE3-4004-4710-AD01-12DDD12DCB3B}.Release|x64.Build.0 = Release|Any CPU
-		{17D50EE3-4004-4710-AD01-12DDD12DCB3B}.Release|x86.ActiveCfg = Release|Any CPU
-		{17D50EE3-4004-4710-AD01-12DDD12DCB3B}.Release|x86.Build.0 = Release|Any CPU
 		{EDA35122-AF04-4363-963B-26F8DE52C934}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EDA35122-AF04-4363-963B-26F8DE52C934}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDA35122-AF04-4363-963B-26F8DE52C934}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -151,7 +137,6 @@ Global
 		{435E470B-3C26-4DBF-A232-F1F88FF3FA52} = {4D51C0C7-2D0C-4A48-9F3E-607F5E13988F}
 		{1F67BD34-B720-4F1B-ACC0-58DA872808C3} = {4D51C0C7-2D0C-4A48-9F3E-607F5E13988F}
 		{11375881-7E74-4FD9-B314-69C32296213F} = {4D51C0C7-2D0C-4A48-9F3E-607F5E13988F}
-		{17D50EE3-4004-4710-AD01-12DDD12DCB3B} = {4D51C0C7-2D0C-4A48-9F3E-607F5E13988F}
 		{EDA35122-AF04-4363-963B-26F8DE52C934} = {4D51C0C7-2D0C-4A48-9F3E-607F5E13988F}
 	EndGlobalSection
 EndGlobal

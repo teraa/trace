@@ -3,11 +3,11 @@ using Immediate.Handlers.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Serilog;
-using Serilog.Settings.Configuration;
-using Teraa.Extensions.AspNetCore;
-using Teraa.Extensions.Configuration.Vault.Options;
-using Teraa.Extensions.Serilog.Seq;
-using Teraa.Extensions.Serilog.Systemd;
+using Teraa.Shared.AspNetCore;
+using Teraa.Shared.AspNetCore.Controllers;
+using Teraa.Shared.Configuration.Vault;
+using Teraa.Shared.Serilog.Seq;
+using Teraa.Shared.Serilog.Systemd;
 using Trace.Api;
 using Trace.Api.Auth;
 using Trace.Data;
@@ -26,15 +26,16 @@ builder.Host
         options.ValidateOnBuild = true;
         options.ValidateScopes = true;
     })
-    .UseSystemd()
-    .UseSerilog((hostContext, options) =>
-    {
-        options
-            .ReadFrom.Configuration(hostContext.Configuration,
-                new ConfigurationReaderOptions(typeof(ConsoleLoggerExtensions).Assembly))
-            .ConfigureSystemdConsole()
-            .ConfigureSeq(hostContext);
-    });
+    .UseSystemd();
+
+builder.Logging
+    .ClearProviders()
+    .AddSerilog(
+        new LoggerConfiguration()
+            .ConfigureDefaultLoggerConfiguration(builder.Configuration)
+            .ConfigureSeq(builder.Configuration)
+            .CreateLogger()
+    );
 
 builder.Services
     .AddRequestValidationBehaviour()
