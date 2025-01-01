@@ -78,7 +78,7 @@ jobs:
         with:
           context: .
           file: ./Trace/Dockerfile
-          build-args: |
+          secrets: |
             github_username=${{ github.repository_owner }}
             github_pat=${{ secrets.GITHUB_TOKEN }}
           push: ${{ github.event_name != 'pull_request' }}

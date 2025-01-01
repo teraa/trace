@@ -2,12 +2,13 @@ ARG dotnet_version=9.0
 
 FROM mcr.microsoft.com/dotnet/sdk:$dotnet_version AS build
 WORKDIR /src
-ARG github_username
-ARG github_pat
 
-RUN dotnet nuget add source \
---username $github_username \
---password $github_pat \
+RUN \
+--mount=type=secret,id=github_username \
+--mount=type=secret,id=github_pat \
+dotnet nuget add source \
+--username $(cat /run/secrets/github_username) \
+--password $(cat /run/secrets/github_pat) \
 --store-password-in-clear-text \
 --name github "https://nuget.pkg.github.com/teraa/index.json"
 
