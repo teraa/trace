@@ -16,6 +16,7 @@ dotnet_diagnostic.CA1724.severity = none # Type names should not match namespace
 dotnet_diagnostic.CA1848.severity = none # Use the LoggerMessage delegates
 dotnet_diagnostic.CA2007.severity = none # Do not directly await a Task (ConfigureAwait)
 dotnet_diagnostic.ASP012.severity = none # don't use [controller]
+dotnet_diagnostic.CA1515.severity = none # public API can be made internal
 
 [**/*Controller.cs]
 dotnet_diagnostic.VSTHRD200.severity = none # Use Async suffix for async methods
