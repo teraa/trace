@@ -11,6 +11,7 @@ using Teraa.Shared.Serilog.Systemd;
 using Trace;
 using Trace.Api;
 using Trace.Api.Auth;
+using Trace.Api.Twitch;
 using Trace.Data;
 using Trace.PubSub;
 using Trace.Tmi;
@@ -99,6 +100,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapApi();
 
 await app.InitAsync();
 await app.RunAsync();
