@@ -27,7 +27,7 @@ public class AppFactoryFixture : ICollectionFixture<AppFactory>;
 public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private static readonly Regex s_allowedConnectionString =
-        new(@"\bDatabase=\w+_test\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        new(@"\bDatabase=\w+_tests\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     private readonly UserAccessor _userAccessor = new();
     private Respawner? _respawner;
@@ -67,7 +67,7 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
         if (!s_allowedConnectionString.IsMatch(options.ConnectionString))
         {
             throw new InvalidOperationException(
-                """Tests can only run on databases with a name ending with "_test", please check your appsettings file."""
+                """Tests can only run on databases with a name ending with "_tests", please check your appsettings file."""
             );
         }
 
