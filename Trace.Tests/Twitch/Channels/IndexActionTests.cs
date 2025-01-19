@@ -1,19 +1,20 @@
 ﻿using System.Security.Claims;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.DependencyInjection;
 using Trace.Api;
+using Trace.Api.Twitch.Channels;
 using Trace.Data;
 using Trace.Data.Models.Twitch;
-using Index = Trace.Api.Twitch.Channels.Actions.Index;
 
 namespace Trace.Tests.Twitch.Channels;
 
 [Collection("1")]
-public class IndexTests
+public class IndexActionTests
 {
     private readonly AppFactory _appFactory;
 
-    public IndexTests(AppFactory appFactory)
+    public IndexActionTests(AppFactory appFactory)
     {
         _appFactory = appFactory;
     }
@@ -21,9 +22,10 @@ public class IndexTests
     [Fact]
     public async Task Index_Returns_AllowedChannels()
     {
+        // Arrange
         _appFactory.SetUser([new Claim(AppClaimTypes.ChannelRead, "foo_id")]);
         using var scope = _appFactory.Services.CreateScope();
-        var handler = scope.ServiceProvider.GetRequiredService<Index.Handler>();
+        var handler = scope.ServiceProvider.GetRequiredService<IndexAction.Handler>();
         var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         ctx.TwitchUsers.AddRange([
             new User
@@ -39,14 +41,15 @@ public class IndexTests
         ]);
         await ctx.SaveChangesAsync();
 
-        var request = new Index.Query();
+        var request = new IndexAction.Query();
 
 
+        // Act
         var actionResult = await handler.HandleAsync(request);
 
 
-        var results = actionResult.Should().BeOkObjectResult<List<Index.Result>>().Subject;
-        results.Should().HaveCount(1);
-        results[0].Should().BeEquivalentTo(new Index.Result("foo_id", "foo_login"));
+        // Assert
+        actionResult.Should().BeOfType<Ok<List<IndexAction.Result>>>()
+            .Subject.Value.Should().BeEquivalentTo(new List<IndexAction.Result> {new("foo_id", "foo_login")});
     }
 }

@@ -2,16 +2,14 @@ using FluentValidation;
 using Immediate.Handlers.Shared;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Trace.Api.Auth;
 using Trace.Data;
-using Results = Teraa.Shared.AspNetCore.Results;
 
-namespace Trace.Api.Twitch.Messages.Actions;
+namespace Trace.Api.Twitch.Messages;
 
 [Handler]
-public static partial class Index
+public static partial class IndexAction
 {
     public record Query(
         string ChannelId,
@@ -40,7 +38,7 @@ public static partial class Index
         string Content);
 
 
-    private static async ValueTask<IActionResult> HandleAsync(
+    private static async ValueTask<IResult> HandleAsync(
         Query request,
         AppDbContext ctx,
         IUserAccessor userAccessor,
@@ -50,7 +48,7 @@ public static partial class Index
         var authzResult =
             await authorizationService.AuthorizeAsync(userAccessor.User, request.ChannelId, AppAuthzPolicies.Channel);
         if (!authzResult.Succeeded)
-            return new ForbidResult();
+            return Results.Forbid();
 
         var query = ctx.TmiMessages
             .Where(x => x.ChannelId == request.ChannelId)
@@ -69,7 +67,7 @@ public static partial class Index
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (beforeTimestamp is null)
-                return Results.BadRequestDetails("Invalid before ID.");
+                return Results.Problem("Invalid before ID.", statusCode: StatusCodes.Status400BadRequest);
 
             int offset = await query
                 .Where(x => x.Timestamp == beforeTimestamp)
@@ -97,6 +95,6 @@ public static partial class Index
                 x.Content))
             .ToListAsync(cancellationToken);
 
-        return new OkObjectResult(results);
+        return Results.Ok(results);
     }
 }

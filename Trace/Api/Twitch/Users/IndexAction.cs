@@ -3,16 +3,14 @@ using FluentValidation;
 using Immediate.Handlers.Shared;
 using JetBrains.Annotations;
 using LinqKit;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Trace.Data;
 using Trace.Data.Models.Twitch;
-using Results = Teraa.Shared.AspNetCore.Results;
 
-namespace Trace.Api.Twitch.Users.Actions;
+namespace Trace.Api.Twitch.Users;
 
 [Handler]
-public static partial class Index
+public static partial class IndexAction
 {
     public record Query(
         IReadOnlyList<string>? Ids = null,
@@ -46,7 +44,7 @@ public static partial class Index
         DateTimeOffset FirstSeen,
         DateTimeOffset LastSeen);
 
-    private static async ValueTask<IActionResult> HandleAsync(
+    private static async ValueTask<IResult> HandleAsync(
         Query request,
         AppDbContext ctx,
         CancellationToken cancellationToken)
@@ -99,7 +97,7 @@ public static partial class Index
                 }
                 catch (Npgsql.PostgresException ex) when (ex.SqlState == "2201B")
                 {
-                    return Results.BadRequestDetails("Invalid pattern.");
+                    return Results.Problem("Invalid pattern.", statusCode: StatusCodes.Status400BadRequest);
                 }
 
                 predicate = predicate.Or(x => userIds.Contains(x.Id));
@@ -117,7 +115,7 @@ public static partial class Index
                 }
                 catch (Npgsql.PostgresException ex) when (ex.SqlState == "2201B")
                 {
-                    return Results.BadRequestDetails("Invalid pattern.");
+                    return Results.Problem("Invalid pattern.", statusCode: StatusCodes.Status400BadRequest);
                 }
 
                 predicate = predicate.Or(x => userLogins.Contains(x.Login));
@@ -129,6 +127,6 @@ public static partial class Index
             .Select(x => new Result(x.Id, x.Login, x.FirstSeen, x.LastSeen))
             .ToListAsync(cancellationToken);
 
-        return new OkObjectResult(results);
+        return Results.Ok(results);
     }
 }

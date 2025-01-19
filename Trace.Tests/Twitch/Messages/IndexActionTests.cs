@@ -1,32 +1,33 @@
 ﻿using System.Security.Claims;
 using FluentAssertions;
 using FluentAssertions.Primitives;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.DependencyInjection;
 using Trace.Api;
+using Trace.Api.Twitch.Messages;
 using Trace.Data;
 using Trace.Data.Models.Tmi;
-using Index = Trace.Api.Twitch.Messages.Actions.Index;
 
 namespace Trace.Tests.Twitch.Messages;
 
 [Collection("1")]
-public sealed class IndexTests : IAsyncLifetime, IDisposable
+public sealed class IndexActionTests : IAsyncLifetime, IDisposable
 {
     private const string s_channelId = "channel.id";
 
     private readonly AppFactory _appFactory;
     private readonly IServiceScope _scope;
-    private readonly Index.Handler _handler;
+    private readonly IndexAction.Handler _handler;
 #pragma warning disable CA2213
     private readonly AppDbContext _ctx;
 #pragma warning restore CA2213
 
-    public IndexTests(AppFactory appFactory)
+    public IndexActionTests(AppFactory appFactory)
     {
         _appFactory = appFactory;
         _scope = _appFactory.Services.CreateScope();
-        _handler = _scope.ServiceProvider.GetRequiredService<Index.Handler>();
+        _handler = _scope.ServiceProvider.GetRequiredService<IndexAction.Handler>();
         _ctx = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
         _appFactory.SetUser([new Claim(AppClaimTypes.ChannelRead, ChannelId)]);
     }
@@ -43,7 +44,7 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
         Timestamp = DateTimeOffset.MinValue,
     };
 
-    private Index.Query Query { get; } = new(s_channelId);
+    private IndexAction.Query Query { get; } = new(s_channelId);
 
     public Task InitializeAsync()
     {
@@ -63,16 +64,17 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
     [Fact]
     public async Task Forbidden_WhenUnauthorized()
     {
-        var request = new Index.Query("foo");
+        var request = new IndexAction.Query("foo");
 
         var actionResult = await _handler.HandleAsync(request);
 
-        actionResult.Should().BeOfType<ForbidResult>();
+        actionResult.Should().BeOfType<ForbidHttpResult>();
     }
 
     [Fact]
     public async Task Returns_CorrectChannelMessages()
     {
+        // Arrange
         var messages = new List<Message>
         {
             Template with {Id = 1},
@@ -91,14 +93,16 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
         var response = await _handler.HandleAsync(Query);
 
 
-        response.Should().BeResults()
-            .Subject.Select(x => x.Id)
+        // Assert
+        response.Should().BeOkResult().Subject.Value!
+            .Select(x => x.Id)
             .Should().BeEquivalentTo([1, 4]);
     }
 
     [Fact]
     public async Task QueryWithBefore_RespectsTimestampNotId()
     {
+        // Arrange
         var start = DateTimeOffset.MinValue;
         var second = new TimeSpan(0, 0, 1);
 
@@ -121,15 +125,16 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
         var response = await _handler.HandleAsync(query);
 
 
-        var results = response.Should().BeResults().Subject;
-
-        results.Select(x => x.Id)
+        // Assert
+        response.Should().BeOkResult().Subject.Value!
+            .Select(x => x.Id)
             .Should().Equal([3, 5, 1]);
     }
 
     [Fact]
     public async Task QueryWithInvalidBefore_ReturnsBadRequest()
     {
+        // Arrange
         var messages = new List<Message>
         {
             Template with {Id = 1},
@@ -145,12 +150,16 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
         // Act
         var response = await _handler.HandleAsync(query);
 
-        response.Should().BeOfType<BadRequestObjectResult>();
+
+        // Assert
+        response.Should().BeOfType<ProblemHttpResult>().Subject
+            .StatusCode.Should().Be(StatusCodes.Status400BadRequest);
     }
 
     [Fact]
     public async Task QueryWithAuthorId_ReturnsOnlyMessagesByAuthorId()
     {
+        // Arrange
         var messages = new List<Message>
         {
             Template with {Id = 1, AuthorId = "1"}, // target
@@ -171,7 +180,8 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
         var response = await _handler.HandleAsync(query);
 
 
-        var results = response.Should().BeResults().Subject;
+        // Assert
+        var results = response.Should().BeOkResult().Subject.Value!;
 
         results.Select(x => x.AuthorId)
             .Should().AllBe(authorId);
@@ -183,6 +193,7 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
     [Fact]
     public async Task QueryWithBeforeTimestamp_ReturnsOnlyMessagesBeforeTimestamp()
     {
+        // Arrange
         var timestamp = DateTimeOffset.MinValue;
         var second = TimeSpan.FromSeconds(1);
 
@@ -203,17 +214,18 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
         var response = await _handler.HandleAsync(query);
 
 
-        response.Should().BeResults()
-            .Subject.Select(x => x.Id)
+        // Assert
+        response.Should().BeOkResult().Subject.Value!
+            .Select(x => x.Id)
             .Should().BeEquivalentTo([1, 2]);
     }
 }
 
 file static class Extensions
 {
-    public static AndWhichConstraint<ObjectAssertions, List<Index.Result>> BeResults(
+    public static AndWhichConstraint<ObjectAssertions, Ok<List<IndexAction.Result>>> BeOkResult(
         this ObjectAssertions assertions)
     {
-        return assertions.BeOfType<OkObjectResult>().Subject.Value.Should().BeOfType<List<Index.Result>>();
+        return assertions.BeOfType<Ok<List<IndexAction.Result>>>();
     }
 }

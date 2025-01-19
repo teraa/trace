@@ -1,13 +1,12 @@
 using Immediate.Handlers.Shared;
 using JetBrains.Annotations;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Trace.Data;
 
-namespace Trace.Api.Twitch.Channels.Actions;
+namespace Trace.Api.Twitch.Channels;
 
 [Handler]
-public static partial class Index
+public static partial class IndexAction
 {
     public record Query;
 
@@ -17,7 +16,7 @@ public static partial class Index
         string Login
     );
 
-    private static async ValueTask<IActionResult> HandleAsync(
+    private static async ValueTask<IResult> HandleAsync(
         Query _,
         AppDbContext ctx,
         IUserAccessor userAccessor,
@@ -39,6 +38,6 @@ public static partial class Index
             .Select(x => new Result(x.Id, x.Login))
             .ToList();
 
-        return new OkObjectResult(results);
+        return Results.Ok(results);
     }
 }

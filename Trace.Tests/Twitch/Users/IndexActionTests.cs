@@ -1,28 +1,29 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Primitives;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.DependencyInjection;
+using Trace.Api.Twitch.Users;
 using Trace.Data;
 using Trace.Data.Models.Twitch;
-using Index = Trace.Api.Twitch.Users.Actions.Index;
 
 namespace Trace.Tests.Twitch.Users;
 
 [Collection("1")]
-public sealed class IndexTests : IAsyncLifetime, IDisposable
+public sealed class IndexActionTests : IAsyncLifetime, IDisposable
 {
     private readonly AppFactory _appFactory;
     private readonly IServiceScope _scope;
-    private readonly Index.Handler _handler;
+    private readonly IndexAction.Handler _handler;
 #pragma warning disable CA2213
     private readonly AppDbContext _ctx;
 #pragma warning restore CA2213
 
-    public IndexTests(AppFactory appFactory)
+    public IndexActionTests(AppFactory appFactory)
     {
         _appFactory = appFactory;
         _scope = _appFactory.Services.CreateScope();
-        _handler = _scope.ServiceProvider.GetRequiredService<Index.Handler>();
+        _handler = _scope.ServiceProvider.GetRequiredService<IndexAction.Handler>();
         _ctx = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
     }
 
@@ -61,18 +62,18 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
         _ctx.TwitchUsers.AddRange(users);
         await _ctx.SaveChangesAsync();
 
-        var query = new Index.Query(Ids: ["1", "3"]);
+        var query = new IndexAction.Query(Ids: ["1", "3"]);
 
 
         // Act
         var response = await _handler.HandleAsync(query);
 
 
-        response.Should().BeResults()
-            .Subject.Should().HaveCount(3)
+        response.Should().BeOkResults()
+            .Subject.Value.Should().HaveCount(3)
             .And.BeEquivalentTo(
                 users.Where((_, i) => i != 1)
-                    .Select(x => new Index.Result(x.Id, x.Login, x.FirstSeen, x.LastSeen)));
+                    .Select(x => new IndexAction.Result(x.Id, x.Login, x.FirstSeen, x.LastSeen)));
     }
 
     [Fact]
@@ -89,18 +90,18 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
         _ctx.TwitchUsers.AddRange(users);
         await _ctx.SaveChangesAsync();
 
-        var query = new Index.Query(Logins: ["foo", "qux"]);
+        var query = new IndexAction.Query(Logins: ["foo", "qux"]);
 
 
         // Act
         var response = await _handler.HandleAsync(query);
 
 
-        response.Should().BeResults()
-            .Subject.Should().HaveCount(3)
+        response.Should().BeOkResults()
+            .Subject.Value.Should().HaveCount(3)
             .And.BeEquivalentTo(
                 users.Where((_, i) => i != 1)
-                    .Select(x => new Index.Result(x.Id, x.Login, x.FirstSeen, x.LastSeen)));
+                    .Select(x => new IndexAction.Result(x.Id, x.Login, x.FirstSeen, x.LastSeen)));
     }
 
     [Fact]
@@ -116,18 +117,18 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
         _ctx.TwitchUsers.AddRange(users);
         await _ctx.SaveChangesAsync();
 
-        var query = new Index.Query(LoginPattern: "^BA");
+        var query = new IndexAction.Query(LoginPattern: "^BA");
 
 
         // Act
         var response = await _handler.HandleAsync(query);
 
 
-        response.Should().BeResults()
-            .Subject.Should().HaveCount(2)
+        response.Should().BeOkResults()
+            .Subject.Value.Should().HaveCount(2)
             .And.BeEquivalentTo(
                 users.Skip(1)
-                    .Select(x => new Index.Result(x.Id, x.Login, x.FirstSeen, x.LastSeen)));
+                    .Select(x => new IndexAction.Result(x.Id, x.Login, x.FirstSeen, x.LastSeen)));
     }
 
     [Fact]
@@ -144,18 +145,18 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
         _ctx.TwitchUsers.AddRange(users);
         await _ctx.SaveChangesAsync();
 
-        var query = new Index.Query(Logins: ["foo"], Recursive: true);
+        var query = new IndexAction.Query(Logins: ["foo"], Recursive: true);
 
 
         // Act
         var response = await _handler.HandleAsync(query);
 
 
-        response.Should().BeResults()
-            .Subject.Should().HaveCount(3)
+        response.Should().BeOkResults()
+            .Subject.Value.Should().HaveCount(3)
             .And.BeEquivalentTo(
                 users.Where((_, i) => i != 1)
-                    .Select(x => new Index.Result(x.Id, x.Login, x.FirstSeen, x.LastSeen)));
+                    .Select(x => new IndexAction.Result(x.Id, x.Login, x.FirstSeen, x.LastSeen)));
     }
 
     [Fact]
@@ -172,52 +173,52 @@ public sealed class IndexTests : IAsyncLifetime, IDisposable
         _ctx.TwitchUsers.AddRange(users);
         await _ctx.SaveChangesAsync();
 
-        var query = new Index.Query(LoginPattern: "^f", Recursive: true);
+        var query = new IndexAction.Query(LoginPattern: "^f", Recursive: true);
 
 
         // Act
         var response = await _handler.HandleAsync(query);
 
 
-        response.Should().BeResults()
-            .Subject.Should().HaveCount(3)
+        response.Should().BeOkResults()
+            .Subject.Value.Should().HaveCount(3)
             .And.BeEquivalentTo(
                 users.Where((_, i) => i != 1)
-                    .Select(x => new Index.Result(x.Id, x.Login, x.FirstSeen, x.LastSeen)));
+                    .Select(x => new IndexAction.Result(x.Id, x.Login, x.FirstSeen, x.LastSeen)));
     }
 
     [Fact]
     public async Task QueryWithInvalidPattern_ReturnsBadRequest()
     {
-        var query = new Index.Query(LoginPattern: "[z-a]");
+        var query = new IndexAction.Query(LoginPattern: "[z-a]");
 
 
         // Act
         var response = await _handler.HandleAsync(query);
 
 
-        response.Should().BeOfType<BadRequestObjectResult>();
+        response.Should().BeOfType<ProblemHttpResult>().Subject.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
     }
 
     [Fact]
     public async Task QueryWithRecursiveInvalidPattern_ReturnsBadRequest()
     {
-        var query = new Index.Query(LoginPattern: "[z-a]", Recursive: true);
+        var query = new IndexAction.Query(LoginPattern: "[z-a]", Recursive: true);
 
 
         // Act
         var response = await _handler.HandleAsync(query);
 
 
-        response.Should().BeOfType<BadRequestObjectResult>();
+        response.Should().BeOfType<ProblemHttpResult>().Subject.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
     }
 }
 
 file static class Extensions
 {
-    public static AndWhichConstraint<ObjectAssertions, List<Index.Result>> BeResults(
+    public static AndWhichConstraint<ObjectAssertions, Ok<List<IndexAction.Result>>> BeOkResults(
         this ObjectAssertions assertions)
     {
-        return assertions.BeOfType<OkObjectResult>().Subject.Value.Should().BeOfType<List<Index.Result>>();
+        return assertions.BeOfType<Ok<List<IndexAction.Result>>>();
     }
 }
