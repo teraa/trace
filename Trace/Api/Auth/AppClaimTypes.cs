@@ -1,4 +1,4 @@
-namespace Trace.Api;
+namespace Trace.Api.Auth;
 
 public static class AppClaimTypes
 {

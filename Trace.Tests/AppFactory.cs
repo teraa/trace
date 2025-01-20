@@ -14,6 +14,7 @@ using Respawn.Graph;
 using Teraa.Twitch.PubSub;
 using Teraa.Twitch.Tmi;
 using Trace.Api;
+using Trace.Api.Auth;
 using Trace.Data;
 using Trace.PubSub;
 using Trace.Tmi;

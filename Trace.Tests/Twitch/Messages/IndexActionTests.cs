@@ -4,7 +4,7 @@ using FluentAssertions.Primitives;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.DependencyInjection;
-using Trace.Api;
+using Trace.Api.Auth;
 using Trace.Api.Twitch.Messages;
 using Trace.Data;
 using Trace.Data.Models.Tmi;

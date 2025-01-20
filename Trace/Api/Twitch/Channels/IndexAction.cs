@@ -1,6 +1,7 @@
 using Immediate.Handlers.Shared;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using Trace.Api.Auth;
 using Trace.Data;
 
 namespace Trace.Api.Twitch.Channels;
