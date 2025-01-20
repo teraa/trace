@@ -1,7 +1,5 @@
 using FluentValidation;
 using JetBrains.Annotations;
-using Microsoft.AspNetCore.Authentication;
-using Teraa.Shared.Configuration;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
@@ -25,30 +23,5 @@ public class TwitchAuthOptions
             RuleFor(x => x.RedirectUri).NotEmpty();
             RuleFor(x => x.CallbackPath).NotEmpty();
         }
-    }
-}
-
-public static class AuthenticationBuilderExtensions
-{
-    public static AuthenticationBuilder AddTwitchAuth(this AuthenticationBuilder builder, IConfiguration configuration)
-    {
-        builder
-            .AddTwitch(authOptions =>
-            {
-                var twitchOptions = configuration.GetValidatedRequiredOptions([new TwitchAuthOptions.Validator()], "Twitch");
-                authOptions.ClientId = twitchOptions.ClientId;
-                authOptions.ClientSecret = twitchOptions.ClientSecret;
-                authOptions.CallbackPath = twitchOptions.CallbackPath;
-
-                authOptions.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
-                authOptions.CorrelationCookie.Name = "Correlation.";
-
-                // options.SaveTokens = true;
-            })
-            .Services
-            .AddValidatedOptions<TwitchAuthOptions>(configSectionPath: "Twitch")
-            ;
-
-        return builder;
     }
 }
