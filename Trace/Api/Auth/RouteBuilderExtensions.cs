@@ -38,7 +38,7 @@ public static class RouteBuilderExtensions
             Results<
                 RedirectHttpResult,
                 BadRequest,
-                BadRequest<Microsoft.AspNetCore.Identity.SignInResult>,
+                BadRequest<SignInResult>,
                 ForbidHttpResult
             >
         > (
