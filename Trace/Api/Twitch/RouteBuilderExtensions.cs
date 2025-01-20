@@ -4,15 +4,6 @@ namespace Trace.Api.Twitch;
 
 public static class RouteBuilderExtensions
 {
-    public static RouteGroupBuilder MapApi(this IEndpointRouteBuilder endpoints)
-    {
-        var group = endpoints.MapGroup("/api");
-
-        group.MapTwitch();
-
-        return group;
-    }
-
     public static RouteGroupBuilder MapTwitch(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints

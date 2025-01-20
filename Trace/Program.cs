@@ -4,14 +4,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Serilog;
 using Teraa.Shared.AspNetCore;
-using Teraa.Shared.AspNetCore.Controllers;
+using Teraa.Shared.AspNetCore.MinimalApis;
 using Teraa.Shared.Configuration.Vault;
 using Teraa.Shared.Serilog.Seq;
 using Teraa.Shared.Serilog.Systemd;
 using Trace;
 using Trace.Api;
 using Trace.Api.Auth;
-using Trace.Api.Twitch;
 using Trace.Data;
 using Trace.PubSub;
 using Trace.Tmi;
@@ -40,14 +39,10 @@ builder.Logging
     );
 
 builder.Services
+    // .AddEndpointsApiExplorer()
+    .AddCors()
     .AddRequestValidationBehaviour()
     .AddValidatorsFromAssemblyContaining<Program>()
-    .AddControllers(options =>
-    {
-        options.ModelValidatorProviders.Clear();
-        options.ModelMetadataDetailsProviders.Add(new EmptyStringMetadataProvider());
-    })
-    .Services
     .AddDb()
     .AddIdentity<AppUser, IdentityRole>(options =>
     {
@@ -99,7 +94,6 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
 app.MapApi();
 
 await app.InitAsync();
