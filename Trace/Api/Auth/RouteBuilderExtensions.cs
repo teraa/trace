@@ -49,7 +49,7 @@ public static class RouteBuilderExtensions
             ClaimsPrincipal claimsPrincipal
         ) =>
         {
-            var logger = loggerFactory.CreateLogger(typeof(RouteBuilderExtensions).FullName!);
+            var logger = loggerFactory.CreateLogger(typeof(RouteBuilderExtensions).FullName!); // TODO
             var info = await signInManager.GetExternalLoginInfoAsync();
             if (info is null)
             {
