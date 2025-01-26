@@ -9,20 +9,17 @@ using Trace.Data.Models.Twitch;
 
 namespace Trace.Tests.Twitch.Users;
 
-[Collection("1")]
-public sealed class IndexActionTests : IAsyncLifetime, IDisposable
+public sealed class IndexActionTests : AppTests, IDisposable
 {
-    private readonly AppFactory _appFactory;
     private readonly IServiceScope _scope;
     private readonly IndexAction.Handler _handler;
 #pragma warning disable CA2213
     private readonly AppDbContext _ctx;
 #pragma warning restore CA2213
 
-    public IndexActionTests(AppFactory appFactory)
+    public IndexActionTests(AppFactory appFactory) : base(appFactory)
     {
-        _appFactory = appFactory;
-        _scope = _appFactory.Services.CreateScope();
+        _scope = CreateScope();
         _handler = _scope.ServiceProvider.GetRequiredService<IndexAction.Handler>();
         _ctx = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
     }
@@ -32,16 +29,6 @@ public sealed class IndexActionTests : IAsyncLifetime, IDisposable
         FirstSeen = DateTimeOffset.MinValue,
         LastSeen = DateTimeOffset.MinValue,
     };
-
-    public Task InitializeAsync()
-    {
-        return Task.CompletedTask;
-    }
-
-    public async Task DisposeAsync()
-    {
-        await _appFactory.ResetDatabaseAsync();
-    }
 
     public void Dispose()
     {

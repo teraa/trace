@@ -6,20 +6,12 @@ using Trace.Data.Models.Twitch;
 
 namespace Trace.Tests;
 
-[Collection("1")]
-public class Test1
+public class Test1(AppFactory appFactory) : AppTests(appFactory)
 {
-    private readonly AppFactory _appFactory;
-
-    public Test1(AppFactory appFactory)
-    {
-        _appFactory = appFactory;
-    }
-
     [Fact]
     public async Task TestAsync()
     {
-        using var scope = _appFactory.Services.CreateScope();
+        using var scope = CreateScope();
         var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         ctx.TwitchUsers.Add(new User
@@ -33,7 +25,7 @@ public class Test1
         var count = await ctx.TwitchUsers.CountAsync();
         count.Should().Be(1);
 
-        await _appFactory.ResetDatabaseAsync();
+        await AppFactory.ResetDatabaseAsync();
 
         count = await ctx.TwitchUsers.CountAsync();
         count.Should().Be(0);

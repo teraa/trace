@@ -21,8 +21,24 @@ using Trace.Tmi;
 
 namespace Trace.Tests;
 
-[CollectionDefinition("1")]
-public class AppFactoryFixture : ICollectionFixture<AppFactory>;
+
+[Collection(AppFactoryFixture.CollectionName)]
+public abstract class AppTests(AppFactory appFactory) : IAsyncLifetime
+{
+    protected readonly AppFactory AppFactory = appFactory;
+
+    public IServiceScope CreateScope() => AppFactory.Services.CreateScope();
+
+    public Task InitializeAsync() => AppFactory.InitializeAsync();
+
+    public Task DisposeAsync() => AppFactory.ResetDatabaseAsync();
+}
+
+[CollectionDefinition(CollectionName)]
+public class AppFactoryFixture : ICollectionFixture<AppFactory>
+{
+    public const string CollectionName = "Default";
+}
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime

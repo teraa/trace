@@ -11,26 +11,23 @@ using Trace.Data.Models.Tmi;
 
 namespace Trace.Tests.Twitch.Messages;
 
-[Collection("1")]
-public sealed class IndexActionTests : IAsyncLifetime, IDisposable
+public sealed class IndexActionTests : AppTests, IDisposable
 {
     private const string s_channelId = "channel.id";
 
-    private readonly AppFactory _appFactory;
     private readonly IServiceScope _scope;
     private readonly IndexAction.Handler _handler;
 #pragma warning disable CA2213
     private readonly AppDbContext _ctx;
 #pragma warning restore CA2213
 
-    public IndexActionTests(AppFactory appFactory)
+    public IndexActionTests(AppFactory appFactory) : base(appFactory)
     {
-        _appFactory = appFactory;
-        _scope = _appFactory.Services.CreateScope();
+        _scope = CreateScope();
         _handler = _scope.ServiceProvider.GetRequiredService<IndexAction.Handler>();
         _ctx = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        _appFactory.UserAccessorMock.Setup(x => x.User)
+        AppFactory.UserAccessorMock.Setup(x => x.User)
             .Returns(new ClaimsPrincipal(new ClaimsIdentity([new Claim(AppClaimTypes.ChannelRead, ChannelId)])));
     }
 
@@ -47,16 +44,6 @@ public sealed class IndexActionTests : IAsyncLifetime, IDisposable
     };
 
     private IndexAction.Query Query { get; } = new(s_channelId);
-
-    public Task InitializeAsync()
-    {
-        return Task.CompletedTask;
-    }
-
-    public async Task DisposeAsync()
-    {
-        await _appFactory.ResetDatabaseAsync();
-    }
 
     public void Dispose()
     {

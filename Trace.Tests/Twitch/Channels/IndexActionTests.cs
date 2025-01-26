@@ -9,24 +9,17 @@ using Trace.Data.Models.Twitch;
 
 namespace Trace.Tests.Twitch.Channels;
 
-[Collection("1")]
-public class IndexActionTests
+public class IndexActionTests(AppFactory appFactory) : AppTests(appFactory)
 {
-    private readonly AppFactory _appFactory;
-
-    public IndexActionTests(AppFactory appFactory)
-    {
-        _appFactory = appFactory;
-    }
 
     [Fact]
     public async Task Index_Returns_AllowedChannels()
     {
         // Arrange
-        _appFactory.UserAccessorMock.Setup(x => x.User)
+        AppFactory.UserAccessorMock.Setup(x => x.User)
             .Returns(new ClaimsPrincipal(new ClaimsIdentity([new Claim(AppClaimTypes.ChannelRead, "foo_id")])));
 
-        using var scope = _appFactory.Services.CreateScope();
+        using var scope = CreateScope();
         var handler = scope.ServiceProvider.GetRequiredService<IndexAction.Handler>();
         var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         ctx.TwitchUsers.AddRange([
