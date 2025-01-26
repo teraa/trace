@@ -4,7 +4,7 @@ using Command = Trace.Common.UpdateUsers.Command;
 using Handler = Trace.Common.UpdateUsers.Handler;
 using User = Trace.Common.UpdateUsers.Command.User;
 
-namespace Trace.Tests;
+namespace Trace.Tests.Twitch;
 
 public sealed class UpdateUsersTests: AppTests
 {
