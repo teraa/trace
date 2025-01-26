@@ -17,7 +17,7 @@ public static class RouteBuilderExtensions
         return group;
     }
 
-    public static RouteGroupBuilder MapChannels(this IEndpointRouteBuilder endpoints)
+    private static RouteGroupBuilder MapChannels(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/channels");
 
@@ -30,7 +30,7 @@ public static class RouteBuilderExtensions
         return group;
     }
 
-    public static RouteGroupBuilder MapMessages(this IEndpointRouteBuilder endpoints)
+    private static RouteGroupBuilder MapMessages(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/messages");
 
@@ -44,7 +44,7 @@ public static class RouteBuilderExtensions
         return group;
     }
 
-    public static RouteGroupBuilder MapUsers(this IEndpointRouteBuilder endpoints)
+    private static RouteGroupBuilder MapUsers(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints
             .MapGroup("/users")
