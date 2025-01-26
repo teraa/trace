@@ -68,7 +68,7 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
         if (!s_allowedConnectionString.IsMatch(options.ConnectionString))
         {
             throw new InvalidOperationException(
-                """Tests can only run on databases with a name ending with "_tests", please check your appsettings file."""
+                """Tests can only run on databases with a name ending with "_tests", please check your connection string."""
             );
         }
 
