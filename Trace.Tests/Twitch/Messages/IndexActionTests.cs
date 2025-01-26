@@ -29,7 +29,9 @@ public sealed class IndexActionTests : IAsyncLifetime, IDisposable
         _scope = _appFactory.Services.CreateScope();
         _handler = _scope.ServiceProvider.GetRequiredService<IndexAction.Handler>();
         _ctx = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        _appFactory.SetUser([new Claim(AppClaimTypes.ChannelRead, ChannelId)]);
+
+        _appFactory.UserAccessorMock.Setup(x => x.User)
+            .Returns(new ClaimsPrincipal(new ClaimsIdentity([new Claim(AppClaimTypes.ChannelRead, ChannelId)])));
     }
 
     private static string ChannelId => s_channelId;

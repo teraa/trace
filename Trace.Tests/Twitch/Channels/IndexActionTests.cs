@@ -23,7 +23,9 @@ public class IndexActionTests
     public async Task Index_Returns_AllowedChannels()
     {
         // Arrange
-        _appFactory.SetUser([new Claim(AppClaimTypes.ChannelRead, "foo_id")]);
+        _appFactory.UserAccessorMock.Setup(x => x.User)
+            .Returns(new ClaimsPrincipal(new ClaimsIdentity([new Claim(AppClaimTypes.ChannelRead, "foo_id")])));
+
         using var scope = _appFactory.Services.CreateScope();
         var handler = scope.ServiceProvider.GetRequiredService<IndexAction.Handler>();
         var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();

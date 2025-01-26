@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using Moq;
 using Npgsql;
 using Respawn;
 using Respawn.Graph;
@@ -30,8 +30,9 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
     private static readonly Regex s_allowedConnectionString =
         new(@"\bDatabase=\w+_tests\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-    private readonly UserAccessor _userAccessor = new();
     private Respawner? _respawner;
+
+    public Mock<IUserAccessor> UserAccessorMock { get; private set; } = null!;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -57,7 +58,7 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
             services
                 .RemoveAll<IUserAccessor>()
-                .AddSingleton<IUserAccessor>(_userAccessor);
+                .AddTransient<IUserAccessor>(_ => UserAccessorMock.Object);
         });
     }
 
@@ -88,31 +89,20 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
         await _respawner.ResetAsync(connection);
     }
 
-    public void SetUser(ClaimsPrincipal user) => _userAccessor.User = user;
-
-    public void SetUser(IEnumerable<Claim> claims) =>
-        _userAccessor.User = new ClaimsPrincipal(new ClaimsIdentity(claims));
-
     public Task InitializeAsync()
     {
+        UserAccessorMock = new Mock<IUserAccessor>(MockBehavior.Strict);
+
         return Task.CompletedTask;
     }
 
     public new async Task DisposeAsync()
     {
-        // In case something else forgot to reset DB, this will clean after all tests are done.
-        await ResetDatabaseAsync();
-    }
-}
+        // Delete the database after all tests have completed.
+        using var scope = Services.CreateScope();
+        var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-public class UserAccessor : IUserAccessor
-{
-    private ClaimsPrincipal? _user;
-
-    public ClaimsPrincipal User
-    {
-        get => _user ?? throw new InvalidOperationException("User not set");
-        set => _user = value;
+        await ctx.Database.EnsureDeletedAsync();
     }
 }
 
