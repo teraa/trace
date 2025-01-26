@@ -1,10 +1,7 @@
 ﻿using System.Security.Claims;
-using FluentAssertions;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.Extensions.DependencyInjection;
 using Trace.Api.Auth;
 using Trace.Api.Twitch.Channels;
-using Trace.Data;
 using Trace.Data.Models.Twitch;
 
 namespace Trace.Tests.Twitch.Channels;

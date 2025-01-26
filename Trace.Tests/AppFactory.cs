@@ -4,7 +4,6 @@ using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -15,7 +14,6 @@ using Teraa.Twitch.PubSub;
 using Teraa.Twitch.Tmi;
 using Trace.Api;
 using Trace.Api.Auth;
-using Trace.Data;
 using Trace.PubSub;
 using Trace.Tmi;
 

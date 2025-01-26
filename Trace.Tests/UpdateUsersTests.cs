@@ -1,8 +1,5 @@
 ﻿using System.Globalization;
-using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Trace.Data;
 using Command = Trace.Common.UpdateUsers.Command;
 using Handler = Trace.Common.UpdateUsers.Handler;
 using User = Trace.Common.UpdateUsers.Command.User;

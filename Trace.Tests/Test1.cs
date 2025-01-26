@@ -1,7 +1,4 @@
-﻿using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Trace.Data;
+﻿using Microsoft.EntityFrameworkCore;
 using Trace.Data.Models.Twitch;
 
 namespace Trace.Tests;

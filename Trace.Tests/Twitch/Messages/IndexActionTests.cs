@@ -1,11 +1,9 @@
 ﻿using System.Security.Claims;
-using FluentAssertions;
 using FluentAssertions.Primitives;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Trace.Api.Auth;
 using Trace.Api.Twitch.Messages;
-using Trace.Data;
 using Trace.Data.Models.Tmi;
 
 namespace Trace.Tests.Twitch.Messages;

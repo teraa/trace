@@ -1,9 +1,7 @@
-﻿using FluentAssertions;
-using FluentAssertions.Primitives;
+﻿using FluentAssertions.Primitives;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Trace.Api.Twitch.Users;
-using Trace.Data;
 using Trace.Data.Models.Twitch;
 
 namespace Trace.Tests.Twitch.Users;
