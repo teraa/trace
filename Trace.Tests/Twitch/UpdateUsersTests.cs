@@ -6,12 +6,8 @@ using User = Trace.Common.UpdateUsers.Command.User;
 
 namespace Trace.Tests.Twitch;
 
-public sealed class UpdateUsersTests: AppTests
+public sealed class UpdateUsersTests(AppFactory appFactory) : AppTests(appFactory)
 {
-    public UpdateUsersTests(AppFactory appFactory) : base(appFactory)
-    {
-    }
-
     [Fact]
     public async Task OneUser_InsertsOne()
     {
