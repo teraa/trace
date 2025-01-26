@@ -2,8 +2,8 @@
 using MediatR;
 using Teraa.Twitch.PubSub.Messages.ChatModeratorActions;
 using Teraa.Twitch.PubSub.Notifications;
+using Trace.Common;
 using Trace.Data;
-using Trace.Features.Users;
 using Timeout = Teraa.Twitch.PubSub.Messages.ChatModeratorActions.Timeout;
 
 

@@ -3,7 +3,7 @@ using Immediate.Handlers.Shared;
 using Microsoft.EntityFrameworkCore;
 using Trace.Data;
 
-namespace Trace.Features.Users;
+namespace Trace.Common;
 
 [Handler]
 public static partial class UpdateUsers

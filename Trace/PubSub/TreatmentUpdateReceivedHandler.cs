@@ -1,9 +1,9 @@
 ﻿using JetBrains.Annotations;
 using MediatR;
 using Teraa.Twitch.PubSub.Notifications;
+using Trace.Common;
 using Trace.Data;
 using Trace.Data.Models.Pubsub;
-using Trace.Features.Users;
 
 namespace Trace.PubSub;
 

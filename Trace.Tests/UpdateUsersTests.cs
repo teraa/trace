@@ -3,9 +3,9 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Trace.Data;
-using Handler = Trace.Features.Users.UpdateUsers.Handler;
-using Command = Trace.Features.Users.UpdateUsers.Command;
-using User = Trace.Features.Users.UpdateUsers.Command.User;
+using Command = Trace.Common.UpdateUsers.Command;
+using Handler = Trace.Common.UpdateUsers.Handler;
+using User = Trace.Common.UpdateUsers.Command.User;
 
 namespace Trace.Tests;
 

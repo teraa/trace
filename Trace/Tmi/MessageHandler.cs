@@ -3,8 +3,8 @@ using JetBrains.Annotations;
 using MediatR;
 using Teraa.Irc;
 using Teraa.Twitch.Tmi.Notifications;
+using Trace.Common;
 using Trace.Data;
-using Trace.Features.Users;
 
 namespace Trace.Tmi;
 
