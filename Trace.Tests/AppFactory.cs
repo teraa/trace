@@ -14,11 +14,11 @@ using Teraa.Twitch.PubSub;
 using Teraa.Twitch.Tmi;
 using Trace.Api;
 using Trace.Api.Auth;
+using Trace.Migrations;
 using Trace.PubSub;
 using Trace.Tmi;
 
 namespace Trace.Tests;
-
 
 [Collection(AppFactoryFixture.CollectionName)]
 public abstract class AppTests(AppFactory appFactory) : IAsyncLifetime
@@ -73,6 +73,10 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
             services
                 .RemoveAll<IUserAccessor>()
                 .AddTransient<IUserAccessor>(_ => UserAccessorMock.Object);
+
+            services
+                .RemoveService<MigrationInitializer>()
+                .AddAsyncInitializer<TestDbInitializer>();
         });
     }
 
