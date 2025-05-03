@@ -28,8 +28,6 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.2" />
     <PackageReference Include="Serilog" Version="4.2.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
-    <PackageReference Include="Teraa.Twitch.PubSub" Version="1.0.0-alpha.47" />
-    <PackageReference Include="Teraa.Twitch.Tmi" Version="1.0.0-alpha.47" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +37,8 @@
     <ProjectReference Include="..\Shared\AspNetCore.Identity\Shared.AspNetCore.Identity.csproj" />
     <ProjectReference Include="..\Shared\Serilog.Seq\Shared.Serilog.Seq.csproj" />
     <ProjectReference Include="..\Shared\Serilog.Systemd\Shared.Serilog.Systemd.csproj" />
+    <ProjectReference Include="..\Twitch\src\PubSub\PubSub.csproj" />
+    <ProjectReference Include="..\Twitch\src\Tmi\Tmi.csproj" />
   </ItemGroup>
 
   <ItemGroup>
