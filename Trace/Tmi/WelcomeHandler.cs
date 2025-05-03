@@ -1,33 +1,28 @@
 ﻿using JetBrains.Annotations;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Teraa.Irc;
 using Teraa.Twitch.Tmi;
-using Teraa.Twitch.Tmi.Notifications;
 using Trace.Data;
 
 namespace Trace.Tmi;
 
 [UsedImplicitly]
-public class WelcomeHandler : INotificationHandler<MessageReceived>
+public class WelcomeHandler : ITmiEventHandler<MessageReceivedEvent>
 {
     private readonly AppDbContext _ctx;
     private readonly ILogger<WelcomeHandler> _logger;
-    private readonly ITmiClient _tmi;
 
     public WelcomeHandler(
         AppDbContext ctx,
-        ILogger<WelcomeHandler> logger,
-        ITmiClient tmi)
+        ILogger<WelcomeHandler> logger)
     {
         _ctx = ctx;
         _logger = logger;
-        _tmi = tmi;
     }
 
-    public async Task Handle(MessageReceived notification, CancellationToken cancellationToken)
+    public async ValueTask HandleAsync(MessageReceivedEvent evt, CancellationToken cancellationToken)
     {
-        if (notification.Message is not {Command: (Command) 1}) return;
+        if (evt.Message is not {Command: (Command) 1}) return;
 
         var channels = await _ctx.TmiConfigs
             .Select(x => x.ChannelLogin)
@@ -36,7 +31,7 @@ public class WelcomeHandler : INotificationHandler<MessageReceived>
         _logger.LogInformation("Joining: {Channels}", channels);
 
         foreach (string channel in channels)
-            _tmi.EnqueueMessage(new Message(
+            evt.Service.EnqueueMessage(new Message(
                 Command: Command.JOIN,
                 Content: new Content($"#{channel}")));
     }

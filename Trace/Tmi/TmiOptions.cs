@@ -35,7 +35,11 @@ public static class ServiceCollectionExtensions
             .AddAsyncInitializer<SourceInitializer>()
             .AddSingleton<SourceProvider>()
             .AddSingleton<ISourceProvider>(static services => services.GetRequiredService<SourceProvider>())
-            .AddTmiService();
+            .AddTmiService()
+            .AddTmiEventHandler<ConnectedEvent, ConnectedHandler>()
+            .AddTmiEventHandler<MessageReceivedEvent, MessageHandler>()
+            .AddTmiEventHandler<MessageReceivedEvent, WelcomeHandler>()
+            ;
 
         return services;
     }

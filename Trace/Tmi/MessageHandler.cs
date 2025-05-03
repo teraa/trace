@@ -1,15 +1,14 @@
 using System.Globalization;
 using JetBrains.Annotations;
-using MediatR;
 using Teraa.Irc;
-using Teraa.Twitch.Tmi.Notifications;
+using Teraa.Twitch.Tmi;
 using Trace.Common;
 using Trace.Data;
 
 namespace Trace.Tmi;
 
 [UsedImplicitly]
-public class MessageHandler : INotificationHandler<MessageReceived>
+public class MessageHandler : ITmiEventHandler<MessageReceivedEvent>
 {
     private readonly AppDbContext _ctx;
     private readonly ISourceProvider _sourceProvider;
@@ -28,11 +27,11 @@ public class MessageHandler : INotificationHandler<MessageReceived>
         _updateUserHandler = updateUserHandler;
     }
 
-    public async Task Handle(MessageReceived notification, CancellationToken cancellationToken)
+    public async ValueTask HandleAsync(MessageReceivedEvent evt, CancellationToken cancellationToken)
     {
-        if (notification.Message.Command != Command.PRIVMSG) return;
+        if (evt.Message.Command != Command.PRIVMSG) return;
 
-        if (notification.Message is not
+        if (evt.Message is not
             {
                 Arg: not null,
                 Tags: not null,
@@ -40,16 +39,16 @@ public class MessageHandler : INotificationHandler<MessageReceived>
                 Content: not null,
             })
         {
-            _logger.LogWarning("Invalid message received: {Message}", notification.Message);
+            _logger.LogWarning("Invalid message received: {Message}", evt.Message);
             return;
         }
 
         // string channelLogin = notification.Message.Arg[1..];
-        string channelId = notification.Message.Tags["room-id"];
-        string userLogin = notification.Message.Prefix.Name;
-        string userId = notification.Message.Tags["user-id"];
+        string channelId = evt.Message.Tags["room-id"];
+        string userLogin = evt.Message.Prefix.Name;
+        string userId = evt.Message.Tags["user-id"];
         var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(
-            long.Parse(notification.Message.Tags["tmi-sent-ts"], CultureInfo.InvariantCulture));
+            long.Parse(evt.Message.Tags["tmi-sent-ts"], CultureInfo.InvariantCulture));
 
         var messageEntity = new Data.Models.Tmi.Message
         {
@@ -58,7 +57,7 @@ public class MessageHandler : INotificationHandler<MessageReceived>
             ChannelId = channelId,
             AuthorId = userId,
             AuthorLogin = userLogin,
-            Content = notification.Message.Content.Text
+            Content = evt.Message.Content.Text
         };
 
         _ctx.TmiMessages.Add(messageEntity);
