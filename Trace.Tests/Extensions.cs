@@ -21,8 +21,14 @@ static class Extensions
         services.RemoveAll(x =>
             x.ServiceType == typeof(TService) ||
             x.ImplementationType == typeof(TService) ||
-            (x.ImplementationFactory is not null &&
-             x.ImplementationFactory.Method.ReturnType == typeof(TService)));
+            (
+                x.ImplementationFactory is not null &&
+                x.ImplementationFactory.Method.ReturnType == typeof(TService)
+            ) ||
+            x.ServiceType.GetInterfaces().Contains(typeof(TService)) ||
+            (x.ImplementationType?.IsAssignableTo(typeof(TService)) ?? false) ||
+            (x.ImplementationInstance?.GetType().IsAssignableTo(typeof(TService)) ?? false)
+        );
 
         return services;
     }

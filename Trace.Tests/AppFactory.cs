@@ -10,6 +10,7 @@ using Npgsql;
 using Respawn;
 using Respawn.Graph;
 using Teraa.Twitch.Tmi;
+using Teraa.Twitch.Ws;
 using Trace.Api;
 using Trace.Api.Auth;
 using Trace.Migrations;
@@ -54,7 +55,10 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
         builder.ConfigureTestServices(services =>
         {
             services
-                .RemoveService<TmiService>();
+                .RemoveService<ITmiService>()
+                .RemoveService<ITmiEventHandler>()
+                .RemoveService<ITextWebSocketEventHandler>()
+                ;
 
             services
                 .RemoveAll<IValidator<TmiOptions>>()
