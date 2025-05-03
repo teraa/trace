@@ -44,7 +44,6 @@ builder.Services
     .AddIdentity()
     .AddAuth(builder.Configuration)
     .AddSingleton<IUserAccessor, UserAccessor>()
-    .AddMediatR(config => config.RegisterServicesFromAssemblyContaining<Program>())
     .AddHttpContextAccessor()
     .AddTmi()
     .AddTraceHandlers()

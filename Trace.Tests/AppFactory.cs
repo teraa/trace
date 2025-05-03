@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 using FluentValidation;
-using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -55,10 +54,7 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
         builder.ConfigureTestServices(services =>
         {
             services
-                .RemoveService<TmiService>()
-                .RemoveAll(x =>
-                    x.ServiceType.IsGenericType &&
-                    x.ServiceType.GetGenericTypeDefinition() == typeof(INotificationHandler<>));
+                .RemoveService<TmiService>();
 
             services
                 .RemoveAll<IValidator<TmiOptions>>()
