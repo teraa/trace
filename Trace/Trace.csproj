@@ -37,7 +37,6 @@
     <ProjectReference Include="..\Shared\AspNetCore.Identity\Shared.AspNetCore.Identity.csproj" />
     <ProjectReference Include="..\Shared\Serilog.Seq\Shared.Serilog.Seq.csproj" />
     <ProjectReference Include="..\Shared\Serilog.Systemd\Shared.Serilog.Systemd.csproj" />
-    <ProjectReference Include="..\Twitch\src\PubSub\PubSub.csproj" />
     <ProjectReference Include="..\Twitch\src\Tmi\Tmi.csproj" />
   </ItemGroup>
 

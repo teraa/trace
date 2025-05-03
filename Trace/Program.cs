@@ -10,7 +10,6 @@ using Trace;
 using Trace.Api;
 using Trace.Api.Auth;
 using Trace.Data;
-using Trace.PubSub;
 using Trace.Tmi;
 
 [assembly: Behaviors(typeof(RequestValidationBehavior<,>))]
@@ -48,7 +47,6 @@ builder.Services
     .AddMediatR(config => config.RegisterServicesFromAssemblyContaining<Program>())
     .AddHttpContextAccessor()
     .AddTmi()
-    .AddPubSub()
     .AddTraceHandlers()
     .AddTraceBehaviors()
     ;

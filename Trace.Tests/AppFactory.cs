@@ -10,12 +10,10 @@ using Moq;
 using Npgsql;
 using Respawn;
 using Respawn.Graph;
-using Teraa.Twitch.PubSub;
 using Teraa.Twitch.Tmi;
 using Trace.Api;
 using Trace.Api.Auth;
 using Trace.Migrations;
-using Trace.PubSub;
 using Trace.Tmi;
 
 namespace Trace.Tests;
@@ -58,14 +56,12 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
         {
             services
                 .RemoveService<TmiService>()
-                .RemoveService<PubSubService>()
                 .RemoveAll(x =>
                     x.ServiceType.IsGenericType &&
                     x.ServiceType.GetGenericTypeDefinition() == typeof(INotificationHandler<>));
 
             services
                 .RemoveAll<IValidator<TmiOptions>>()
-                .RemoveAll<IValidator<PubSubOptions>>()
                 .RemoveAll<IValidator<TwitchAuthOptions>>();
 
             services.RemoveService<SourceInitializer>();
