@@ -61,7 +61,7 @@ public static class ServiceCollectionExtensions
                 authOptions.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
                 authOptions.CorrelationCookie.Name = "Correlation.";
 
-                // options.SaveTokens = true;
+                // authOptions.SaveTokens = true;
             })
             .Services
             .AddValidatedOptions<TwitchAuthOptions>(configSectionPath: "Twitch")

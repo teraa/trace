@@ -22,8 +22,9 @@ public static class RouteBuilderExtensions
 
             var properties = signInManager.ConfigureExternalAuthenticationProperties(
                 "Twitch",
-                // need to specify auth because this is executed from /api/signing-twitch,
-                // and we want to redirect to /api/auth/continue
+                // need to specify "auth" part of the path too,
+                // because this is executed from /api/signing-twitch path (oauth middleware),
+                // and we want to redirect to /api/auth/continue.
                 "auth/continue"
             );
 
