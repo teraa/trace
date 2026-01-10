@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.HttpOverrides;
 using Teraa.Shared.Configuration;
+using IPNetwork = System.Net.IPNetwork;
 
 namespace Trace.Api;
 
@@ -41,7 +42,7 @@ public static class ProxyExtensions
 
         foreach (var network in options.KnownNetworks)
         {
-            forwardedHeadersOptions.KnownNetworks.Add(IPNetwork.Parse(network));
+            forwardedHeadersOptions.KnownIPNetworks.Add(IPNetwork.Parse(network));
         }
 
         builder.UseForwardedHeaders(forwardedHeadersOptions);

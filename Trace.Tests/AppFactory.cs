@@ -21,7 +21,7 @@ namespace Trace.Tests;
 [Collection(AppFactoryFixture.CollectionName)]
 public abstract class AppTests(AppFactory appFactory) : IAsyncLifetime
 {
-    protected readonly AppFactory AppFactory = appFactory;
+    protected AppFactory AppFactory { get; } = appFactory;
 
     public IServiceScope CreateScope() => AppFactory.Services.CreateScope();
 
