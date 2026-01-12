@@ -1,7 +1,6 @@
 using FluentValidation;
 using Immediate.Handlers.Shared;
 using Serilog;
-using Teraa.Shared.AspNetCore;
 using Teraa.Shared.AspNetCore.MinimalApis;
 using Teraa.Shared.Configuration.Vault;
 using Teraa.Shared.Serilog.Seq;
@@ -38,7 +37,6 @@ builder.Logging
 builder.Services
     // .AddEndpointsApiExplorer()
     .AddCors()
-    .AddRequestValidationBehaviour()
     .AddValidatorsFromAssemblyContaining<Program>()
     .AddDb()
     .AddIdentity()
