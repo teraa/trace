@@ -7,7 +7,9 @@ using Trace.Data;
 namespace Trace.Api.Twitch.Channels;
 
 [Handler]
-public static partial class IndexAction
+public sealed partial class IndexAction(
+    AppDbContext ctx,
+    IUserAccessor userAccessor)
 {
     public record Query;
 
@@ -17,10 +19,8 @@ public static partial class IndexAction
         string Login
     );
 
-    private static async ValueTask<IResult> HandleAsync(
+    private async ValueTask<IResult> HandleAsync(
         Query _,
-        AppDbContext ctx,
-        IUserAccessor userAccessor,
         CancellationToken cancellationToken)
     {
         var channelIds = userAccessor.User.Claims

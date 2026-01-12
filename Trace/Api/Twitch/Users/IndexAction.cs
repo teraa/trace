@@ -10,7 +10,7 @@ using Trace.Data.Models.Twitch;
 namespace Trace.Api.Twitch.Users;
 
 [Handler]
-public static partial class IndexAction
+public sealed partial class IndexAction(AppDbContext ctx)
 {
     public record Query(
         IReadOnlyList<string>? Ids = null,
@@ -44,9 +44,8 @@ public static partial class IndexAction
         DateTimeOffset FirstSeen,
         DateTimeOffset LastSeen);
 
-    private static async ValueTask<IResult> HandleAsync(
+    private async ValueTask<IResult> HandleAsync(
         Query request,
-        AppDbContext ctx,
         CancellationToken cancellationToken)
     {
         var predicate = PredicateBuilder.New<User>();

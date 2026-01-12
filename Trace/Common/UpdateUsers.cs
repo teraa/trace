@@ -6,12 +6,13 @@ using Trace.Data;
 namespace Trace.Common;
 
 [Handler]
-public static partial class UpdateUsers
+public sealed partial class UpdateUsers(
+    AppDbContext ctx,
+    ILogger<UpdateUsers> logger)
 {
     public sealed record Command(
         IReadOnlyList<Command.User> Users,
-        DateTimeOffset Timestamp
-    )
+        DateTimeOffset Timestamp)
     {
         public sealed record User(
             string Id,
@@ -21,10 +22,8 @@ public static partial class UpdateUsers
 
     private static readonly Regex s_loginRegex = new("^[a-z0-9_]+$", RegexOptions.Compiled);
 
-    private static async ValueTask HandleAsync(
+    private async ValueTask HandleAsync(
         Command request,
-        AppDbContext ctx,
-        ILogger<Command> logger,
         CancellationToken cancellationToken)
     {
         var users = new Dictionary<string, string>(request.Users.Count);

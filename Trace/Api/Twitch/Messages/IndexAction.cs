@@ -9,7 +9,10 @@ using Trace.Data;
 namespace Trace.Api.Twitch.Messages;
 
 [Handler]
-public static partial class IndexAction
+public sealed partial class IndexAction(
+    AppDbContext ctx,
+    IUserAccessor userAccessor,
+    IAuthorizationService authorizationService)
 {
     public record Query(
         string ChannelId,
@@ -38,11 +41,8 @@ public static partial class IndexAction
         string Content);
 
 
-    private static async ValueTask<IResult> HandleAsync(
+    private async ValueTask<IResult> HandleAsync(
         Query request,
-        AppDbContext ctx,
-        IUserAccessor userAccessor,
-        IAuthorizationService authorizationService,
         CancellationToken cancellationToken)
     {
         var authzResult =
