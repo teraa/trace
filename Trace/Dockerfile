@@ -12,16 +12,7 @@ dotnet nuget add source \
 --store-password-in-clear-text \
 --name github "https://nuget.pkg.github.com/teraa/index.json"
 
-COPY ["Trace/Trace.csproj", "Trace/"]
-COPY ["Shared/AspNetCore/Shared.AspNetCore.csproj", "Shared/AspNetCore/"]
-COPY ["Shared/Configuration.Vault/Shared.Configuration.Vault.csproj", "Shared/Configuration.Vault/"]
-COPY ["Shared/Configuration/Shared.Configuration.csproj", "Shared/Configuration/"]
-COPY ["Shared/AspNetCore.Identity/Shared.AspNetCore.Identity.csproj", "Shared/AspNetCore.Identity/"]
-COPY ["Shared/Serilog.Seq/Shared.Serilog.Seq.csproj", "Shared/Serilog.Seq/"]
-COPY ["Shared/Serilog.Systemd/Shared.Serilog.Systemd.csproj", "Shared/Serilog.Systemd/"]
-COPY ["Twitch/src/EventSub/EventSub.csproj", "Twitch/src/EventSub/"]
-COPY ["Twitch/src/Tmi/Tmi.csproj", "Twitch/src/Tmi/"]
-COPY ["Twitch/src/Ws/Ws.csproj", "Twitch/src/Ws/"]
+COPY --parents ["**/*.csproj", "."]
 RUN dotnet restore "Trace/Trace.csproj"
 
 COPY . .
