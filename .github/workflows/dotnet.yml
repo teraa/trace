@@ -46,8 +46,11 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore -r linux-x64
 
-      - name: Build
-        run: dotnet build --no-restore -r linux-x64
+      - name: Build main project
+        run: dotnet build Trace --no-restore -c Release -r linux-x64 -p:DebugType=None -p:GenerateDocumentationFile=false
+
+      - name: Build tests
+        run: dotnet build Trace.Tests --no-restore -c Release -r linux-x64 -p:DebugType=None -p:GenerateDocumentationFile=false
 
       - name: Test
         run: dotnet test --no-build -c Release -r linux-x64 -v minimal --logger "console;verbosity=detailed"
@@ -57,8 +60,7 @@ jobs:
       - name: Publish
         run: >
           dotnet publish Trace
-          --no-build -c Release -r linux-x64 --self-contained false -o bin/publish/
-          -p:GenerateDocumentationFile=false
+          --no-build -c Release -r linux-x64 --self-contained true -o bin/publish/
           -p:PublishSingleFile=true
           -p:DebugType=None
 
