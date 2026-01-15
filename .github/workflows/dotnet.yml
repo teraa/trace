@@ -47,20 +47,32 @@ jobs:
         run: dotnet restore -r linux-x64
 
       - name: Build main project
-        run: dotnet build Trace --no-restore -c Release -r linux-x64 --self-contained -p:DebugType=None -p:GenerateDocumentationFile=false
+        run: >
+          dotnet build Trace
+          --no-restore -c Release -r linux-x64 --self-contained
+          -p:DebugType=None
+          -p:GenerateDocumentationFile=false
 
       - name: Build tests
-        run: dotnet build Trace.Tests --no-restore -c Release -r linux-x64 --self-contained -p:DebugType=None -p:GenerateDocumentationFile=false
+        run: >
+          dotnet build Trace.Tests
+          --no-restore -c Release -r linux-x64 --self-contained
+          -p:DebugType=None
+          -p:GenerateDocumentationFile=false
 
       - name: Test
-        run: dotnet test --no-build -c Release -r linux-x64 -v minimal --logger "console;verbosity=detailed"
+        run: >
+          dotnet test
+          --no-build -c Release -r linux-x64
+          -v minimal --logger "console;verbosity=detailed"
         env:
           Db__ConnectionString: "Host=localhost;Port=5432;Database=trace_tests;Username=postgres;Password=postgres;Include Error Detail=true;Command Timeout=60"
 
       - name: Publish
         run: >
           dotnet publish Trace
-          --no-build -c Release -r linux-x64 --self-contained true -o bin/publish/
+          --no-build -c Release -r linux-x64 --self-contained
+          -o bin/publish/
           -p:PublishSingleFile=true
           -p:DebugType=None
 
