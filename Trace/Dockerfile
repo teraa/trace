@@ -4,15 +4,19 @@ FROM mcr.microsoft.com/dotnet/sdk:$dotnet_version AS build
 WORKDIR /src
 
 COPY --parents ["**/*.csproj", "."]
-RUN dotnet restore "Trace/Trace.csproj"
+RUN dotnet restore "Trace/Trace.csproj" -r linux-x64
 
 COPY . .
-WORKDIR "/src/Trace"
-RUN dotnet build "Trace.csproj" -c Release --no-restore
+WORKDIR /src/Trace
+RUN dotnet build -c Release --no-restore -r linux-x64 \
+-p:DebugType=None \
+-p:GenerateDocumentationFile=false
 
 
 FROM build AS publish
-RUN dotnet publish "Trace.csproj" -c Release --no-build -o /app/publish /p:UseAppHost=false
+RUN dotnet publish -c Release --no-build -o /app/publish -r linux-x64 \
+-p:UseAppHost=false \
+-p:DebugType=None
 
 
 FROM mcr.microsoft.com/dotnet/aspnet:$dotnet_version AS runtime
