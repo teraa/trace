@@ -3,15 +3,6 @@ ARG dotnet_version=10.0
 FROM mcr.microsoft.com/dotnet/sdk:$dotnet_version AS build
 WORKDIR /src
 
-RUN \
---mount=type=secret,id=github_username \
---mount=type=secret,id=github_pat \
-dotnet nuget add source \
---username $(cat /run/secrets/github_username) \
---password $(cat /run/secrets/github_pat) \
---store-password-in-clear-text \
---name github "https://nuget.pkg.github.com/teraa/index.json"
-
 COPY --parents ["**/*.csproj", "."]
 RUN dotnet restore "Trace/Trace.csproj"
 
