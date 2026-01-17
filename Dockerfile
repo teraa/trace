@@ -8,15 +8,15 @@ RUN dotnet restore "Trace/Trace.csproj" -r linux-x64
 
 COPY . .
 WORKDIR /src/Trace
-RUN dotnet build -c Release --no-restore -r linux-x64 \
+RUN dotnet build -c Release -r linux-x64 --no-restore \
 -p:DebugType=None \
 -p:GenerateDocumentationFile=false
 
 
 FROM build AS publish
-RUN dotnet publish -c Release --no-build -o /app/publish -r linux-x64 \
--p:UseAppHost=false \
--p:DebugType=None
+RUN dotnet publish -c Release -r linux-x64 --no-build -o /app/publish \
+-p:DebugType=None \
+-p:UseAppHost=false
 
 
 FROM mcr.microsoft.com/dotnet/aspnet:$dotnet_version AS runtime
