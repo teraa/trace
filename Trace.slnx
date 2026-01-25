@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/Shared/">
+    <Project Path="Shared/AspNetCore.Identity/Shared.AspNetCore.Identity.csproj" />
+    <Project Path="Shared/AspNetCore/Shared.AspNetCore.csproj" />
+    <Project Path="Shared/Configuration.Vault/Shared.Configuration.Vault.csproj" />
+    <Project Path="Shared/Configuration/Shared.Configuration.csproj" />
+    <Project Path="Shared/Serilog.Seq/Shared.Serilog.Seq.csproj" />
+    <Project Path="Shared/Serilog.Systemd/Shared.Serilog.Systemd.csproj" />
+  </Folder>
+  <Folder Name="/Twitch/">
+    <Project Path="Twitch/src/EventSub/EventSub.csproj" />
+    <Project Path="Twitch/src/Tmi/Tmi.csproj" />
+    <Project Path="Twitch/src/Ws/Ws.csproj" />
+  </Folder>
+  <Project Path="Trace.Tests/Trace.Tests.csproj" />
+  <Project Path="Trace/Trace.csproj" />
+</Solution>
