@@ -3,7 +3,7 @@ ARG dotnet_version=10.0
 FROM mcr.microsoft.com/dotnet/sdk:$dotnet_version AS build
 WORKDIR /src
 
-COPY --parents ["**/*.csproj", "."]
+COPY --parents ["**/*.csproj", "**/Directory.*", "**/nuget.config", "./"]
 RUN dotnet restore "Trace/Trace.csproj" -r linux-x64
 
 COPY . .
