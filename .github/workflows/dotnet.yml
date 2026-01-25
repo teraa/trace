@@ -27,6 +27,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           submodules: recursive
+          # `content:read` for this repo and all submodules
           token: ${{ secrets.PAT }}
 
       - name: Setup .NET
