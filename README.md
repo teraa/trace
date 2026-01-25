@@ -10,7 +10,6 @@ services:
     image: ghcr.io/teraa/trace:master
     environment:
       - Db__ConnectionString=Host=trace-db;Port=5432;Database=trace;Username=postgres;Password=example;Include Error Detail=true;Command Timeout=60
-      - PubSub__Token=x
     depends_on:
       - db
 
