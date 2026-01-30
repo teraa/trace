@@ -8,7 +8,8 @@
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="EFCore.NamingConventions" Version="10.0.0-rc.2" />
     <PackageVersion Include="Extensions.Hosting.AsyncInitialization" Version="3.0.1" />
-    <PackageVersion Include="FluentAssertions" Version="[7.0.0]" /> <!-- pin to 7.0.0 because new version has commercial license -->
+    <!-- pin to 7.0.0 because new version has commercial license -->
+    <PackageVersion Include="FluentAssertions" Version="[7.0.0]" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageVersion Include="FluentValidation" Version="12.1.1" />
     <PackageVersion Include="IDisposableAnalyzers" Version="4.0.8" />
