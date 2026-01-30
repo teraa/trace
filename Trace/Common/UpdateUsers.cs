@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using Immediate.Handlers.Shared;
 using Microsoft.EntityFrameworkCore;
 using Trace.Data;

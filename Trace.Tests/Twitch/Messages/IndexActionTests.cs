@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using FluentAssertions.Primitives;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -18,7 +18,7 @@ public sealed class IndexActionTests(AppFactory appFactory) : AppTests(appFactor
         AuthorLogin = "author.login",
         ChannelId = s_channelId,
         Content = "Lorem ipsum",
-        Source = new Source {Name = "source"},
+        Source = new Source { Name = "source" },
         Timestamp = DateTimeOffset.MinValue,
     };
 
@@ -107,7 +107,7 @@ public sealed class IndexActionTests(AppFactory appFactory) : AppTests(appFactor
         ctx.TmiMessages.AddRange(messages);
         await ctx.SaveChangesAsync();
 
-        var query = QueryTemplate with {Before = 2};
+        var query = QueryTemplate with { Before = 2 };
 
 
         // Act
@@ -138,7 +138,7 @@ public sealed class IndexActionTests(AppFactory appFactory) : AppTests(appFactor
         ctx.TmiMessages.AddRange(messages);
         await ctx.SaveChangesAsync();
 
-        var query = QueryTemplate with {Before = 2};
+        var query = QueryTemplate with { Before = 2 };
 
 
         // Act
@@ -172,7 +172,7 @@ public sealed class IndexActionTests(AppFactory appFactory) : AppTests(appFactor
         await ctx.SaveChangesAsync();
 
         const string authorId = "1";
-        var query = QueryTemplate with {AuthorId = authorId};
+        var query = QueryTemplate with { AuthorId = authorId };
 
 
         // Act
@@ -211,7 +211,7 @@ public sealed class IndexActionTests(AppFactory appFactory) : AppTests(appFactor
         ctx.TmiMessages.AddRange(messages);
         await ctx.SaveChangesAsync();
 
-        var query = QueryTemplate with {BeforeTimestamp = messages[1].Timestamp};
+        var query = QueryTemplate with { BeforeTimestamp = messages[1].Timestamp };
 
 
         // Act

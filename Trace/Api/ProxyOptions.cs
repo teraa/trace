@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Microsoft.AspNetCore.HttpOverrides;
 using Teraa.Shared.Configuration;
 using IPNetwork = System.Net.IPNetwork;

@@ -31,7 +31,7 @@ public sealed partial class IndexAction(AppDbContext ctx)
             RuleFor(x => x.PatternLimit).InclusiveBetween(1, 1000);
 
             RuleFor(x => x)
-                .Must(x => x is {Ids: not null} or {Logins: not null} or {LoginPattern: not null})
+                .Must(x => x is { Ids: not null } or { Logins: not null } or { LoginPattern: not null })
                 .WithMessage(
                     $"Must include at least one of {nameof(Query.Ids)}, {nameof(Query.Logins)}, or {nameof(Query.LoginPattern)}");
         }

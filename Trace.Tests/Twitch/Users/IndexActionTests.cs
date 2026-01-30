@@ -1,4 +1,4 @@
-﻿using FluentAssertions.Primitives;
+using FluentAssertions.Primitives;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Trace.Api.Twitch.Users;

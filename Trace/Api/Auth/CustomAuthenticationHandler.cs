@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
 
 namespace Trace.Api.Auth;

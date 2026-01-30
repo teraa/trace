@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Options;
 using Teraa.Irc;
 using Teraa.Twitch.Tmi;

@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Teraa.Irc;
 using Teraa.Twitch.Tmi;
@@ -22,7 +22,7 @@ public class WelcomeHandler : ITmiEventHandler<MessageReceivedEvent>
 
     public async ValueTask HandleAsync(MessageReceivedEvent evt, CancellationToken cancellationToken)
     {
-        if (evt.Message is not {Command: (Command) 1}) return;
+        if (evt.Message is not { Command: (Command)1 }) return;
 
         var channels = await _ctx.TmiConfigs
             .Select(x => x.ChannelLogin)

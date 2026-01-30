@@ -63,7 +63,7 @@ public sealed partial class IndexAction(
         {
             var beforeTimestamp = await query
                 .Where(x => x.Id == request.Before)
-                .Select(x => (DateTimeOffset?) x.Timestamp)
+                .Select(x => (DateTimeOffset?)x.Timestamp)
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (beforeTimestamp is null)

@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Trace.Api.Auth;
 using Trace.Api.Twitch.Channels;
@@ -42,6 +42,6 @@ public class IndexActionTests(AppFactory appFactory) : AppTests(appFactory)
 
         // Assert
         actionResult.Should().BeOfType<Ok<List<IndexAction.Result>>>()
-            .Subject.Value.Should().BeEquivalentTo(new List<IndexAction.Result> {new("foo_id", "foo_login")});
+            .Subject.Value.Should().BeEquivalentTo(new List<IndexAction.Result> { new("foo_id", "foo_login") });
     }
 }

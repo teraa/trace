@@ -1,4 +1,4 @@
-﻿namespace Trace.Api.Auth;
+namespace Trace.Api.Auth;
 
 public static class AppAuthzPolicies
 {

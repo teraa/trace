@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Command = Trace.Common.UpdateUsers.Command;
 using Handler = Trace.Common.UpdateUsers.Handler;

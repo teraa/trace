@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using JetBrains.Annotations;
 using Teraa.Shared.Configuration;
 using Teraa.Twitch.Tmi;

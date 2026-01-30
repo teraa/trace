@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
